@@ -27,4 +27,5 @@ format:
 
 check:
 	clang-tidy $(ruri_SOURCES)
-
+test:
+	make -C test
