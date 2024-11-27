@@ -1,0 +1,34 @@
+name: Build release
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Check update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check latest version
+        id: check_version
+        uses: actions/checkout@v4
+      - run: |
+          sudo apt update&&sudo apt install -y git wget
+          yes | sudo apt install --no-install-recommends -y curl xz-utils \
+          make \
+          clang \
+          libseccomp-dev \
+          libcap-dev \
+          libc6-dev \
+          binutils qemu-user-static uidmap
+      - name: configure
+        run: ./configure --enable-debug --enable-static
+      - name: build
+        run: make
+      - name: run cmake
+        run: cmake . -GNinja
+      - name: build
+        run: ninja
+      - name: clean
+        run: git clean -dxf
