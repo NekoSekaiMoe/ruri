@@ -34,6 +34,17 @@ AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
     [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi])
 
+AC_CANONICAL_HOST
+case "$host_cpu" in
+    x86_64|i686)
+        CFLAGS="$CFLAGS -mshstk"
+        ;;
+    *)
+        AC_MSG_WARN([Skipping -mshstk as it is not supported on $host_cpu])
+        ;;
+esac
+
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
