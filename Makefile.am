@@ -21,6 +21,26 @@ AM_CFLAGS = -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
 AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now
 AM_LDFLAGS += -Wl,--gc-sections -lcap -lseccomp -lpthread
 
+if ENABLE_STRIP
+strip_target:
+	$(STRIP) $(bin_PROGRAMS)
+else
+strip_target:
+	@echo "strip not found, skipping stripping."
+endif
+
+if ENABLE_UPX
+upx_target:
+	$(UPX) --best --lzma $(bin_PROGRAMS)
+else
+upx_target:
+	@echo "UPX not found, skipping compression."
+endif
+
+if !ENABLE_DEBUG
+install-data-hook: strip_target upx_target
+endif
+
 # Custom commands
 format:
 	clang-format -i $(ruri_SOURCES)
