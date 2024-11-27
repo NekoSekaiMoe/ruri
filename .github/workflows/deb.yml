@@ -21,13 +21,13 @@ jobs:
           libseccomp-dev \
           libcap-dev \
           libc6-dev \
-          binutils qemu-user-static uidmap
+          binutils ninja-build uidmap
       - name: configure
         run: ./configure --enable-debug --enable-static
       - name: build
         run: make
       - name: run cmake
-        run: cmake . -GNinja
+        run: cmake . -GNinja -DCMAKE_C_COMPILER=$(which gcc)
       - name: build
         run: ninja
       - name: clean
