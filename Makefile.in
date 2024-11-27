@@ -14,9 +14,6 @@
 
 @SET_MAKE@
 
-# SPDX-License-Identifier: MIT
-# Automake file for ruri
-
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -107,14 +104,18 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_ruri_OBJECTS = main.$(OBJEXT) caplist.$(OBJEXT) chroot.$(OBJEXT) \
-	cprintf.$(OBJEXT) info.$(OBJEXT) rurienv.$(OBJEXT) \
-	rurifetch.$(OBJEXT) seccomp.$(OBJEXT) signal.$(OBJEXT) \
-	umount.$(OBJEXT) unshare.$(OBJEXT) rootless.$(OBJEXT) \
-	mount.$(OBJEXT) k2v.$(OBJEXT) elf-magic.$(OBJEXT) \
-	config.$(OBJEXT) cgroup.$(OBJEXT) passwd.$(OBJEXT) \
-	ps.$(OBJEXT) action.$(OBJEXT) nekofeng.$(OBJEXT) \
-	layer.$(OBJEXT) typewriter.$(OBJEXT)
+am__dirstamp = $(am__leading_dot)dirstamp
+am_ruri_OBJECTS = src/main.$(OBJEXT) src/caplist.$(OBJEXT) \
+	src/chroot.$(OBJEXT) src/cprintf.$(OBJEXT) src/info.$(OBJEXT) \
+	src/rurienv.$(OBJEXT) src/rurifetch.$(OBJEXT) \
+	src/seccomp.$(OBJEXT) src/signal.$(OBJEXT) \
+	src/umount.$(OBJEXT) src/unshare.$(OBJEXT) \
+	src/rootless.$(OBJEXT) src/mount.$(OBJEXT) src/k2v.$(OBJEXT) \
+	src/elf-magic.$(OBJEXT) src/config.$(OBJEXT) \
+	src/cgroup.$(OBJEXT) src/passwd.$(OBJEXT) src/ps.$(OBJEXT) \
+	src/easteregg/action.$(OBJEXT) \
+	src/easteregg/nekofeng.$(OBJEXT) src/easteregg/layer.$(OBJEXT) \
+	src/easteregg/typewriter.$(OBJEXT)
 ruri_OBJECTS = $(am_ruri_OBJECTS)
 ruri_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -132,22 +133,20 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/action.Po ./$(DEPDIR)/caplist.Po \
-	./$(DEPDIR)/cgroup.Po ./$(DEPDIR)/chroot.Po \
-	./$(DEPDIR)/config.Po ./$(DEPDIR)/cprintf.Po \
-	./$(DEPDIR)/elf-magic.Po ./$(DEPDIR)/info.Po \
-	./$(DEPDIR)/k2v.Po ./$(DEPDIR)/layer.Po ./$(DEPDIR)/main.Po \
-	./$(DEPDIR)/mount.Po ./$(DEPDIR)/nekofeng.Po \
-	./$(DEPDIR)/passwd.Po ./$(DEPDIR)/ps.Po \
-	./$(DEPDIR)/rootless.Po ./$(DEPDIR)/rurienv.Po \
-	./$(DEPDIR)/rurifetch.Po ./$(DEPDIR)/seccomp.Po \
-	./$(DEPDIR)/signal.Po ./$(DEPDIR)/typewriter.Po \
-	./$(DEPDIR)/umount.Po ./$(DEPDIR)/unshare.Po
+am__depfiles_remade = src/$(DEPDIR)/caplist.Po src/$(DEPDIR)/cgroup.Po \
+	src/$(DEPDIR)/chroot.Po src/$(DEPDIR)/config.Po \
+	src/$(DEPDIR)/cprintf.Po src/$(DEPDIR)/elf-magic.Po \
+	src/$(DEPDIR)/info.Po src/$(DEPDIR)/k2v.Po \
+	src/$(DEPDIR)/main.Po src/$(DEPDIR)/mount.Po \
+	src/$(DEPDIR)/passwd.Po src/$(DEPDIR)/ps.Po \
+	src/$(DEPDIR)/rootless.Po src/$(DEPDIR)/rurienv.Po \
+	src/$(DEPDIR)/rurifetch.Po src/$(DEPDIR)/seccomp.Po \
+	src/$(DEPDIR)/signal.Po src/$(DEPDIR)/umount.Po \
+	src/$(DEPDIR)/unshare.Po src/easteregg/$(DEPDIR)/action.Po \
+	src/easteregg/$(DEPDIR)/layer.Po \
+	src/easteregg/$(DEPDIR)/nekofeng.Po \
+	src/easteregg/$(DEPDIR)/typewriter.Po
 am__mv = mv -f
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 AM_V_CC = $(am__v_CC_@AM_V@)
@@ -187,8 +186,8 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 AM_RECURSIVE_TARGETS = cscope
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in README \
-	compile config.guess config.sub depcomp install-sh ltmain.sh \
-	missing
+	ar-lib compile config.guess config.sub depcomp install-sh \
+	ltmain.sh missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -211,6 +210,7 @@ distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
+AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -249,6 +249,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -257,6 +258,7 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -305,6 +307,10 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
+# SPDX-License-Identifier: MIT
+# Automake file for ruri
+AUTOMAKE_OPTIONS = subdir-objects
+
 # Source files
 ruri_SOURCES = src/main.c src/caplist.c src/chroot.c src/cprintf.c \
                 src/info.c src/rurienv.c src/rurifetch.c src/seccomp.c \
@@ -314,16 +320,10 @@ ruri_SOURCES = src/main.c src/caplist.c src/chroot.c src/cprintf.c \
                 src/easteregg/nekofeng.c src/easteregg/layer.c \
                 src/easteregg/typewriter.c
 
-
-# Compiler and linker flags
-AM_CFLAGS = -Wall -Wextra -pedantic -Wconversion -Wno-unused-result \
-	-ffunction-sections -fdata-sections -fstack-protector-all \
-	-D_FORTIFY_SOURCE=3
+# Include additional directories
+AM_CFLAGS = -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
 AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now \
 	-Wl,--gc-sections -lcap -lseccomp -lpthread
-
-# Include additional directories
-INCLUDES = -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -419,6 +419,59 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+src/$(am__dirstamp):
+	@$(MKDIR_P) src
+	@: > src/$(am__dirstamp)
+src/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/$(DEPDIR)
+	@: > src/$(DEPDIR)/$(am__dirstamp)
+src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/caplist.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/chroot.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/cprintf.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/info.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/rurienv.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/rurifetch.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/seccomp.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/signal.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/umount.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/unshare.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/rootless.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/mount.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/k2v.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/elf-magic.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/config.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/cgroup.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/passwd.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/ps.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/easteregg/$(am__dirstamp):
+	@$(MKDIR_P) src/easteregg
+	@: > src/easteregg/$(am__dirstamp)
+src/easteregg/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/easteregg/$(DEPDIR)
+	@: > src/easteregg/$(DEPDIR)/$(am__dirstamp)
+src/easteregg/action.$(OBJEXT): src/easteregg/$(am__dirstamp) \
+	src/easteregg/$(DEPDIR)/$(am__dirstamp)
+src/easteregg/nekofeng.$(OBJEXT): src/easteregg/$(am__dirstamp) \
+	src/easteregg/$(DEPDIR)/$(am__dirstamp)
+src/easteregg/layer.$(OBJEXT): src/easteregg/$(am__dirstamp) \
+	src/easteregg/$(DEPDIR)/$(am__dirstamp)
+src/easteregg/typewriter.$(OBJEXT): src/easteregg/$(am__dirstamp) \
+	src/easteregg/$(DEPDIR)/$(am__dirstamp)
 
 ruri$(EXEEXT): $(ruri_OBJECTS) $(ruri_DEPENDENCIES) $(EXTRA_ruri_DEPENDENCIES) 
 	@rm -f ruri$(EXEEXT)
@@ -426,33 +479,35 @@ ruri$(EXEEXT): $(ruri_OBJECTS) $(ruri_DEPENDENCIES) $(EXTRA_ruri_DEPENDENCIES)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f src/*.$(OBJEXT)
+	-rm -f src/easteregg/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/action.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/caplist.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cgroup.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chroot.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/config.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cprintf.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/elf-magic.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/info.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/k2v.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/layer.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mount.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/nekofeng.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/passwd.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ps.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rootless.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rurienv.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rurifetch.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/seccomp.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signal.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/typewriter.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/umount.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unshare.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/caplist.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cgroup.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/chroot.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/config.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cprintf.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/elf-magic.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/info.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/k2v.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/mount.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/passwd.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ps.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rootless.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rurienv.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rurifetch.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/seccomp.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/signal.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/umount.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/unshare.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/easteregg/$(DEPDIR)/action.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/easteregg/$(DEPDIR)/layer.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/easteregg/$(DEPDIR)/nekofeng.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/easteregg/$(DEPDIR)/typewriter.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -461,340 +516,20 @@ $(am__depfiles_remade):
 am--depfiles: $(am__depfiles_remade)
 
 .c.o:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ $<
 
 .c.obj:
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+@am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+@am__fastdepCC_TRUE@	$(am__mv) $$depbase.Tpo $$depbase.Po
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
-
-main.o: src/main.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT main.o -MD -MP -MF $(DEPDIR)/main.Tpo -c -o main.o `test -f 'src/main.c' || echo '$(srcdir)/'`src/main.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/main.Tpo $(DEPDIR)/main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/main.c' object='main.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o main.o `test -f 'src/main.c' || echo '$(srcdir)/'`src/main.c
-
-main.obj: src/main.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT main.obj -MD -MP -MF $(DEPDIR)/main.Tpo -c -o main.obj `if test -f 'src/main.c'; then $(CYGPATH_W) 'src/main.c'; else $(CYGPATH_W) '$(srcdir)/src/main.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/main.Tpo $(DEPDIR)/main.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/main.c' object='main.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o main.obj `if test -f 'src/main.c'; then $(CYGPATH_W) 'src/main.c'; else $(CYGPATH_W) '$(srcdir)/src/main.c'; fi`
-
-caplist.o: src/caplist.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT caplist.o -MD -MP -MF $(DEPDIR)/caplist.Tpo -c -o caplist.o `test -f 'src/caplist.c' || echo '$(srcdir)/'`src/caplist.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/caplist.Tpo $(DEPDIR)/caplist.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/caplist.c' object='caplist.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o caplist.o `test -f 'src/caplist.c' || echo '$(srcdir)/'`src/caplist.c
-
-caplist.obj: src/caplist.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT caplist.obj -MD -MP -MF $(DEPDIR)/caplist.Tpo -c -o caplist.obj `if test -f 'src/caplist.c'; then $(CYGPATH_W) 'src/caplist.c'; else $(CYGPATH_W) '$(srcdir)/src/caplist.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/caplist.Tpo $(DEPDIR)/caplist.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/caplist.c' object='caplist.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o caplist.obj `if test -f 'src/caplist.c'; then $(CYGPATH_W) 'src/caplist.c'; else $(CYGPATH_W) '$(srcdir)/src/caplist.c'; fi`
-
-chroot.o: src/chroot.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT chroot.o -MD -MP -MF $(DEPDIR)/chroot.Tpo -c -o chroot.o `test -f 'src/chroot.c' || echo '$(srcdir)/'`src/chroot.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/chroot.Tpo $(DEPDIR)/chroot.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/chroot.c' object='chroot.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o chroot.o `test -f 'src/chroot.c' || echo '$(srcdir)/'`src/chroot.c
-
-chroot.obj: src/chroot.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT chroot.obj -MD -MP -MF $(DEPDIR)/chroot.Tpo -c -o chroot.obj `if test -f 'src/chroot.c'; then $(CYGPATH_W) 'src/chroot.c'; else $(CYGPATH_W) '$(srcdir)/src/chroot.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/chroot.Tpo $(DEPDIR)/chroot.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/chroot.c' object='chroot.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o chroot.obj `if test -f 'src/chroot.c'; then $(CYGPATH_W) 'src/chroot.c'; else $(CYGPATH_W) '$(srcdir)/src/chroot.c'; fi`
-
-cprintf.o: src/cprintf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cprintf.o -MD -MP -MF $(DEPDIR)/cprintf.Tpo -c -o cprintf.o `test -f 'src/cprintf.c' || echo '$(srcdir)/'`src/cprintf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cprintf.Tpo $(DEPDIR)/cprintf.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cprintf.c' object='cprintf.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cprintf.o `test -f 'src/cprintf.c' || echo '$(srcdir)/'`src/cprintf.c
-
-cprintf.obj: src/cprintf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cprintf.obj -MD -MP -MF $(DEPDIR)/cprintf.Tpo -c -o cprintf.obj `if test -f 'src/cprintf.c'; then $(CYGPATH_W) 'src/cprintf.c'; else $(CYGPATH_W) '$(srcdir)/src/cprintf.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cprintf.Tpo $(DEPDIR)/cprintf.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cprintf.c' object='cprintf.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cprintf.obj `if test -f 'src/cprintf.c'; then $(CYGPATH_W) 'src/cprintf.c'; else $(CYGPATH_W) '$(srcdir)/src/cprintf.c'; fi`
-
-info.o: src/info.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT info.o -MD -MP -MF $(DEPDIR)/info.Tpo -c -o info.o `test -f 'src/info.c' || echo '$(srcdir)/'`src/info.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/info.Tpo $(DEPDIR)/info.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/info.c' object='info.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o info.o `test -f 'src/info.c' || echo '$(srcdir)/'`src/info.c
-
-info.obj: src/info.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT info.obj -MD -MP -MF $(DEPDIR)/info.Tpo -c -o info.obj `if test -f 'src/info.c'; then $(CYGPATH_W) 'src/info.c'; else $(CYGPATH_W) '$(srcdir)/src/info.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/info.Tpo $(DEPDIR)/info.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/info.c' object='info.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o info.obj `if test -f 'src/info.c'; then $(CYGPATH_W) 'src/info.c'; else $(CYGPATH_W) '$(srcdir)/src/info.c'; fi`
-
-rurienv.o: src/rurienv.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT rurienv.o -MD -MP -MF $(DEPDIR)/rurienv.Tpo -c -o rurienv.o `test -f 'src/rurienv.c' || echo '$(srcdir)/'`src/rurienv.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rurienv.Tpo $(DEPDIR)/rurienv.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rurienv.c' object='rurienv.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o rurienv.o `test -f 'src/rurienv.c' || echo '$(srcdir)/'`src/rurienv.c
-
-rurienv.obj: src/rurienv.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT rurienv.obj -MD -MP -MF $(DEPDIR)/rurienv.Tpo -c -o rurienv.obj `if test -f 'src/rurienv.c'; then $(CYGPATH_W) 'src/rurienv.c'; else $(CYGPATH_W) '$(srcdir)/src/rurienv.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rurienv.Tpo $(DEPDIR)/rurienv.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rurienv.c' object='rurienv.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o rurienv.obj `if test -f 'src/rurienv.c'; then $(CYGPATH_W) 'src/rurienv.c'; else $(CYGPATH_W) '$(srcdir)/src/rurienv.c'; fi`
-
-rurifetch.o: src/rurifetch.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT rurifetch.o -MD -MP -MF $(DEPDIR)/rurifetch.Tpo -c -o rurifetch.o `test -f 'src/rurifetch.c' || echo '$(srcdir)/'`src/rurifetch.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rurifetch.Tpo $(DEPDIR)/rurifetch.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rurifetch.c' object='rurifetch.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o rurifetch.o `test -f 'src/rurifetch.c' || echo '$(srcdir)/'`src/rurifetch.c
-
-rurifetch.obj: src/rurifetch.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT rurifetch.obj -MD -MP -MF $(DEPDIR)/rurifetch.Tpo -c -o rurifetch.obj `if test -f 'src/rurifetch.c'; then $(CYGPATH_W) 'src/rurifetch.c'; else $(CYGPATH_W) '$(srcdir)/src/rurifetch.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rurifetch.Tpo $(DEPDIR)/rurifetch.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rurifetch.c' object='rurifetch.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o rurifetch.obj `if test -f 'src/rurifetch.c'; then $(CYGPATH_W) 'src/rurifetch.c'; else $(CYGPATH_W) '$(srcdir)/src/rurifetch.c'; fi`
-
-seccomp.o: src/seccomp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT seccomp.o -MD -MP -MF $(DEPDIR)/seccomp.Tpo -c -o seccomp.o `test -f 'src/seccomp.c' || echo '$(srcdir)/'`src/seccomp.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/seccomp.Tpo $(DEPDIR)/seccomp.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/seccomp.c' object='seccomp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o seccomp.o `test -f 'src/seccomp.c' || echo '$(srcdir)/'`src/seccomp.c
-
-seccomp.obj: src/seccomp.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT seccomp.obj -MD -MP -MF $(DEPDIR)/seccomp.Tpo -c -o seccomp.obj `if test -f 'src/seccomp.c'; then $(CYGPATH_W) 'src/seccomp.c'; else $(CYGPATH_W) '$(srcdir)/src/seccomp.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/seccomp.Tpo $(DEPDIR)/seccomp.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/seccomp.c' object='seccomp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o seccomp.obj `if test -f 'src/seccomp.c'; then $(CYGPATH_W) 'src/seccomp.c'; else $(CYGPATH_W) '$(srcdir)/src/seccomp.c'; fi`
-
-signal.o: src/signal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT signal.o -MD -MP -MF $(DEPDIR)/signal.Tpo -c -o signal.o `test -f 'src/signal.c' || echo '$(srcdir)/'`src/signal.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/signal.Tpo $(DEPDIR)/signal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/signal.c' object='signal.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o signal.o `test -f 'src/signal.c' || echo '$(srcdir)/'`src/signal.c
-
-signal.obj: src/signal.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT signal.obj -MD -MP -MF $(DEPDIR)/signal.Tpo -c -o signal.obj `if test -f 'src/signal.c'; then $(CYGPATH_W) 'src/signal.c'; else $(CYGPATH_W) '$(srcdir)/src/signal.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/signal.Tpo $(DEPDIR)/signal.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/signal.c' object='signal.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o signal.obj `if test -f 'src/signal.c'; then $(CYGPATH_W) 'src/signal.c'; else $(CYGPATH_W) '$(srcdir)/src/signal.c'; fi`
-
-umount.o: src/umount.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT umount.o -MD -MP -MF $(DEPDIR)/umount.Tpo -c -o umount.o `test -f 'src/umount.c' || echo '$(srcdir)/'`src/umount.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/umount.Tpo $(DEPDIR)/umount.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/umount.c' object='umount.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o umount.o `test -f 'src/umount.c' || echo '$(srcdir)/'`src/umount.c
-
-umount.obj: src/umount.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT umount.obj -MD -MP -MF $(DEPDIR)/umount.Tpo -c -o umount.obj `if test -f 'src/umount.c'; then $(CYGPATH_W) 'src/umount.c'; else $(CYGPATH_W) '$(srcdir)/src/umount.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/umount.Tpo $(DEPDIR)/umount.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/umount.c' object='umount.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o umount.obj `if test -f 'src/umount.c'; then $(CYGPATH_W) 'src/umount.c'; else $(CYGPATH_W) '$(srcdir)/src/umount.c'; fi`
-
-unshare.o: src/unshare.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT unshare.o -MD -MP -MF $(DEPDIR)/unshare.Tpo -c -o unshare.o `test -f 'src/unshare.c' || echo '$(srcdir)/'`src/unshare.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/unshare.Tpo $(DEPDIR)/unshare.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unshare.c' object='unshare.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o unshare.o `test -f 'src/unshare.c' || echo '$(srcdir)/'`src/unshare.c
-
-unshare.obj: src/unshare.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT unshare.obj -MD -MP -MF $(DEPDIR)/unshare.Tpo -c -o unshare.obj `if test -f 'src/unshare.c'; then $(CYGPATH_W) 'src/unshare.c'; else $(CYGPATH_W) '$(srcdir)/src/unshare.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/unshare.Tpo $(DEPDIR)/unshare.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/unshare.c' object='unshare.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o unshare.obj `if test -f 'src/unshare.c'; then $(CYGPATH_W) 'src/unshare.c'; else $(CYGPATH_W) '$(srcdir)/src/unshare.c'; fi`
-
-rootless.o: src/rootless.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT rootless.o -MD -MP -MF $(DEPDIR)/rootless.Tpo -c -o rootless.o `test -f 'src/rootless.c' || echo '$(srcdir)/'`src/rootless.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rootless.Tpo $(DEPDIR)/rootless.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rootless.c' object='rootless.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o rootless.o `test -f 'src/rootless.c' || echo '$(srcdir)/'`src/rootless.c
-
-rootless.obj: src/rootless.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT rootless.obj -MD -MP -MF $(DEPDIR)/rootless.Tpo -c -o rootless.obj `if test -f 'src/rootless.c'; then $(CYGPATH_W) 'src/rootless.c'; else $(CYGPATH_W) '$(srcdir)/src/rootless.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/rootless.Tpo $(DEPDIR)/rootless.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/rootless.c' object='rootless.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o rootless.obj `if test -f 'src/rootless.c'; then $(CYGPATH_W) 'src/rootless.c'; else $(CYGPATH_W) '$(srcdir)/src/rootless.c'; fi`
-
-mount.o: src/mount.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT mount.o -MD -MP -MF $(DEPDIR)/mount.Tpo -c -o mount.o `test -f 'src/mount.c' || echo '$(srcdir)/'`src/mount.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mount.Tpo $(DEPDIR)/mount.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/mount.c' object='mount.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o mount.o `test -f 'src/mount.c' || echo '$(srcdir)/'`src/mount.c
-
-mount.obj: src/mount.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT mount.obj -MD -MP -MF $(DEPDIR)/mount.Tpo -c -o mount.obj `if test -f 'src/mount.c'; then $(CYGPATH_W) 'src/mount.c'; else $(CYGPATH_W) '$(srcdir)/src/mount.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mount.Tpo $(DEPDIR)/mount.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/mount.c' object='mount.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o mount.obj `if test -f 'src/mount.c'; then $(CYGPATH_W) 'src/mount.c'; else $(CYGPATH_W) '$(srcdir)/src/mount.c'; fi`
-
-k2v.o: src/k2v.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT k2v.o -MD -MP -MF $(DEPDIR)/k2v.Tpo -c -o k2v.o `test -f 'src/k2v.c' || echo '$(srcdir)/'`src/k2v.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/k2v.Tpo $(DEPDIR)/k2v.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/k2v.c' object='k2v.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o k2v.o `test -f 'src/k2v.c' || echo '$(srcdir)/'`src/k2v.c
-
-k2v.obj: src/k2v.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT k2v.obj -MD -MP -MF $(DEPDIR)/k2v.Tpo -c -o k2v.obj `if test -f 'src/k2v.c'; then $(CYGPATH_W) 'src/k2v.c'; else $(CYGPATH_W) '$(srcdir)/src/k2v.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/k2v.Tpo $(DEPDIR)/k2v.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/k2v.c' object='k2v.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o k2v.obj `if test -f 'src/k2v.c'; then $(CYGPATH_W) 'src/k2v.c'; else $(CYGPATH_W) '$(srcdir)/src/k2v.c'; fi`
-
-elf-magic.o: src/elf-magic.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT elf-magic.o -MD -MP -MF $(DEPDIR)/elf-magic.Tpo -c -o elf-magic.o `test -f 'src/elf-magic.c' || echo '$(srcdir)/'`src/elf-magic.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/elf-magic.Tpo $(DEPDIR)/elf-magic.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/elf-magic.c' object='elf-magic.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o elf-magic.o `test -f 'src/elf-magic.c' || echo '$(srcdir)/'`src/elf-magic.c
-
-elf-magic.obj: src/elf-magic.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT elf-magic.obj -MD -MP -MF $(DEPDIR)/elf-magic.Tpo -c -o elf-magic.obj `if test -f 'src/elf-magic.c'; then $(CYGPATH_W) 'src/elf-magic.c'; else $(CYGPATH_W) '$(srcdir)/src/elf-magic.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/elf-magic.Tpo $(DEPDIR)/elf-magic.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/elf-magic.c' object='elf-magic.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o elf-magic.obj `if test -f 'src/elf-magic.c'; then $(CYGPATH_W) 'src/elf-magic.c'; else $(CYGPATH_W) '$(srcdir)/src/elf-magic.c'; fi`
-
-config.o: src/config.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT config.o -MD -MP -MF $(DEPDIR)/config.Tpo -c -o config.o `test -f 'src/config.c' || echo '$(srcdir)/'`src/config.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/config.Tpo $(DEPDIR)/config.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/config.c' object='config.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o config.o `test -f 'src/config.c' || echo '$(srcdir)/'`src/config.c
-
-config.obj: src/config.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT config.obj -MD -MP -MF $(DEPDIR)/config.Tpo -c -o config.obj `if test -f 'src/config.c'; then $(CYGPATH_W) 'src/config.c'; else $(CYGPATH_W) '$(srcdir)/src/config.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/config.Tpo $(DEPDIR)/config.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/config.c' object='config.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o config.obj `if test -f 'src/config.c'; then $(CYGPATH_W) 'src/config.c'; else $(CYGPATH_W) '$(srcdir)/src/config.c'; fi`
-
-cgroup.o: src/cgroup.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cgroup.o -MD -MP -MF $(DEPDIR)/cgroup.Tpo -c -o cgroup.o `test -f 'src/cgroup.c' || echo '$(srcdir)/'`src/cgroup.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cgroup.Tpo $(DEPDIR)/cgroup.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cgroup.c' object='cgroup.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cgroup.o `test -f 'src/cgroup.c' || echo '$(srcdir)/'`src/cgroup.c
-
-cgroup.obj: src/cgroup.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT cgroup.obj -MD -MP -MF $(DEPDIR)/cgroup.Tpo -c -o cgroup.obj `if test -f 'src/cgroup.c'; then $(CYGPATH_W) 'src/cgroup.c'; else $(CYGPATH_W) '$(srcdir)/src/cgroup.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cgroup.Tpo $(DEPDIR)/cgroup.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/cgroup.c' object='cgroup.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o cgroup.obj `if test -f 'src/cgroup.c'; then $(CYGPATH_W) 'src/cgroup.c'; else $(CYGPATH_W) '$(srcdir)/src/cgroup.c'; fi`
-
-passwd.o: src/passwd.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT passwd.o -MD -MP -MF $(DEPDIR)/passwd.Tpo -c -o passwd.o `test -f 'src/passwd.c' || echo '$(srcdir)/'`src/passwd.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/passwd.Tpo $(DEPDIR)/passwd.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/passwd.c' object='passwd.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o passwd.o `test -f 'src/passwd.c' || echo '$(srcdir)/'`src/passwd.c
-
-passwd.obj: src/passwd.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT passwd.obj -MD -MP -MF $(DEPDIR)/passwd.Tpo -c -o passwd.obj `if test -f 'src/passwd.c'; then $(CYGPATH_W) 'src/passwd.c'; else $(CYGPATH_W) '$(srcdir)/src/passwd.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/passwd.Tpo $(DEPDIR)/passwd.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/passwd.c' object='passwd.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o passwd.obj `if test -f 'src/passwd.c'; then $(CYGPATH_W) 'src/passwd.c'; else $(CYGPATH_W) '$(srcdir)/src/passwd.c'; fi`
-
-ps.o: src/ps.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ps.o -MD -MP -MF $(DEPDIR)/ps.Tpo -c -o ps.o `test -f 'src/ps.c' || echo '$(srcdir)/'`src/ps.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ps.Tpo $(DEPDIR)/ps.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/ps.c' object='ps.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ps.o `test -f 'src/ps.c' || echo '$(srcdir)/'`src/ps.c
-
-ps.obj: src/ps.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ps.obj -MD -MP -MF $(DEPDIR)/ps.Tpo -c -o ps.obj `if test -f 'src/ps.c'; then $(CYGPATH_W) 'src/ps.c'; else $(CYGPATH_W) '$(srcdir)/src/ps.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ps.Tpo $(DEPDIR)/ps.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/ps.c' object='ps.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ps.obj `if test -f 'src/ps.c'; then $(CYGPATH_W) 'src/ps.c'; else $(CYGPATH_W) '$(srcdir)/src/ps.c'; fi`
-
-action.o: src/easteregg/action.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT action.o -MD -MP -MF $(DEPDIR)/action.Tpo -c -o action.o `test -f 'src/easteregg/action.c' || echo '$(srcdir)/'`src/easteregg/action.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/action.Tpo $(DEPDIR)/action.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/action.c' object='action.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o action.o `test -f 'src/easteregg/action.c' || echo '$(srcdir)/'`src/easteregg/action.c
-
-action.obj: src/easteregg/action.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT action.obj -MD -MP -MF $(DEPDIR)/action.Tpo -c -o action.obj `if test -f 'src/easteregg/action.c'; then $(CYGPATH_W) 'src/easteregg/action.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/action.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/action.Tpo $(DEPDIR)/action.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/action.c' object='action.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o action.obj `if test -f 'src/easteregg/action.c'; then $(CYGPATH_W) 'src/easteregg/action.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/action.c'; fi`
-
-nekofeng.o: src/easteregg/nekofeng.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT nekofeng.o -MD -MP -MF $(DEPDIR)/nekofeng.Tpo -c -o nekofeng.o `test -f 'src/easteregg/nekofeng.c' || echo '$(srcdir)/'`src/easteregg/nekofeng.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nekofeng.Tpo $(DEPDIR)/nekofeng.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/nekofeng.c' object='nekofeng.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o nekofeng.o `test -f 'src/easteregg/nekofeng.c' || echo '$(srcdir)/'`src/easteregg/nekofeng.c
-
-nekofeng.obj: src/easteregg/nekofeng.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT nekofeng.obj -MD -MP -MF $(DEPDIR)/nekofeng.Tpo -c -o nekofeng.obj `if test -f 'src/easteregg/nekofeng.c'; then $(CYGPATH_W) 'src/easteregg/nekofeng.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/nekofeng.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/nekofeng.Tpo $(DEPDIR)/nekofeng.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/nekofeng.c' object='nekofeng.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o nekofeng.obj `if test -f 'src/easteregg/nekofeng.c'; then $(CYGPATH_W) 'src/easteregg/nekofeng.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/nekofeng.c'; fi`
-
-layer.o: src/easteregg/layer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT layer.o -MD -MP -MF $(DEPDIR)/layer.Tpo -c -o layer.o `test -f 'src/easteregg/layer.c' || echo '$(srcdir)/'`src/easteregg/layer.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/layer.Tpo $(DEPDIR)/layer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/layer.c' object='layer.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o layer.o `test -f 'src/easteregg/layer.c' || echo '$(srcdir)/'`src/easteregg/layer.c
-
-layer.obj: src/easteregg/layer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT layer.obj -MD -MP -MF $(DEPDIR)/layer.Tpo -c -o layer.obj `if test -f 'src/easteregg/layer.c'; then $(CYGPATH_W) 'src/easteregg/layer.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/layer.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/layer.Tpo $(DEPDIR)/layer.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/layer.c' object='layer.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o layer.obj `if test -f 'src/easteregg/layer.c'; then $(CYGPATH_W) 'src/easteregg/layer.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/layer.c'; fi`
-
-typewriter.o: src/easteregg/typewriter.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT typewriter.o -MD -MP -MF $(DEPDIR)/typewriter.Tpo -c -o typewriter.o `test -f 'src/easteregg/typewriter.c' || echo '$(srcdir)/'`src/easteregg/typewriter.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/typewriter.Tpo $(DEPDIR)/typewriter.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/typewriter.c' object='typewriter.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o typewriter.o `test -f 'src/easteregg/typewriter.c' || echo '$(srcdir)/'`src/easteregg/typewriter.c
-
-typewriter.obj: src/easteregg/typewriter.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT typewriter.obj -MD -MP -MF $(DEPDIR)/typewriter.Tpo -c -o typewriter.obj `if test -f 'src/easteregg/typewriter.c'; then $(CYGPATH_W) 'src/easteregg/typewriter.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/typewriter.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/typewriter.Tpo $(DEPDIR)/typewriter.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/easteregg/typewriter.c' object='typewriter.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o typewriter.obj `if test -f 'src/easteregg/typewriter.c'; then $(CYGPATH_W) 'src/easteregg/typewriter.c'; else $(CYGPATH_W) '$(srcdir)/src/easteregg/typewriter.c'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -1059,6 +794,10 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f src/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/$(am__dirstamp)
+	-rm -f src/easteregg/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/easteregg/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -1069,29 +808,29 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-		-rm -f ./$(DEPDIR)/action.Po
-	-rm -f ./$(DEPDIR)/caplist.Po
-	-rm -f ./$(DEPDIR)/cgroup.Po
-	-rm -f ./$(DEPDIR)/chroot.Po
-	-rm -f ./$(DEPDIR)/config.Po
-	-rm -f ./$(DEPDIR)/cprintf.Po
-	-rm -f ./$(DEPDIR)/elf-magic.Po
-	-rm -f ./$(DEPDIR)/info.Po
-	-rm -f ./$(DEPDIR)/k2v.Po
-	-rm -f ./$(DEPDIR)/layer.Po
-	-rm -f ./$(DEPDIR)/main.Po
-	-rm -f ./$(DEPDIR)/mount.Po
-	-rm -f ./$(DEPDIR)/nekofeng.Po
-	-rm -f ./$(DEPDIR)/passwd.Po
-	-rm -f ./$(DEPDIR)/ps.Po
-	-rm -f ./$(DEPDIR)/rootless.Po
-	-rm -f ./$(DEPDIR)/rurienv.Po
-	-rm -f ./$(DEPDIR)/rurifetch.Po
-	-rm -f ./$(DEPDIR)/seccomp.Po
-	-rm -f ./$(DEPDIR)/signal.Po
-	-rm -f ./$(DEPDIR)/typewriter.Po
-	-rm -f ./$(DEPDIR)/umount.Po
-	-rm -f ./$(DEPDIR)/unshare.Po
+		-rm -f src/$(DEPDIR)/caplist.Po
+	-rm -f src/$(DEPDIR)/cgroup.Po
+	-rm -f src/$(DEPDIR)/chroot.Po
+	-rm -f src/$(DEPDIR)/config.Po
+	-rm -f src/$(DEPDIR)/cprintf.Po
+	-rm -f src/$(DEPDIR)/elf-magic.Po
+	-rm -f src/$(DEPDIR)/info.Po
+	-rm -f src/$(DEPDIR)/k2v.Po
+	-rm -f src/$(DEPDIR)/main.Po
+	-rm -f src/$(DEPDIR)/mount.Po
+	-rm -f src/$(DEPDIR)/passwd.Po
+	-rm -f src/$(DEPDIR)/ps.Po
+	-rm -f src/$(DEPDIR)/rootless.Po
+	-rm -f src/$(DEPDIR)/rurienv.Po
+	-rm -f src/$(DEPDIR)/rurifetch.Po
+	-rm -f src/$(DEPDIR)/seccomp.Po
+	-rm -f src/$(DEPDIR)/signal.Po
+	-rm -f src/$(DEPDIR)/umount.Po
+	-rm -f src/$(DEPDIR)/unshare.Po
+	-rm -f src/easteregg/$(DEPDIR)/action.Po
+	-rm -f src/easteregg/$(DEPDIR)/layer.Po
+	-rm -f src/easteregg/$(DEPDIR)/nekofeng.Po
+	-rm -f src/easteregg/$(DEPDIR)/typewriter.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -1139,29 +878,29 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-		-rm -f ./$(DEPDIR)/action.Po
-	-rm -f ./$(DEPDIR)/caplist.Po
-	-rm -f ./$(DEPDIR)/cgroup.Po
-	-rm -f ./$(DEPDIR)/chroot.Po
-	-rm -f ./$(DEPDIR)/config.Po
-	-rm -f ./$(DEPDIR)/cprintf.Po
-	-rm -f ./$(DEPDIR)/elf-magic.Po
-	-rm -f ./$(DEPDIR)/info.Po
-	-rm -f ./$(DEPDIR)/k2v.Po
-	-rm -f ./$(DEPDIR)/layer.Po
-	-rm -f ./$(DEPDIR)/main.Po
-	-rm -f ./$(DEPDIR)/mount.Po
-	-rm -f ./$(DEPDIR)/nekofeng.Po
-	-rm -f ./$(DEPDIR)/passwd.Po
-	-rm -f ./$(DEPDIR)/ps.Po
-	-rm -f ./$(DEPDIR)/rootless.Po
-	-rm -f ./$(DEPDIR)/rurienv.Po
-	-rm -f ./$(DEPDIR)/rurifetch.Po
-	-rm -f ./$(DEPDIR)/seccomp.Po
-	-rm -f ./$(DEPDIR)/signal.Po
-	-rm -f ./$(DEPDIR)/typewriter.Po
-	-rm -f ./$(DEPDIR)/umount.Po
-	-rm -f ./$(DEPDIR)/unshare.Po
+		-rm -f src/$(DEPDIR)/caplist.Po
+	-rm -f src/$(DEPDIR)/cgroup.Po
+	-rm -f src/$(DEPDIR)/chroot.Po
+	-rm -f src/$(DEPDIR)/config.Po
+	-rm -f src/$(DEPDIR)/cprintf.Po
+	-rm -f src/$(DEPDIR)/elf-magic.Po
+	-rm -f src/$(DEPDIR)/info.Po
+	-rm -f src/$(DEPDIR)/k2v.Po
+	-rm -f src/$(DEPDIR)/main.Po
+	-rm -f src/$(DEPDIR)/mount.Po
+	-rm -f src/$(DEPDIR)/passwd.Po
+	-rm -f src/$(DEPDIR)/ps.Po
+	-rm -f src/$(DEPDIR)/rootless.Po
+	-rm -f src/$(DEPDIR)/rurienv.Po
+	-rm -f src/$(DEPDIR)/rurifetch.Po
+	-rm -f src/$(DEPDIR)/seccomp.Po
+	-rm -f src/$(DEPDIR)/signal.Po
+	-rm -f src/$(DEPDIR)/umount.Po
+	-rm -f src/$(DEPDIR)/unshare.Po
+	-rm -f src/easteregg/$(DEPDIR)/action.Po
+	-rm -f src/easteregg/$(DEPDIR)/layer.Po
+	-rm -f src/easteregg/$(DEPDIR)/nekofeng.Po
+	-rm -f src/easteregg/$(DEPDIR)/typewriter.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

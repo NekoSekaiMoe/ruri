@@ -8,6 +8,8 @@ AM_INIT_AUTOMAKE
 
 # Check for programs
 AC_PROG_CC
+AC_PROG_RANLIB
+AM_PROG_AR
 AC_PROG_MAKE_SET
 AC_CHECK_TOOL([STRIP], [strip], [:])
 
@@ -21,8 +23,8 @@ AC_SEARCH_LIBS([seccomp_init], [seccomp], [], AC_MSG_ERROR([libseccomp is requir
 AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([pthread is required]))
 
 # Enable optional flags
-CFLAGS="$CFLAGS -ftrivial-auto-var-init=pattern -fcf-protection=full -flto=auto -fPIE -pie -fstack-protector-all"
-CFLAGS="$CFLAGS -fstack-clash-protection -mshstk -Wno-unused-result -O2"
+CFLAGS="$CFLAGS -ftrivial-auto-var-init=pattern -flto=auto -fPIE -pie -fstack-protector-all"
+CFLAGS="$CFLAGS -fstack-clash-protection -Wno-unused-result"
 CFLAGS="$CFLAGS -ffunction-sections -fdata-sections -Wl,--gc-sections"
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
@@ -32,7 +34,7 @@ AC_ARG_ENABLE([debug],
     [if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g -O0 -DDEBUG_BUILD"; fi])
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
-    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi])
+    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; else CFLAGS="$CFLAGS -O2 -DNDEBUG"; fi])
 
 AC_CANONICAL_HOST
 case "$host_cpu" in
@@ -43,7 +45,6 @@ case "$host_cpu" in
         AC_MSG_WARN([Skipping -mshstk as it is not supported on $host_cpu])
         ;;
 esac
-
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

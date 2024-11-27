@@ -1,7 +1,11 @@
 #!/bin/sh
 
+set -eu
+
+rm -rf configure Makefile Makefile.in config.*
+
 echo
-echo ... auto_test autogen ...
+echo Running autogen script...
 echo
 
 ## Check all dependencies are present
