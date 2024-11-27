@@ -115,7 +115,7 @@ am_ruri_OBJECTS = src/main.$(OBJEXT) src/caplist.$(OBJEXT) \
 	src/cgroup.$(OBJEXT) src/passwd.$(OBJEXT) src/ps.$(OBJEXT) \
 	src/easteregg/action.$(OBJEXT) \
 	src/easteregg/nekofeng.$(OBJEXT) src/easteregg/layer.$(OBJEXT) \
-	src/easteregg/typewriter.$(OBJEXT)
+	src/easteregg/typewriter.$(OBJEXT) src/ruri.$(OBJEXT)
 ruri_OBJECTS = $(am_ruri_OBJECTS)
 ruri_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -139,10 +139,11 @@ am__depfiles_remade = src/$(DEPDIR)/caplist.Po src/$(DEPDIR)/cgroup.Po \
 	src/$(DEPDIR)/info.Po src/$(DEPDIR)/k2v.Po \
 	src/$(DEPDIR)/main.Po src/$(DEPDIR)/mount.Po \
 	src/$(DEPDIR)/passwd.Po src/$(DEPDIR)/ps.Po \
-	src/$(DEPDIR)/rootless.Po src/$(DEPDIR)/rurienv.Po \
-	src/$(DEPDIR)/rurifetch.Po src/$(DEPDIR)/seccomp.Po \
-	src/$(DEPDIR)/signal.Po src/$(DEPDIR)/umount.Po \
-	src/$(DEPDIR)/unshare.Po src/easteregg/$(DEPDIR)/action.Po \
+	src/$(DEPDIR)/rootless.Po src/$(DEPDIR)/ruri.Po \
+	src/$(DEPDIR)/rurienv.Po src/$(DEPDIR)/rurifetch.Po \
+	src/$(DEPDIR)/seccomp.Po src/$(DEPDIR)/signal.Po \
+	src/$(DEPDIR)/umount.Po src/$(DEPDIR)/unshare.Po \
+	src/easteregg/$(DEPDIR)/action.Po \
 	src/easteregg/$(DEPDIR)/layer.Po \
 	src/easteregg/$(DEPDIR)/nekofeng.Po \
 	src/easteregg/$(DEPDIR)/typewriter.Po
@@ -318,7 +319,7 @@ ruri_SOURCES = src/main.c src/caplist.c src/chroot.c src/cprintf.c \
                 src/mount.c src/k2v.c src/elf-magic.c src/config.c \
                 src/cgroup.c src/passwd.c src/ps.c src/easteregg/action.c \
                 src/easteregg/nekofeng.c src/easteregg/layer.c \
-                src/easteregg/typewriter.c
+                src/easteregg/typewriter.c src/ruri.c
 
 # Include additional directories
 AM_CFLAGS = -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
@@ -472,6 +473,7 @@ src/easteregg/layer.$(OBJEXT): src/easteregg/$(am__dirstamp) \
 	src/easteregg/$(DEPDIR)/$(am__dirstamp)
 src/easteregg/typewriter.$(OBJEXT): src/easteregg/$(am__dirstamp) \
 	src/easteregg/$(DEPDIR)/$(am__dirstamp)
+src/ruri.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
 ruri$(EXEEXT): $(ruri_OBJECTS) $(ruri_DEPENDENCIES) $(EXTRA_ruri_DEPENDENCIES) 
 	@rm -f ruri$(EXEEXT)
@@ -498,6 +500,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/passwd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ps.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rootless.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ruri.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rurienv.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rurifetch.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/seccomp.Po@am__quote@ # am--include-marker
@@ -821,6 +824,7 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/passwd.Po
 	-rm -f src/$(DEPDIR)/ps.Po
 	-rm -f src/$(DEPDIR)/rootless.Po
+	-rm -f src/$(DEPDIR)/ruri.Po
 	-rm -f src/$(DEPDIR)/rurienv.Po
 	-rm -f src/$(DEPDIR)/rurifetch.Po
 	-rm -f src/$(DEPDIR)/seccomp.Po
@@ -891,6 +895,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/passwd.Po
 	-rm -f src/$(DEPDIR)/ps.Po
 	-rm -f src/$(DEPDIR)/rootless.Po
+	-rm -f src/$(DEPDIR)/ruri.Po
 	-rm -f src/$(DEPDIR)/rurienv.Po
 	-rm -f src/$(DEPDIR)/rurifetch.Po
 	-rm -f src/$(DEPDIR)/seccomp.Po
