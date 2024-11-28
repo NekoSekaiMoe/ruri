@@ -47,5 +47,6 @@ format:
 
 check:
 	clang-tidy $(ruri_SOURCES)
+.PHONY: test
 test:
 	make -C test
