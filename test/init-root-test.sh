@@ -13,9 +13,12 @@ cd ..
 mkdir ${TMPDIR}
 check_if_succeed $?
 export TMPDIR=$(realpath ${TMPDIR})
-./configure -d
+mkdir out
+cd out
+cp ../* . -r
+./configure --enable-debug
 check_if_succeed $?
-make dev
+make
 check_if_succeed $?
 mv ruri ${TMPDIR}
 check_if_succeed $?
@@ -117,3 +120,4 @@ check_if_succeed $?
 pass_subtest
 
 pass_test
+cd ..
