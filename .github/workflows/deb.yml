@@ -1,0 +1,26 @@
+name: Build deb
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  check_update:
+    name: Check update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check latest version
+        uses: actions/checkout@v4
+
+      - name: Test
+        run: |
+          sudo apt update&&sudo apt install -y git wget
+          yes | sudo apt install --no-install-recommends -y curl xz-utils \
+          make \
+          clang \
+          libseccomp-dev \
+          libcap-dev \
+          libc6-dev \
+          binutils uidmap
+      - name: build deb
+        run: sudo dpkg-buildpackage -b -us -uc -d
