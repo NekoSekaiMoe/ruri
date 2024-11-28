@@ -10,5 +10,9 @@ export DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 %:
 	dh $@
+
 override_dh_autoreconf:
 	bash autogen.sh
+
+override_dh_strip:
+	echo 6
