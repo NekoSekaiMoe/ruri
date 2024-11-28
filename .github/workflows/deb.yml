@@ -24,3 +24,11 @@ jobs:
           binutils uidmap
       - name: build deb
         run: sudo dpkg-buildpackage -b -us -uc -d
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: rurideb-${{ github.sha }}
+          name: rurideb-${{ github.sha }}
+          prerelease: false
+          files: |
+             ../ruri*
