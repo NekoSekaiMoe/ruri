@@ -44,7 +44,7 @@ else
 fi
 
 # Check for required headers
-AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/mount.h sys/socket.h unistd.h linux/fs.h linux/version.h linux/sched.h])
+AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/mount.h sys/socket.h unistd.h linux/fs.h linux/version.h linux/sched.h sys/ioctl.h time.h grp.h])
 AC_CHECK_HEADERS([sys/capability.h seccomp.h pthread.h], [], AC_MSG_ERROR([Missing required headers]))
 
 # Check for libraries
@@ -53,7 +53,7 @@ AC_SEARCH_LIBS([seccomp_init], [seccomp], [], AC_MSG_ERROR([libseccomp is requir
 AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([pthread is required]))
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections"
+CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -fdata-sections"
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds

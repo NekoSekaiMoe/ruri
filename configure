@@ -4835,6 +4835,24 @@ then :
   printf "%s\n" "#define HAVE_LINUX_SCHED_H 1" >>confdefs.h
 
 fi
+ac_fn_c_check_header_compile "$LINENO" "sys/ioctl.h" "ac_cv_header_sys_ioctl_h" "$ac_includes_default"
+if test "x$ac_cv_header_sys_ioctl_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_SYS_IOCTL_H 1" >>confdefs.h
+
+fi
+ac_fn_c_check_header_compile "$LINENO" "time.h" "ac_cv_header_time_h" "$ac_includes_default"
+if test "x$ac_cv_header_time_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_TIME_H 1" >>confdefs.h
+
+fi
+ac_fn_c_check_header_compile "$LINENO" "grp.h" "ac_cv_header_grp_h" "$ac_includes_default"
+if test "x$ac_cv_header_grp_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_GRP_H 1" >>confdefs.h
+
+fi
 
        for ac_header in sys/capability.h seccomp.h pthread.h
 do :
@@ -5038,7 +5056,7 @@ fi
 
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections"
+CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -fdata-sections"
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
