@@ -53,7 +53,7 @@ AC_SEARCH_LIBS([seccomp_init], [seccomp], [], AC_MSG_ERROR([libseccomp is requir
 AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([pthread is required]))
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -Wno-newline-eof -Wno-gnu-zero-variadic-macro-arguments -pedantic -fsanitize=address"
+CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wl,-z,common-page-size=4096 -Wall -Wextra -Wconversion -Wno-newline-eof -Wno-gnu-zero-variadic-macro-arguments -pedantic -enable-trivial-auto-var-init-zero-knowing-it-will-be-removed-from-clang"
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
@@ -63,7 +63,7 @@ AC_ARG_ENABLE([debug],
     AM_CONDITIONAL([ENABLE_DEBUG], [test "x$enable_debug" = "xyes"])
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
-    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; else LDFLAGS="-fsanitize=address"; fi])
+    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi])
 
 # Check CFLAGS
 AC_MSG_CHECKING([whether the following CFLAGS are supported])

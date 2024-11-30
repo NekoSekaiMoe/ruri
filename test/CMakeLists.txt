@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(ruri_test LANGUAGES CXX)
 
 add_executable(ruri_test main.cpp)
+add_executable(test_cpp test.cpp)
 
 enable_testing()
 
