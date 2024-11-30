@@ -23,7 +23,9 @@ jobs:
           libc6-dev \
           binutils uidmap
       - name: build deb
-        run: sudo dpkg-buildpackage -F -d
+        run: 
+          git archive --prefix=ruri-3.7/ -o ../ruri_3.7.orig.tar.gz HEAD
+          sudo dpkg-buildpackage -F -d
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
