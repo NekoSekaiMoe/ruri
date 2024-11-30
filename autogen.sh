@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eu
+set -euo
 
 rm -rf configure Makefile Makefile.in config.*
 
