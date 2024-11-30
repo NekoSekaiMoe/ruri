@@ -23,7 +23,7 @@ jobs:
           libc6-dev \
           binutils uidmap
       - name: build deb
-        run: sudo dpkg-buildpackage -F -g -G -us -uc -d
+        run: sudo dpkg-buildpackage -F -d
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
