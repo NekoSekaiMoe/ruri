@@ -4787,6 +4787,24 @@ then :
 printf "%s\n" "#define STDC_HEADERS 1" >>confdefs.h
 
 fi
+ac_fn_c_check_header_compile "$LINENO" "time.h" "ac_cv_header_time_h" "$ac_includes_default"
+if test "x$ac_cv_header_time_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_TIME_H 1" >>confdefs.h
+
+fi
+ac_fn_c_check_header_compile "$LINENO" "grp.h" "ac_cv_header_grp_h" "$ac_includes_default"
+if test "x$ac_cv_header_grp_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_GRP_H 1" >>confdefs.h
+
+fi
+ac_fn_c_check_header_compile "$LINENO" "sddlib.h" "ac_cv_header_sddlib_h" "$ac_includes_default"
+if test "x$ac_cv_header_sddlib_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_SDDLIB_H 1" >>confdefs.h
+
+fi
 ac_fn_c_check_header_compile "$LINENO" "fcntl.h" "ac_cv_header_fcntl_h" "$ac_includes_default"
 if test "x$ac_cv_header_fcntl_h" = xyes
 then :
@@ -4811,12 +4829,6 @@ then :
   printf "%s\n" "#define HAVE_SYS_SOCKET_H 1" >>confdefs.h
 
 fi
-ac_fn_c_check_header_compile "$LINENO" "unistd.h" "ac_cv_header_unistd_h" "$ac_includes_default"
-if test "x$ac_cv_header_unistd_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_UNISTD_H 1" >>confdefs.h
-
-fi
 ac_fn_c_check_header_compile "$LINENO" "linux/fs.h" "ac_cv_header_linux_fs_h" "$ac_includes_default"
 if test "x$ac_cv_header_linux_fs_h" = xyes
 then :
@@ -4833,24 +4845,6 @@ ac_fn_c_check_header_compile "$LINENO" "linux/sched.h" "ac_cv_header_linux_sched
 if test "x$ac_cv_header_linux_sched_h" = xyes
 then :
   printf "%s\n" "#define HAVE_LINUX_SCHED_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "sys/ioctl.h" "ac_cv_header_sys_ioctl_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_ioctl_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_SYS_IOCTL_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "time.h" "ac_cv_header_time_h" "$ac_includes_default"
-if test "x$ac_cv_header_time_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_TIME_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "grp.h" "ac_cv_header_grp_h" "$ac_includes_default"
-if test "x$ac_cv_header_grp_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_GRP_H 1" >>confdefs.h
 
 fi
 
@@ -5056,14 +5050,14 @@ fi
 
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -fdata-sections"
+CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -Wno-newline-eof -Wno-gnu-zero-variadic-macro-arguments -pedantic -fsanitize=address"
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
 # Check whether --enable-debug was given.
 if test ${enable_debug+y}
 then :
-  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g -O0 -DDEBUG_BUILD"; fi
+  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g -O0 -DDEBUG_BUILD"; else CFLAGS="$CFLAGS -O2 -DNDEBUG"; fi
 fi
 
      if test "x$enable_debug" = "xyes"; then
@@ -5077,7 +5071,7 @@ fi
 # Check whether --enable-static was given.
 if test ${enable_static+y}
 then :
-  enableval=$enable_static; if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; else CFLAGS="$CFLAGS -O2 -DNDEBUG"; fi
+  enableval=$enable_static; if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; else LDFLAGS="-fsanitize=address"; fi
 fi
 
 

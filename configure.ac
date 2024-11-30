@@ -44,7 +44,7 @@ else
 fi
 
 # Check for required headers
-AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/mount.h sys/socket.h unistd.h linux/fs.h linux/version.h linux/sched.h sys/ioctl.h time.h grp.h])
+AC_CHECK_HEADERS([time.h grp.h sddlib.h fcntl.h sys/ioctl.h sys/mount.h sys/socket.h linux/fs.h linux/version.h linux/sched.h])
 AC_CHECK_HEADERS([sys/capability.h seccomp.h pthread.h], [], AC_MSG_ERROR([Missing required headers]))
 
 # Check for libraries
@@ -53,17 +53,17 @@ AC_SEARCH_LIBS([seccomp_init], [seccomp], [], AC_MSG_ERROR([libseccomp is requir
 AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([pthread is required]))
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -fdata-sections"
+CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -Wno-newline-eof -Wno-gnu-zero-variadic-macro-arguments -pedantic -fsanitize=address"
 LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
 AC_ARG_ENABLE([debug],
     AS_HELP_STRING([--enable-debug], [Enable debug build]),
-    [if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g -O0 -DDEBUG_BUILD"; fi])
+    [if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g -O0 -DDEBUG_BUILD"; else CFLAGS="$CFLAGS -O2 -DNDEBUG"; fi])
     AM_CONDITIONAL([ENABLE_DEBUG], [test "x$enable_debug" = "xyes"])
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
-    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; else CFLAGS="$CFLAGS -O2 -DNDEBUG"; fi])
+    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; else LDFLAGS="-fsanitize=address"; fi])
 
 # Check CFLAGS
 AC_MSG_CHECKING([whether the following CFLAGS are supported])
