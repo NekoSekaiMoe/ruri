@@ -6,9 +6,10 @@ apk add upx
 apk add lld
 mkdir output
 mkdir output2
-git clone https://github.com/moe-hacker/ruri
+git clone https://github.com/dpkg123/ruri
 cd ruri
-./configure -s
+bash autogen.sh
+./configure --enable-static
 make
 strip ruri
 cp ruri ../output2/ruri
