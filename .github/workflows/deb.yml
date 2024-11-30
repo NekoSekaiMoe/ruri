@@ -23,7 +23,7 @@ jobs:
           libc6-dev \
           binutils uidmap
       - name: build deb
-        run: 
+        run: |
           git archive --prefix=ruri-3.7/ -o ../ruri_3.7.orig.tar.gz HEAD
           sudo dpkg-buildpackage -F -d
       - name: Release
