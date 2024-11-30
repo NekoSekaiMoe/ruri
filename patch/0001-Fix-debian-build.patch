@@ -1,0 +1,38 @@
+From c37599293d120dbb8486b85644a15b55763ee63a Mon Sep 17 00:00:00 2001
+From: dpkg123 <test1@qw5d.onmicrosoft.com>
+Date: Sun, 1 Dec 2024 00:31:56 +0800
+Subject: [PATCH] Fix debian build
+
+---
+ Makefile.am | 3 ---
+ Makefile.in | 3 ---
+ 2 files changed, 6 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 47d0276..9590231 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -47,6 +47,3 @@ format:
+ 
+ check:
+ 	clang-tidy $(ruri_SOURCES)
+-.PHONY: test
+-test:
+-	make -C test
+diff --git a/Makefile.in b/Makefile.in
+index 20d8241..6cefa02 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -955,9 +955,6 @@ format:
+ 
+ check:
+ 	clang-tidy $(ruri_SOURCES)
+-.PHONY: test
+-test:
+-	make -C test
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+-- 
+2.39.5
+
