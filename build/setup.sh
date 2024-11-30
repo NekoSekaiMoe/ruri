@@ -3,11 +3,12 @@ apt install -y sudo
 sudo apt install -y git wget
 yes | sudo apt install --no-install-recommends -y curl xz-utils \
   make \
-  clang \
+  gcc \
   libseccomp-dev \
   libcap-dev \
   libc6-dev \
-  binutils
+  binutils \
+  automake autoconf libtool
 # Build ruri
 git clone https://github.com/moe-hacker/ruri
 cd ruri
