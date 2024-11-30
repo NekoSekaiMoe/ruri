@@ -44,7 +44,7 @@ else
 fi
 
 # Check for required headers
-AC_CHECK_HEADERS([time.h grp.h sddlib.h fcntl.h sys/ioctl.h sys/mount.h sys/socket.h linux/fs.h linux/version.h linux/sched.h])
+AC_CHECK_HEADERS([time.h grp.h stdlib.h fcntl.h sys/ioctl.h sys/mount.h sys/socket.h linux/fs.h linux/version.h linux/sched.h])
 AC_CHECK_HEADERS([sys/capability.h seccomp.h pthread.h], [], AC_MSG_ERROR([Missing required headers]))
 
 # Check for libraries

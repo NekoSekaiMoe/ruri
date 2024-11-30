@@ -4799,10 +4799,10 @@ then :
   printf "%s\n" "#define HAVE_GRP_H 1" >>confdefs.h
 
 fi
-ac_fn_c_check_header_compile "$LINENO" "sddlib.h" "ac_cv_header_sddlib_h" "$ac_includes_default"
-if test "x$ac_cv_header_sddlib_h" = xyes
+ac_fn_c_check_header_compile "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
+if test "x$ac_cv_header_stdlib_h" = xyes
 then :
-  printf "%s\n" "#define HAVE_SDDLIB_H 1" >>confdefs.h
+  printf "%s\n" "#define HAVE_STDLIB_H 1" >>confdefs.h
 
 fi
 ac_fn_c_check_header_compile "$LINENO" "fcntl.h" "ac_cv_header_fcntl_h" "$ac_includes_default"
