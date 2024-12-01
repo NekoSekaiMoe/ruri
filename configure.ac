@@ -64,6 +64,13 @@ AC_ARG_ENABLE([debug],
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
     [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi])
+AC_ARG_ENABLE([shared],
+    [AS_HELP_STRING([--enable-shared],
+                    [build shared libraries @<:@default=yes@:>@])],
+    [enable_shared=$enableval],
+    [enable_shared=yes])
+
+AM_CONDITIONAL([BUILD_SHARED_LIBS], [test "x$enable_shared" = "xyes"])
 
 # Check CFLAGS
 AC_MSG_CHECKING([whether the following CFLAGS are supported])
