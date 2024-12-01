@@ -5,7 +5,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 bin_PROGRAMS = ruri
 
 # Source files
-ruri_SOURCES = src/main.c src/caplist.c src/chroot.c src/cprintf.c \
+ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
                 src/info.c src/rurienv.c src/rurifetch.c src/seccomp.c \
                 src/signal.c src/umount.c src/unshare.c src/rootless.c \
                 src/mount.c src/k2v.c src/elf-magic.c src/config.c \
