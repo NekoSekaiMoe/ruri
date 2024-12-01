@@ -49,8 +49,9 @@ jobs:
           yes | sudo apt install --no-install-recommends -y curl xz-utils \
           make \
           clang \
+          clang-tidy \
           libseccomp-dev \
           libcap-dev \
           libc6-dev \
           binutils qemu-user-static uidmap
-          ./configure && make test
+          ./configure && make check && make test
