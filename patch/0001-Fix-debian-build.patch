@@ -1,38 +1,52 @@
-From c37599293d120dbb8486b85644a15b55763ee63a Mon Sep 17 00:00:00 2001
+From 604824d8f140f0dba7dda931431432faedbc939e Mon Sep 17 00:00:00 2001
 From: dpkg123 <test1@qw5d.onmicrosoft.com>
-Date: Sun, 1 Dec 2024 00:31:56 +0800
+Date: Sun, 1 Dec 2024 11:15:49 +0800
 Subject: [PATCH] Fix debian build
 
 ---
- Makefile.am | 3 ---
- Makefile.in | 3 ---
- 2 files changed, 6 deletions(-)
+ Makefile.am | 10 ----------
+ Makefile.in | 10 ----------
+ 2 files changed, 20 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 47d0276..9590231 100644
+index 47d0276..d8fc683 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -47,6 +47,3 @@ format:
- 
- check:
- 	clang-tidy $(ruri_SOURCES)
+@@ -40,13 +40,3 @@ endif
+ if !ENABLE_DEBUG
+ install-data-hook: strip_target upx_target
+ endif
+-
+-# Custom commands
+-format:
+-	clang-format -i $(ruri_SOURCES)
+-
+-check:
+-	clang-tidy $(ruri_SOURCES)
 -.PHONY: test
 -test:
 -	make -C test
 diff --git a/Makefile.in b/Makefile.in
-index 20d8241..6cefa02 100644
+index 20d8241..99ca8eb 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -955,9 +955,6 @@ format:
+@@ -949,16 +949,6 @@ uninstall-am: uninstall-binPROGRAMS
  
- check:
- 	clang-tidy $(ruri_SOURCES)
+ @ENABLE_DEBUG_FALSE@install-data-hook: strip_target upx_target
+ 
+-# Custom commands
+-format:
+-	clang-format -i $(ruri_SOURCES)
+-
+-check:
+-	clang-tidy $(ruri_SOURCES)
 -.PHONY: test
 -test:
 -	make -C test
- 
+-
  # Tell versions [3.59,3.63) of GNU make to not export all variables.
  # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
 -- 
 2.39.5
 
