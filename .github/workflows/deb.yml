@@ -6,7 +6,7 @@ on:
 
 jobs:
   check_update:
-    name: Check update
+    name: Build and Release
     runs-on: ubuntu-latest
     steps:
       - name: Check latest version
@@ -22,13 +22,22 @@ jobs:
           libcap-dev \
           libc6-dev \
           binutils uidmap
-      - name: build deb
+
+      - name: Setup Git
         run: |
           git apply patch/0001-Fix-debian-build.patch
           rm -rf patch
           bash autogen.sh
+          git config --global user.name "root"
+          git config --global user.email "your_email@example.com"
+          git add .
+          git commit -m "Test"
+
+      - name: build deb
+        run: |
           git archive --prefix=ruri-3.7/ -o ../ruri_3.7.orig.tar.gz HEAD
           sudo dpkg-buildpackage -F -d
+
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
