@@ -50,13 +50,3 @@ check:
 .PHONY: test
 test:
 	make -C test
-
-if BUILD_SHARED_LIBS
-lib_LTLIBRARIES = libruri.la
-libruri_la_SOURCES = ruri.c
-libruri_la_LDFLAGS = -shared
-else
-noinst_LIBRARIES = libruri.a
-libruri_a_SOURCES = ruri.c
-endif
-

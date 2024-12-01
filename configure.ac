@@ -2,8 +2,14 @@
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.69])
 AC_INIT([ruri], [3.7], [moe-hacker@crack.moe])
-AC_PROG_CC
+
+# Check for programs
 AM_INIT_AUTOMAKE
+AC_PROG_CC
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AM_PROG_AR
+LT_INIT
 
 # Define AC_CHECK_CFLAGS macro
 AC_DEFUN([AC_CHECK_CFLAGS], [
@@ -17,13 +23,8 @@ AC_DEFUN([AC_CHECK_CFLAGS], [
     )
 ])
 
-AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_SRCDIR([src/ruri.c])
 AC_CONFIG_HEADERS([config.h])
-
-# Check for programs
-AC_PROG_RANLIB
-AM_PROG_AR
-AC_PROG_MAKE_SET
 
 # Check strip and upx
 AC_CHECK_TOOL([STRIP], [strip], [no])
@@ -61,16 +62,27 @@ AC_ARG_ENABLE([debug],
     AS_HELP_STRING([--enable-debug], [Enable debug build]),
     [if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g -O0 -DDEBUG_BUILD"; else CFLAGS="$CFLAGS -O2 -DNDEBUG"; fi])
     AM_CONDITIONAL([ENABLE_DEBUG], [test "x$enable_debug" = "xyes"])
-AC_ARG_ENABLE([static],
-    AS_HELP_STRING([--enable-static], [Enable static linking]),
-    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi])
 AC_ARG_ENABLE([shared],
-    [AS_HELP_STRING([--enable-shared],
-                    [build shared libraries @<:@default=yes@:>@])],
+    [AS_HELP_STRING([--enable-shared], [build shared libraries @<:@default=no@:>@])],
     [enable_shared=$enableval],
-    [enable_shared=yes])
+    [enable_shared=no])
 
-AM_CONDITIONAL([BUILD_SHARED_LIBS], [test "x$enable_shared" = "xyes"])
+AC_ARG_ENABLE([static],
+    [AS_HELP_STRING([--enable-static], [build static libraries @<:@default=no@:>@])],
+    [enable_static=$enableval],
+    [enable_static=no])
+
+if test "x$enable_shared" = "xyes" -a "x$enable_static" = "xyes"; then
+    build_target="static_lib"
+elif test "x$enable_shared" = "xyes"; then
+    build_target="shared_lib"
+else
+    build_target="binary"
+fi
+
+AM_CONDITIONAL([BUILD_STATIC_LIB], [test "x$build_target" = "xstatic_lib"])
+AM_CONDITIONAL([BUILD_SHARED_LIB], [test "x$build_target" = "xshared_lib"])
+AM_CONDITIONAL([BUILD_BINARY], [test "x$build_target" = "xbinary"])
 
 # Check CFLAGS
 AC_MSG_CHECKING([whether the following CFLAGS are supported])
@@ -80,4 +92,3 @@ done
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
-
