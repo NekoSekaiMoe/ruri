@@ -26,6 +26,7 @@ jobs:
         run: |
           git apply patch/0001-Fix-debian-build.patch
           rm -rf patch
+          bash autogen.sh
           git archive --prefix=ruri-3.7/ -o ../ruri_3.7.orig.tar.gz HEAD
           sudo dpkg-buildpackage -F -d
       - name: Release
