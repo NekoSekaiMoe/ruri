@@ -42,11 +42,9 @@ install-data-hook: strip_target upx_target
 endif
 
 # Custom commands
-format:
-	clang-format -i $(ruri_SOURCES)
-
 check:
 	clang-tidy $(ruri_SOURCES)
+
 .PHONY: test
 test:
 	make -C test
