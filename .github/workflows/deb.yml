@@ -35,7 +35,7 @@ jobs:
 
       - name: build deb
         run: |
-          git archive --prefix=ruri-3.7/ -o ../ruri_3.7.orig.tar.gz HEAD
+          git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
           sudo dpkg-buildpackage -F -d
 
       - name: Release
