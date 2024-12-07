@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -euo
+set -eu
 
 rm -rf configure Makefile Makefile.in config.*
 
@@ -98,3 +98,4 @@ $AUTOMAKE --add-missing --force-missing --copy --foreign
 # Instruct user on next steps
 echo
 echo "Generuated configure."
+rm -rf autom4te.cache

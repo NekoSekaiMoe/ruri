@@ -1,3 +1,32 @@
+ruri (3.8) unstable; urgency=medium
+
+  [ Moe-hacker ]
+  * Improve rootless container support.
+  * Add `-W` option: `--work-dir`.
+  * Add `-A` option: `--unmask-dirs`.
+  * Add `-E` option: `--user`.
+  * Add `-t` option: `--hostname`.
+  * Add `-F` option: `--ruri-fetch`.
+  * Add `-x` option: `--disable-network`.
+  * Add `-C` option: `--correct-config`.
+  * Add `-K` option: `--use-kvm`.
+  * Add `-I` option: `--char-dev`.
+  * Add `-i` option: `--hide-pid`.
+  * Add `-T` option: `--timens-offset`.
+  * Add `-b` option: `--background`.
+  * Add `-L` option: `--log-file`.
+  * `-c` option can now recognize other args and command to run.
+  * `-U` and `-P` option can now use config file.
+  * Rewrite cgroup support, add cpupercent limit support.
+  * Change MAX_MOUNTPOINTS AND MAX_ENVS from 128*2 to 512*2.
+  * Auto kill all processes in container when umounting container.
+  * We will always mount / as the first mountpoint.
+  * Set the size limit of /dev/shm when memory limit is set.
+  * Fix crash on capget().
+  * Fix pivot_root does not work.
+
+ -- Moe-hacker <admin@crack.moe>  Sat, 07 Dec 2024 17:36:54 +0800
+
 ruri (3.7) unstable; urgency=medium
 
   [ Moe-hacker ]

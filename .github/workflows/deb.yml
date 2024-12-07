@@ -26,7 +26,7 @@ jobs:
       - name: Setup Git
         run: |
           git apply patch/0001-Fix-debian-build.patch
-          rm -rf patch
+          rm -rf patch build doc logo
           bash autogen.sh
           git config --global user.name "root"
           git config --global user.email "your_email@example.com"
