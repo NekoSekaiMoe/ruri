@@ -950,11 +950,9 @@ uninstall-am: uninstall-binPROGRAMS
 @ENABLE_DEBUG_FALSE@install-data-hook: strip_target upx_target
 
 # Custom commands
-format:
-	clang-format -i $(ruri_SOURCES)
-
 check:
 	clang-tidy $(ruri_SOURCES)
+
 .PHONY: test
 test:
 	make -C test
