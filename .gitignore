@@ -4,6 +4,8 @@ ruri-amd64.zip
 ruri-arm64.zip
 # Editor configuration.
 .vscode/
+.idea/
+.editorconfig
 # Gdb log
 peda-*
 # Build dir.
@@ -26,3 +28,6 @@ src/.deps/
 autom4te.cache
 .deps/
 src/.deps/
+config.h
+config.status
+Makefile
