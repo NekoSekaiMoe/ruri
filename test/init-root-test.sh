@@ -37,7 +37,7 @@ export SUBTEST_NO=3
 export SUBTEST_DESCRIPTION="Get rootfs.tar.xz"
 show_subtest_description
 check_if_succeed $?
-../test/rootfstool d -d alpine -v edge
+../../test/rootfstool d -d alpine -v edge
 check_if_succeed $?
 pass_subtest
 
