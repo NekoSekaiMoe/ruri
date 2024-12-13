@@ -24,6 +24,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_RANLIB
 AM_PROG_AR
 AC_PROG_MAKE_SET
+m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 # Check strip and upx
 AC_CHECK_TOOL([STRIP], [strip], [no])

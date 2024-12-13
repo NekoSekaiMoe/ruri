@@ -148,7 +148,6 @@ am__depfiles_remade = src/$(DEPDIR)/caplist.Po src/$(DEPDIR)/cgroup.Po \
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-AM_V_CC = $(am__v_CC_@AM_V@)
 am__v_CC_ = $(am__v_CC_@AM_DEFAULT_V@)
 am__v_CC_0 = @echo "  CC      " $@;
 am__v_CC_1 = 
@@ -208,6 +207,9 @@ distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
+
+#Check VERBOSE vaule
+AM_V = $(if $(VERBOSE),, @)
 AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
@@ -315,6 +317,7 @@ ruri_SOURCES = src/main.c src/caplist.c src/chroot.c src/cprintf.c \
 AM_CFLAGS = -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
 AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now \
 	-Wl,--gc-sections -lcap -lseccomp -lpthread
+AM_V_CC = $(AM_V)echo "  CC       " $@;
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 

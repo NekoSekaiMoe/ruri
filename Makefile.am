@@ -41,6 +41,11 @@ if !ENABLE_DEBUG
 install-data-hook: strip_target upx_target
 endif
 
+#Check VERBOSE vaule
+AM_V = $(if $(VERBOSE),, @)
+
+AM_V_CC = $(AM_V)echo "  CC       " $@;
+
 # Custom commands
 check:
 	clang-tidy $(ruri_SOURCES)
