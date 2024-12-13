@@ -166,7 +166,7 @@ function get_rootfs_url() {
 function download_rootfs() {
   # $MIRROR, $DISTRO, $VERSION and $CPU_ARCH are defined at main()
   rm -f rootfs.tar.xz
-  wget $(get_rootfs_url)
+  aria2c $(get_rootfs_url)
 }
 function exec_function() {
   # *Only for developer.
