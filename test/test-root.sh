@@ -1,4 +1,5 @@
 #!/bin/bash
+if DEBUG=1; then set -x; fi
 source global.sh
 
 # This will set $TEST_ROOT
