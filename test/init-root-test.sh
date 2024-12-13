@@ -16,6 +16,7 @@ export TMPDIR=$(realpath ${TMPDIR})
 mkdir out
 cd out
 cp ../* . -r
+make clean
 ./configure --enable-debug
 check_if_succeed $?
 make
@@ -35,9 +36,8 @@ pass_subtest
 export SUBTEST_NO=3
 export SUBTEST_DESCRIPTION="Get rootfs.tar.xz"
 show_subtest_description
-git clone https://github.com/moe-hacker/rootfstool
 check_if_succeed $?
-rootfstool/rootfstool d -d alpine -v edge
+./rootfstool d -d alpine -v edge
 check_if_succeed $?
 pass_subtest
 
