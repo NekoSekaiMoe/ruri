@@ -37,7 +37,7 @@ export SUBTEST_NO=3
 export SUBTEST_DESCRIPTION="Get rootfs.tar.xz"
 show_subtest_description
 check_if_succeed $?
-./rootfstool d -d alpine -v edge
+../test/rootfstool d -d alpine -v edge
 check_if_succeed $?
 pass_subtest
 
@@ -49,7 +49,7 @@ if [[ -e /tmp/test ]]; then
 fi
 if [[ -d /tmp/test ]]; then
     ./ruri -U /tmp/test
-    rm -rf /tmp/test
+     rm -rf /tmp/test
 fi
 dd if=/dev/zero of=test.img bs=1M count=256
 check_if_succeed $?
