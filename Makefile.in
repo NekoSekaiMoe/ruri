@@ -103,15 +103,14 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_ruri_OBJECTS = src/main.$(OBJEXT) src/caplist.$(OBJEXT) \
-	src/chroot.$(OBJEXT) src/cprintf.$(OBJEXT) src/info.$(OBJEXT) \
-	src/rurienv.$(OBJEXT) src/rurifetch.$(OBJEXT) \
-	src/seccomp.$(OBJEXT) src/signal.$(OBJEXT) \
-	src/umount.$(OBJEXT) src/unshare.$(OBJEXT) \
-	src/rootless.$(OBJEXT) src/mount.$(OBJEXT) src/k2v.$(OBJEXT) \
-	src/elf-magic.$(OBJEXT) src/config.$(OBJEXT) \
-	src/cgroup.$(OBJEXT) src/passwd.$(OBJEXT) src/ps.$(OBJEXT) \
-	src/easteregg/action.$(OBJEXT) \
+am_ruri_OBJECTS = src/caplist.$(OBJEXT) src/chroot.$(OBJEXT) \
+	src/cprintf.$(OBJEXT) src/info.$(OBJEXT) src/rurienv.$(OBJEXT) \
+	src/rurifetch.$(OBJEXT) src/seccomp.$(OBJEXT) \
+	src/signal.$(OBJEXT) src/umount.$(OBJEXT) \
+	src/unshare.$(OBJEXT) src/rootless.$(OBJEXT) \
+	src/mount.$(OBJEXT) src/k2v.$(OBJEXT) src/elf-magic.$(OBJEXT) \
+	src/config.$(OBJEXT) src/cgroup.$(OBJEXT) src/passwd.$(OBJEXT) \
+	src/ps.$(OBJEXT) src/easteregg/action.$(OBJEXT) \
 	src/easteregg/nekofeng.$(OBJEXT) src/easteregg/layer.$(OBJEXT) \
 	src/easteregg/typewriter.$(OBJEXT) src/ruri.$(OBJEXT)
 ruri_OBJECTS = $(am_ruri_OBJECTS)
@@ -135,13 +134,12 @@ am__depfiles_remade = src/$(DEPDIR)/caplist.Po src/$(DEPDIR)/cgroup.Po \
 	src/$(DEPDIR)/chroot.Po src/$(DEPDIR)/config.Po \
 	src/$(DEPDIR)/cprintf.Po src/$(DEPDIR)/elf-magic.Po \
 	src/$(DEPDIR)/info.Po src/$(DEPDIR)/k2v.Po \
-	src/$(DEPDIR)/main.Po src/$(DEPDIR)/mount.Po \
-	src/$(DEPDIR)/passwd.Po src/$(DEPDIR)/ps.Po \
-	src/$(DEPDIR)/rootless.Po src/$(DEPDIR)/ruri.Po \
-	src/$(DEPDIR)/rurienv.Po src/$(DEPDIR)/rurifetch.Po \
-	src/$(DEPDIR)/seccomp.Po src/$(DEPDIR)/signal.Po \
-	src/$(DEPDIR)/umount.Po src/$(DEPDIR)/unshare.Po \
-	src/easteregg/$(DEPDIR)/action.Po \
+	src/$(DEPDIR)/mount.Po src/$(DEPDIR)/passwd.Po \
+	src/$(DEPDIR)/ps.Po src/$(DEPDIR)/rootless.Po \
+	src/$(DEPDIR)/ruri.Po src/$(DEPDIR)/rurienv.Po \
+	src/$(DEPDIR)/rurifetch.Po src/$(DEPDIR)/seccomp.Po \
+	src/$(DEPDIR)/signal.Po src/$(DEPDIR)/umount.Po \
+	src/$(DEPDIR)/unshare.Po src/easteregg/$(DEPDIR)/action.Po \
 	src/easteregg/$(DEPDIR)/layer.Po \
 	src/easteregg/$(DEPDIR)/nekofeng.Po \
 	src/easteregg/$(DEPDIR)/typewriter.Po
@@ -305,7 +303,7 @@ top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = subdir-objects
 
 # Source files
-ruri_SOURCES = src/main.c src/caplist.c src/chroot.c src/cprintf.c \
+ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
                 src/info.c src/rurienv.c src/rurifetch.c src/seccomp.c \
                 src/signal.c src/umount.c src/unshare.c src/rootless.c \
                 src/mount.c src/k2v.c src/elf-magic.c src/config.c \
@@ -419,7 +417,6 @@ src/$(am__dirstamp):
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/caplist.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/chroot.$(OBJEXT): src/$(am__dirstamp) \
@@ -488,7 +485,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/elf-magic.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/info.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/k2v.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/mount.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/passwd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ps.Po@am__quote@ # am--include-marker
@@ -813,7 +809,6 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/elf-magic.Po
 	-rm -f src/$(DEPDIR)/info.Po
 	-rm -f src/$(DEPDIR)/k2v.Po
-	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/mount.Po
 	-rm -f src/$(DEPDIR)/passwd.Po
 	-rm -f src/$(DEPDIR)/ps.Po
@@ -885,7 +880,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/elf-magic.Po
 	-rm -f src/$(DEPDIR)/info.Po
 	-rm -f src/$(DEPDIR)/k2v.Po
-	-rm -f src/$(DEPDIR)/main.Po
 	-rm -f src/$(DEPDIR)/mount.Po
 	-rm -f src/$(DEPDIR)/passwd.Po
 	-rm -f src/$(DEPDIR)/ps.Po

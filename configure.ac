@@ -17,7 +17,7 @@ AC_DEFUN([AC_CHECK_CFLAGS], [
     )
 ])
 
-AC_CONFIG_SRCDIR([src/main.c])
+AC_CONFIG_SRCDIR([src/ruri.c])
 AC_CONFIG_HEADERS([config.h])
 
 # Check for programs
