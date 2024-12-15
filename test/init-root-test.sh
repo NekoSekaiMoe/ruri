@@ -1,5 +1,5 @@
 #!/bin/bash
-if DEBUG=1; then set -x; fi
+#if DEBUG=1; then set -x; fi
 source global.sh
 
 export TEST_NO=0
