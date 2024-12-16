@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-include /usr/share/dpkg/default.mk
+#include /usr/share/dpkg/default.mk
 
 # Uncomment this to turn on verbose mode.
 export DH_VERBOSE = 1
