@@ -25,7 +25,7 @@ jobs:
 
       - name: Setup Git
         run: |
-          rm -rf build doc logo
+          rm -rf -v build doc logo get-ruri.sh
           bash autogen.sh
           git config --global user.name "root"
           git config --global user.email "your_email@example.com"
