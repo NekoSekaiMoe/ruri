@@ -78,7 +78,6 @@ endif()
 # 设置默认的 CFLAGS 和 LDFLAGS
 set(CFLAGS_LIST
     "-flto=auto"
-    "-fPIE"
     "-pie"
     "-fstack-protector-all"
     "-fdata-sections"
@@ -162,11 +161,13 @@ configure_file(
 
 if (BUILD_LIB)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
     add_library(ruri SHARED ${SOURCES})
     install (TARGETS ruri DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/usr/lib/)
 else ()
 # add the executable
-    set(CMAKE_POSITION_INDEPENDENT_CODE FALSE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIE")
     add_executable(ruri ${SOURCES})
     add_custom_command(
         TARGET ruri
