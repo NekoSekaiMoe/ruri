@@ -5,10 +5,11 @@ on:
   push:
     paths:
       - 'CMakeLists.txt'
+      - '.github/workflows/cmake.yml'
 
 jobs:
   check_update:
-    name: Build and Release
+    name: Cmake Test
     runs-on: ubuntu-latest
     steps:
       - name: Check latest version
@@ -25,6 +26,6 @@ jobs:
           libc6-dev \
           binutils uidmap
       - name: Configure
-        run: cmake . -Gninja -DENABLE_DEBUG=on -DBUILD_LIB=on
+        run: cmake . -GNinja -DENABLE_DEBUG=on -DBUILD_LIB=on
       - name: Build
         run: ninja
