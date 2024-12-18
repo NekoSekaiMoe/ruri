@@ -1,0 +1,679 @@
+From 5c3bbcfddb0824ba2663e7c4d942d8b41c32eed7 Mon Sep 17 00:00:00 2001
+From: Moe-hacker <moe-hacker@outlook.com>
+Date: Wed, 18 Dec 2024 06:04:22 +0000
+Subject: [PATCH 1/8] Update libk2v
+
+---
+ src/include/k2v.h |  2 +-
+ src/k2v.c         | 54 ++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 54 insertions(+), 2 deletions(-)
+
+diff --git a/src/include/k2v.h b/src/include/k2v.h
+index c8f2fd6..42d0f5f 100644
+--- a/src/include/k2v.h
++++ b/src/include/k2v.h
+@@ -50,7 +50,7 @@
+ #endif
+ // Version info.
+ #define LIBK2V_MAJOR 2
+-#define LIBK2V_MINOR 1
++#define LIBK2V_MINOR 2
+ // Warning.
+ extern bool k2v_stop_at_warning;
+ extern bool k2v_show_warning;
+diff --git a/src/k2v.c b/src/k2v.c
+index e8c85f9..8a3ff6b 100644
+--- a/src/k2v.c
++++ b/src/k2v.c
+@@ -46,6 +46,58 @@ static void __k2v_lint(const char *_Nonnull buf);
+ // We use global variables here, because we need it to be simple for developers.
+ bool k2v_stop_at_warning = false;
+ bool k2v_show_warning = true;
++// Correct backslash.
++static char *correct_backslash(char *buf)
++{
++	/*
++	 * Delete the backslash.
++	 * '\n' -> '\n' (no change)
++	 * '\t' -> '\t' (no change)
++	 * '\r' -> '\r' (no change)
++	 * '\\' -> '\' (delete one backslash)
++	 * '\x' -> 'x' (delete the backslash)
++	 * '\0' -> '0' (delete the backslash)
++	 * '\"' -> '\"' (no change)
++	 * As I need it to follow the Shell standard,
++	 * '\"' will output as '\"'.
++	 */
++	char *ret = strdup(buf);
++	int j = 0;
++	for (size_t i = 0; i < strlen(buf); i++) {
++		if (buf[i] == '\\') {
++			if (i < strlen(buf) - 1) {
++				i++;
++				if (buf[i] == 'n') {
++					ret[j] = '\\';
++					j++;
++					ret[j] = 'n';
++				} else if (buf[i] == 't') {
++					ret[j] = '\\';
++					j++;
++					ret[j] = 't';
++				} else if (buf[i] == 'r') {
++					ret[j] = '\\';
++					j++;
++					ret[j] = 'r';
++				} else if (buf[i] == '"') {
++					ret[j] = '\\';
++					j++;
++					ret[j] = '"';
++				} else {
++					ret[j] = buf[i];
++				}
++				j++;
++				ret[j] = '\0';
++				continue;
++			}
++		}
++		ret[j] = buf[i];
++		j++;
++		ret[j] = '\0';
++	}
++	free(buf);
++	return ret;
++}
+ // Get the first line in buffer.
+ static char *get_current_line(const char *_Nonnull buf)
+ {
+@@ -110,7 +162,6 @@ size_t k2v_get_filesize(const char *_Nonnull path)
+ 	// To avoid overflow.
+ 	return (size_t)ret + 3;
+ }
+-
+ char *k2v_open_file(const char *_Nonnull path, size_t bufsize)
+ {
+ 	/*
+@@ -474,6 +525,7 @@ static char *line_get_right(const char *_Nonnull line)
+ 		ret[i + 1] = '\0';
+ 		break;
+ 	}
++	ret = correct_backslash(ret);
+ 	return ret;
+ }
+ static bool __k2v_is_array(const char *_Nonnull line)
+
+From 867d24fd7db82a7e496d2ef1a87ec08de567bf88 Mon Sep 17 00:00:00 2001
+From: Moe-hacker <moe-hacker@outlook.com>
+Date: Wed, 18 Dec 2024 06:21:16 +0000
+Subject: [PATCH 2/8] Rootless container will use limited .rurienv
+
+---
+ src/rurienv.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/src/rurienv.c b/src/rurienv.c
+index 020cfa6..94a64fa 100644
+--- a/src/rurienv.c
++++ b/src/rurienv.c
+@@ -321,6 +321,22 @@ struct RURI_CONTAINER *ruri_read_info(struct RURI_CONTAINER *_Nullable container
+ 		remove(file);
+ 		return container;
+ 	}
++	// Rootless container will only get ns_pid, work_dir and user.
++	// Because these config are safe.
++	if (container->rootless) {
++		container->ns_pid = k2v_get_key(int, "ns_pid", buf);
++		if (container->work_dir == NULL) {
++			container->work_dir = k2v_get_key(char, "work_dir", buf);
++		}
++		if (container->user == NULL) {
++			container->user = k2v_get_key(char, "user", buf);
++		}
++		free(buf);
++		// Unset timens offsets because it's already set.
++		container->timens_realtime_offset = 0;
++		container->timens_monotonic_offset = 0;
++		return container;
++	}
+ 	// Get capabilities to drop.
+ 	char *drop_caplist[RURI_CAP_LAST_CAP + 1] = { NULL };
+ 	int caplen = k2v_get_key(char_array, "drop_caplist", buf, drop_caplist, RURI_CAP_LAST_CAP);
+
+From cee13ce6a6b5ec7294c5f1f4c58e4032790a4ab9 Mon Sep 17 00:00:00 2001
+From: Moe-hacker <moe-hacker@outlook.com>
+Date: Wed, 18 Dec 2024 06:23:59 +0000
+Subject: [PATCH 3/8] Force rootless container join net ns
+
+---
+ src/rootless.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/src/rootless.c b/src/rootless.c
+index c3f782e..41186ba 100644
+--- a/src/rootless.c
++++ b/src/rootless.c
+@@ -327,18 +327,12 @@ void ruri_run_rootless_container(struct RURI_CONTAINER *_Nonnull container)
+ 			}
+ 		}
+ 		close(time_ns_fd);
+-		// Disable network.
+-		if (container->no_network) {
+-			char net_ns_file[PATH_MAX] = { '\0' };
+-			sprintf(net_ns_file, "%s%d%s", "/proc/", container->ns_pid, "/ns/net");
+-			int net_ns_fd = open(net_ns_file, O_RDONLY | O_CLOEXEC);
+-			if (net_ns_fd < 0) {
+-				ruri_error("{red}--no-network detected, but failed to open network namespace QwQ\n");
+-			}
+-			if (setns(net_ns_fd, CLONE_NEWNET) == -1) {
+-				ruri_error("{red}--no-network detected, but failed to setns network namespace QwQ\n");
+-			}
+-		}
++		// Join net ns.
++		// This action will be forced, and will not error.
++		char net_ns_file[PATH_MAX] = { '\0' };
++		sprintf(net_ns_file, "%s%d%s", "/proc/", container->ns_pid, "/ns/net");
++		int net_ns_fd = open(net_ns_file, O_RDONLY | O_CLOEXEC);
++		setns(net_ns_fd, CLONE_NEWNET);
+ 	} else {
+ 		// We need to own mount namespace.
+ 		try_unshare(CLONE_NEWNS);
+
+From c24139ef19fb9b21c6f33fa5b3c37e53d04300d6 Mon Sep 17 00:00:00 2001
+From: Moe-hacker <moe-hacker@outlook.com>
+Date: Wed, 18 Dec 2024 08:30:03 +0000
+Subject: [PATCH 5/8] Support part of bsd-style command-line usage
+
+---
+ Changelog  |   2 +
+ README.md  |   2 +
+ src/info.c |   2 +-
+ src/ruri.c | 375 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 380 insertions(+), 1 deletion(-)
+
+diff --git a/Changelog b/Changelog
+index acf15f6..7de90b9 100644
+--- a/Changelog
++++ b/Changelog
+@@ -1,3 +1,5 @@
++# v3.9:
++  * Support part of bsd-style command-line usage.
+ # v3.8:
+   * Support more platforms, currently supports: arm64, armv7, armhf, riscv64, i386, loong64, s390x, ppc64le and x86_64.
+   * Improve rootless container support.
+diff --git a/README.md b/README.md
+index 0c68b0c..49869bf 100644
+--- a/README.md
++++ b/README.md
+@@ -72,6 +72,8 @@ wget -q -O - https://ruri.nekofeng.com | bash -s -- -s
+ This will automatically download ruri binary to `./ruri`.      
+ # Usage:    
+ See [USAGE](doc/USAGE.md) to explore all features of ruri.         
++# About command-line:
++BSD style usage is partially supported now, for example, you can use `-pW /root`, but `-W/root` is not allowed.      
+ # WARNING:      
+ > [!WARNING]
+ > ruri should always be executed with root privileges(sudo), and do not set SUID or any capability on it!      
+diff --git a/src/info.c b/src/info.c
+index 7f2b952..598bbcd 100644
+--- a/src/info.c
++++ b/src/info.c
+@@ -153,7 +153,7 @@ void ruri_show_helps(void)
+ 	cprintf("{base}(*10) : This option need net ns, and will enable unshare feature by default\n");
+ 	cprintf("{base}(*11) : For example, `-I kvm 10 232` or `-I dri/card0 226 0`\n");
+ 	cprintf("{base}(*12) : This feature might not work. The value is in seconds. This feature will auto enable unshare\n");
+-	cprintf("{base}{clear}\n");
++	cprintf("\n{base}Note:\n") cprintf("{base}BSD style usage is partially supported now, for example, you can use `-pW /root`, but `-W/root` is not allowed.\n") cprintf("{base}{clear}\n");
+ }
+ // For `ruri -H`.
+ void ruri_show_examples(void)
+diff --git a/src/ruri.c b/src/ruri.c
+index 3d892fd..c8461a9 100644
+--- a/src/ruri.c
++++ b/src/ruri.c
+@@ -589,6 +589,381 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
+ 				container->command[0] = NULL;
+ 			}
+ 		}
++		// Parse BSD style command-line.
++		else if (argv[index][0] == '-') {
++			if (strlen(argv[index]) == 1) {
++				ruri_error("Invalid argument %s\n", argv[index]);
++			}
++			// Very shit. I know.
++			// At least it works.
++			int index_bk = index;
++			for (size_t i = 1; i < strlen(argv[index]); i++) {
++				if (index_bk != index) {
++					break;
++				}
++				switch (argv[index][i]) {
++				case 'r':
++					container->rootless = true;
++					break;
++				case 'D':
++					dump_config = true;
++					break;
++				case 'u':
++					container->enable_unshare = true;
++					break;
++				case 'n':
++					container->no_new_privs = true;
++					break;
++				case 'N':
++					container->use_rurienv = false;
++					break;
++				case 's':
++					container->enable_seccomp = true;
++					break;
++				case 'p':
++					privileged = true;
++					break;
++				case 'S':
++					container->mount_host_runtime = true;
++					break;
++				case 'R':
++					container->ro_root = true;
++					break;
++				case 'w':
++					container->no_warnings = true;
++					break;
++				case 'f':
++					fork_exec = true;
++					break;
++				case 'j':
++					container->just_chroot = true;
++					break;
++				case 'A':
++					container->unmask_dirs = true;
++					break;
++				case 'x':
++					container->no_network = true;
++					break;
++				case 'K':
++					container->use_kvm = true;
++					break;
++				case 'b':
++					background = true;
++					break;
++				case 'o':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if (index == argc - 1) {
++							ruri_error("{red}Please specify the output file\n{clear}");
++						}
++						output_path = argv[index];
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'c':
++					if (i == (strlen(argv[index]) - 1)) {
++						if (index == argc - 1) {
++							ruri_error("{red}Please specify a config file !\n{clear}");
++						}
++						index++;
++						ruri_read_config(container, argv[index]);
++						use_config_file = true;
++						index++;
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'a':
++					if (i == (strlen(argv[index]) - 1)) {
++						if (index == argc - 1) {
++							ruri_error("{red}Please specify the arch\n{clear}");
++						}
++						index++;
++						container->cross_arch = strdup(argv[index]);
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'q':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if (index == argc - 1) {
++							ruri_error("{red}Please specify the path of qemu binary\n{clear}");
++						}
++						container->qemu_path = strdup(argv[index]);
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'k':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if (argv[index] != NULL) {
++							// We both support capability name and number,
++							// because in the fulture, there might be new capabilities that
++							// we can not use the name to match it in current libcap.
++							if (atoi(argv[index]) != 0) {
++								ruri_add_to_caplist(keep_caplist_extra, atoi(argv[index]));
++							} else if (cap_from_name(argv[index], &cap) == 0) {
++								ruri_add_to_caplist(keep_caplist_extra, cap);
++								ruri_log("{base}Keep capability: %s\n", argv[index]);
++							} else {
++								ruri_error("{red}or: unknown capability `%s`\nQwQ{clear}\n", argv[index]);
++							}
++						} else {
++							ruri_error("{red}Missing argument\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'd':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if (argv[index] != NULL) {
++							if (atoi(argv[index]) != 0) {
++								ruri_add_to_caplist(drop_caplist_extra, atoi(argv[index]));
++							} else if (cap_from_name(argv[index], &cap) == 0) {
++								ruri_add_to_caplist(drop_caplist_extra, cap);
++							} else {
++								ruri_error("{red}Error: unknown capability `%s`\nQwQ{clear}\n", argv[index]);
++							}
++						} else {
++							ruri_error("{red}Missing argument\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'e':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if ((argv[index] != NULL) && (argv[index + 1] != NULL)) {
++							for (int i = 0; i < RURI_MAX_ENVS; i++) {
++								if (container->env[i] == NULL) {
++									container->env[i] = strdup(argv[index]);
++									index++;
++									container->env[i + 1] = strdup(argv[index]);
++									container->env[i + 2] = NULL;
++									break;
++								}
++								// Max 512 envs.
++								if (i == (RURI_MAX_ENVS - 1)) {
++									ruri_error("{red}Too many envs QwQ\n");
++								}
++							}
++						} else {
++							ruri_error("{red}Error: unknown env QwQ\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'm':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if ((argv[index] != NULL) && (argv[index + 1] != NULL)) {
++							if (strcmp(argv[index], "/") == 0) {
++								ruri_error("{red}/ is not allowed to use as a mountpoint QwQ\n");
++							}
++							for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
++								if (container->extra_mountpoint[i] == NULL) {
++									container->extra_mountpoint[i] = realpath(argv[index], NULL);
++									if (container->extra_mountpoint[i] == NULL) {
++										ruri_error("{red}mountpoint does not exist QwQ\n");
++									}
++									index++;
++									container->extra_mountpoint[i + 1] = strdup(argv[index]);
++									if (strcmp(argv[index], "/") == 0) {
++										free(container->extra_mountpoint[i]);
++										free(container->extra_mountpoint[i + 1]);
++										container->extra_mountpoint[i] = NULL;
++										container->extra_mountpoint[i + 1] = NULL;
++										if (container->rootfs_source == NULL) {
++											container->rootfs_source = realpath(argv[index - 1], NULL);
++										} else {
++											ruri_error("{red}You can only mount one source to / QwQ\n");
++										}
++									}
++									container->extra_mountpoint[i + 2] = NULL;
++									break;
++								}
++								// Max 512 mountpoints.
++								if (i == (RURI_MAX_MOUNTPOINTS - 1)) {
++									ruri_error("{red}Too many mountpoints QwQ\n");
++								}
++							}
++						} else {
++							ruri_error("{red}Error: unknown mountpoint QwQ\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'M':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if ((argv[index] != NULL) && (argv[index + 1] != NULL)) {
++							for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
++								if (container->extra_ro_mountpoint[i] == NULL) {
++									container->extra_ro_mountpoint[i] = realpath(argv[index], NULL);
++									if (container->extra_ro_mountpoint[i] == NULL) {
++										ruri_error("{red}mountpoint does not exist QwQ\n");
++									}
++									index++;
++									container->extra_ro_mountpoint[i + 1] = strdup(argv[index]);
++									container->extra_ro_mountpoint[i + 2] = NULL;
++									if (strcmp(argv[index], "/") == 0) {
++										free(container->extra_ro_mountpoint[i]);
++										free(container->extra_ro_mountpoint[i + 1]);
++										container->extra_ro_mountpoint[i] = NULL;
++										container->extra_ro_mountpoint[i + 1] = NULL;
++										if (container->rootfs_source == NULL) {
++											container->rootfs_source = realpath(argv[index - 1], NULL);
++											container->ro_root = true;
++										} else {
++											ruri_error("{red}You can only mount one source to / QwQ\n");
++										}
++									}
++									break;
++								}
++								// Max 512 mountpoints.
++								if (i == (RURI_MAX_MOUNTPOINTS - 1)) {
++									ruri_error("{red}Too many mountpoints QwQ\n");
++								}
++							}
++						} else {
++							ruri_error("{red}Error: unknown mountpoint QwQ\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'l':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if ((argv[index] != NULL)) {
++							parse_cgroup_settings(argv[index], container);
++						} else {
++							ruri_error("{red}Unknown cgroup option\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'W':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if (index < argc) {
++							container->work_dir = strdup(argv[index]);
++						} else {
++							ruri_error("{red}Unknown work directory\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'E':
++					if (i == (strlen(argv[index]) - 1)) {
++						if (index == argc - 1) {
++							ruri_error("{red}Please specify the user\n{clear}");
++						}
++						index++;
++						container->user = strdup(argv[index]);
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 't':
++					if (i == (strlen(argv[index]) - 1)) {
++						if (index == argc - 1) {
++							ruri_error("{red}Please specify the hostname !\n{clear}");
++						}
++						index++;
++						container->hostname = strdup(argv[index]);
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'I':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if ((argv[index] != NULL) && (argv[index + 1] != NULL) && (argv[index + 2] != NULL)) {
++							for (int i = 0; i < RURI_MAX_CHAR_DEVS; i++) {
++								if (container->char_devs[i] == NULL) {
++									container->char_devs[i] = strdup(argv[index]);
++									index++;
++									if (atoi(argv[index]) <= 0) {
++										ruri_error("{red}Error: invalid major number QwQ\n");
++									}
++									container->char_devs[i + 1] = strdup(argv[index]);
++									index++;
++									if (atoi(argv[index]) <= 0 && strcmp(argv[index], "0") != 0) {
++										ruri_error("{red}Error: invalid minor number QwQ\n");
++									}
++									container->char_devs[i + 2] = strdup(argv[index]);
++									container->char_devs[i + 3] = NULL;
++									break;
++								}
++								if (i == (RURI_MAX_CHAR_DEVS - 1)) {
++									ruri_error("{red}Too many char devices QwQ\n");
++								}
++							}
++						} else {
++							ruri_error("{red}Error: unknown char devices QwQ\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'i':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						container->hidepid = atoi(argv[index]);
++						if (container->hidepid < 0 || container->hidepid > 2) {
++							ruri_error("{red}hidepid should be in range 0-2\n");
++						}
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'T':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if (argv[index] != NULL) {
++							container->timens_monotonic_offset = strtoll(argv[index], NULL, 10);
++						} else {
++							ruri_error("{red}Error: unknown time ns offset QwQ\n");
++						}
++						index++;
++						if (argv[index] != NULL) {
++							container->timens_realtime_offset = strtoll(argv[index], NULL, 10);
++						} else {
++							ruri_error("{red}Error: unknown time ns offset QwQ\n");
++						}
++						container->enable_unshare = true;
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				case 'L':
++					if (i == (strlen(argv[index]) - 1)) {
++						index++;
++						if (index == argc - 1) {
++							ruri_error("{red}Please specify the log file\n{clear}");
++						}
++						background = true;
++						log_file = argv[index];
++					} else {
++						ruri_error("Invalid argument %s\n", argv[index]);
++					}
++					break;
++				default:
++					ruri_error("Invalid argument %s\n", argv[index]);
++				}
++			}
++		}
+ 		// For unknown arguments, yeah I didn't forgot it...
+ 		else {
+ 			ruri_show_helps();
+
+From 04ec4c69081a77776485de90396a74ed759c069f Mon Sep 17 00:00:00 2001
+From: Moe-hacker <moe-hacker@outlook.com>
+Date: Wed, 18 Dec 2024 08:53:26 +0000
+Subject: [PATCH 6/8] Fix Built-in Seccomp profile
+
+---
+ src/seccomp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/seccomp.c b/src/seccomp.c
+index 986ce86..8440ddb 100644
+--- a/src/seccomp.c
++++ b/src/seccomp.c
+@@ -58,7 +58,7 @@ void ruri_setup_seccomp(const struct RURI_CONTAINER *_Nonnull container)
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(umount2), 0);
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(unshare), 0);
+ 		// clone(2) can have the same effect as unshare(2), we deny it.
+-		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(clone), 1, SCMP_CMP(0, SCMP_CMP_MASKED_EQ, CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC | CLONE_NEWUSER | CLONE_NEWPID | CLONE_NEWNET));
++		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(clone), 1, SCMP_CMP(2, SCMP_CMP_MASKED_EQ, CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC | CLONE_NEWUSER | CLONE_NEWPID | CLONE_NEWNET, CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC | CLONE_NEWUSER | CLONE_NEWPID | CLONE_NEWNET));
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(vm86), 0);
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(vm86old), 0);
+ 	}
+
+From 9396ea69d4602053f84ab44451bd2d944c4d0dff Mon Sep 17 00:00:00 2001
+From: Moe-hacker <moe-hacker@outlook.com>
+Date: Wed, 18 Dec 2024 09:02:26 +0000
+Subject: [PATCH 7/8] Fix Built-in Seccomp profile
+
+---
+ src/seccomp.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/seccomp.c b/src/seccomp.c
+index 8440ddb..8d66905 100644
+--- a/src/seccomp.c
++++ b/src/seccomp.c
+@@ -90,7 +90,6 @@ void ruri_setup_seccomp(const struct RURI_CONTAINER *_Nonnull container)
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(kcmp), 0);
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(process_vm_readv), 0);
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(process_vm_writev), 0);
+-		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(ptrace), 0);
+ 	}
+ 	if (ruri_is_in_caplist(container->drop_caplist, CAP_SYS_BOOT)) {
+ 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(kexec_file_load), 0);
+
+From 0e7746adde2caa465897ec5cbe7c16f562cdb0ec Mon Sep 17 00:00:00 2001
+From: Moe-hacker <moe-hacker@outlook.com>
+Date: Wed, 18 Dec 2024 09:13:57 +0000
+Subject: [PATCH 8/8] Update changelog.
+
+---
+ Changelog | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Changelog b/Changelog
+index 7de90b9..32b440a 100644
+--- a/Changelog
++++ b/Changelog
+@@ -1,5 +1,6 @@
+ # v3.9:
+   * Support part of bsd-style command-line usage.
++  * Fix built-in seccomp profile.
+ # v3.8:
+   * Support more platforms, currently supports: arm64, armv7, armhf, riscv64, i386, loong64, s390x, ppc64le and x86_64.
+   * Improve rootless container support.

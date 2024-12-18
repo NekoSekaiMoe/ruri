@@ -28,11 +28,5 @@
  *
  *
  */
-// config.h.in
-#ifndef CONFIG_H
-#define CONFIG_H
-
 // Version info.
-#define RURI_VERSION "3.8-rc1"
-
-#endif // CONFIG_H
+#define RURI_VERSION "3.8"
