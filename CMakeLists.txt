@@ -101,7 +101,8 @@ set(CFLAGS_LIST
     "-Wno-newline-eof"
     "-Wno-gnu-zero-variadic-macro-arguments"
     "-pedantic"
-    "-pipe")
+    "-pipe"
+)
 
 foreach(flag IN LISTS CFLAGS_LIST)
     try_compile(result ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/check_flag.c COMPILE_DEFINITIONS ${flag})
