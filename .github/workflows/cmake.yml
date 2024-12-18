@@ -28,4 +28,4 @@ jobs:
       - name: Configure
         run: cmake . -GNinja -DENABLE_DEBUG=on -DBUILD_LIB=on
       - name: Build
-        run: ninja
+        run: ninja -v
