@@ -3,6 +3,8 @@ name: Build deb
 on:
   workflow_dispatch:
   push:
+  paths:
+      - 'debian/**'
 
 jobs:
   check_update:

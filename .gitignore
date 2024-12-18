@@ -31,3 +31,7 @@ src/.deps/
 config.h
 config.status
 Makefile
+
+CMakeFiles/
+CMakeCache.txt
+build.ninja
