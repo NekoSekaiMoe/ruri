@@ -161,7 +161,7 @@ configure_file(
 )
 
 if (BUILD_LIB)
-    set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
     add_library(ruri SHARED ${SOURCES})
     install (TARGETS ruri DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/usr/lib/)
 else ()
