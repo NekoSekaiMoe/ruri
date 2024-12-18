@@ -3,7 +3,7 @@ name: Build deb
 on:
   workflow_dispatch:
   push:
-  paths:
+    paths:
       - 'debian/**'
 
 jobs:
