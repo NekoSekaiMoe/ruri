@@ -53,6 +53,7 @@ static void sighandle(int sig){
     std::cout << errorMsg << std::endl;
     LOG_ERROR();
     write_log(errorMsg.c_str());
+    std::cout << "Log file path: " << std::filesystem::current_path() << "/program_crash.log" << std::endl;
 
     // 获取调用栈
     #ifdef __GLIBC__
@@ -93,8 +94,7 @@ int main() {
     std::array<char, 128> buffer;
     std::string result;
 
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("ls", "-la"), pclose);
-    //std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("bash ./test-root.sh", ""), pclose);
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("bash ./test-root.sh", "r"), pclose);
     if (!pipe) {
         std::cerr << "Failed to run script." << std::endl;
         return 1;
@@ -105,7 +105,7 @@ int main() {
         result += buffer.data();
     }
 
-    status = pclose(pipe.get());
+    //status = pclose(pipe.get());
 
     if (status != 0) {
         std::cerr << "Script failed with exit status: " << status << std::endl;
