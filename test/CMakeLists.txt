@@ -2,12 +2,11 @@ cmake_minimum_required(VERSION 3.10)
 
 project(ruri_test LANGUAGES CXX)
 
-add_executable(ruri_test main.cpp)
-add_executable(test_cpp test.cpp)
+add_executable(test-root main.cpp)
 
 enable_testing()
 
-add_test(NAME ${PROJECT_NAME} COMMAND sudo bash ${CMAKE_SOURCE_DIR}/test-root.sh)
+add_test(NAME ${PROJECT_NAME} COMMAND echo "run" | sudo gdb ./test-root)
 
 set(CTEST_OUTPUT_ON_FAILURE ON)
 
