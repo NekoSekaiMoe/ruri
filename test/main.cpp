@@ -93,7 +93,7 @@ int main() {
     std::array<char, 128> buffer;
     std::string result;
 
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("./test-root.sh", ""), pclose);
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("bash ./test-root.sh", ""), pclose);
     if (!pipe) {
         std::cerr << "Failed to run script." << std::endl;
         return 1;
