@@ -7,6 +7,7 @@
 #include <csignal>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <filesystem>
 #ifdef __GLIBC__
 #include <execinfo.h> // For backtrace
 #else
