@@ -10,10 +10,12 @@ ruri-arm64.zip
 peda-*
 # Build dir.
 out
+test/out
 # Tmp file.
 TODO
 *.save
 a.out
+test/a.out
 t.c
 config.mk
 *.pyc
