@@ -4,8 +4,6 @@ ruri-amd64.zip
 ruri-arm64.zip
 # Editor configuration.
 .vscode/
-.idea/
-.editorconfig
 # Gdb log
 peda-*
 # Build dir.
@@ -18,20 +16,9 @@ t.c
 config.mk
 *.pyc
 debian/ruri
-#debian/source
+debian/source
 debian/.debhelper
 debian/debhelper-build-stamp
 debian/files
 tmpdir*
-
-src/.deps/
-autom4te.cache
-.deps/
-src/.deps/
-config.h
-config.status
-Makefile
-
-CMakeFiles/
-CMakeCache.txt
-build.ninja
+test-root
