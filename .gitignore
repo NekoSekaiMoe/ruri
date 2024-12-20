@@ -23,7 +23,8 @@ debian/.debhelper
 debian/debhelper-build-stamp
 debian/files
 tmpdir*
-
+test-root
+#build system files
 src/.deps/
 autom4te.cache
 .deps/
@@ -31,7 +32,6 @@ src/.deps/
 config.h
 config.status
 Makefile
-
 CMakeFiles/
 CMakeCache.txt
 build.ninja
