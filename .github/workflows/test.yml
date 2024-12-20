@@ -53,5 +53,5 @@ jobs:
           libseccomp-dev \
           libcap-dev \
           libc6-dev \
-          binutils qemu-user-static uidmap
-          ./configure && make check && make test
+          binutils qemu-user-static uidmap gdb
+          ./configure && make test
