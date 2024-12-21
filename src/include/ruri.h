@@ -107,6 +107,7 @@
 #include "elf-magic.h"
 #ifdef HAVE_CONFIG_H
 #include "../../config.h"
+#define RURI_VERSION VERSION
 #else
 #include "version.h"
 #endif
