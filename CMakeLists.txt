@@ -122,7 +122,7 @@ option(BUILD_LIB "BUILD with lib" OFF)
 
 # 根据调试选项修改 CFLAGS
 if(ENABLE_DEBUG)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")
 else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
 endif()
@@ -150,7 +150,7 @@ else()
     file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/easteregg/*.c)
 endif()
 
-set(VERSION 3.8-rc1)
+set(VERSION 3.8)
 set(RURI_VERSION ${VERSION})
 
 configure_file(
