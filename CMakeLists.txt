@@ -6,6 +6,33 @@ project(ruri LANGUAGES C)
 # 检查头文件
 include(CheckIncludeFile)
 
+enable_testing()
+add_subdirectory(test)
+
+execute_process(
+    COMMAND date "+%Y-%m-%d"
+    OUTPUT_VARIABLE CMAKE_CURRENT_DATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+execute_process(
+    COMMAND date "+%H:%M:%S"
+    OUTPUT_VARIABLE CMAKE_CURRENT_TIME
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+add_definitions(-DBUILD_DATE="${CMAKE_CURRENT_DATE}")
+add_definitions(-DBUILD_TIME="${CMAKE_CURRENT_TIME}")
+
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+    message(STATUS "Using ccache: ${CCACHE_FOUND}")
+else()
+    message(STATUS "Ccache not found. Compiling with cache will be disabled.")
+endif(CCACHE_FOUND)
+
 check_include_file("time.h" HAVE_TIME_H)
 check_include_file("grp.h" HAVE_GRP_H)
 check_include_file("fcntl.h" HAVE_FCNTL_H)
