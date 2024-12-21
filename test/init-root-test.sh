@@ -17,7 +17,6 @@ export TMPDIR=$(realpath ${TMPDIR})
 mkdir out
 cd out
 cp ../* . -r
-make clean
 ./configure --enable-debug
 check_if_succeed $?
 make
