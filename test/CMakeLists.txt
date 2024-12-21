@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(ruri_test LANGUAGES CXX)
 
 add_executable(test-root main.cpp)
+add_compile_options(-g3 -O0)
 
 if (VERSION)
     add_test(NAME ${PROJECT_NAME} COMMAND cd test; echo "run" | sudo gdb ./test-root)
