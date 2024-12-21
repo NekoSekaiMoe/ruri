@@ -105,7 +105,11 @@
 #define RURI_MAX_CHAR_DEVS (128 * 3)
 // Include other headers.
 #include "elf-magic.h"
+#ifdef HAVE_CONFIG_H
+#include "../../config.h"
+#else
 #include "version.h"
+#endif
 #include "k2v.h"
 #include "cprintf.h"
 #include "hostarch.h"
