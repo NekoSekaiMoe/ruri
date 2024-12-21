@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'debian/**'
+      - '.github/workflows/deb.yml'
 
 jobs:
   check_update:
@@ -27,7 +28,7 @@ jobs:
 
       - name: Setup Git
         run: |
-          rm -rf -v build doc logo get-ruri.sh
+          rm -rf -v build doc logo get-ruri.sh src/include/ruri.h
           bash autogen.sh
           git config --global user.name "root"
           git config --global user.email "your_email@example.com"
