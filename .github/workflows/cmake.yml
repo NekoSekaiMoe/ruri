@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'CMakeLists.txt'
+      - 'test/CMakeLists.txt'
       - '.github/workflows/cmake.yml'
 
 jobs:
