@@ -60,7 +60,7 @@ LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 # Handle optional flags for debug and static builds
 AC_ARG_ENABLE([debug],
     AS_HELP_STRING([--enable-debug], [Enable debug build]),
-    [if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g3 -O0 -DDEBUG_BUILD"; else CFLAGS="$CFLAGS -O2 -DNDEBUG"; fi])
+    [if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS  -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV"; else CFLAGS="$CFLAGS -O3 -DNDEBUG"; fi])
     AM_CONDITIONAL([ENABLE_DEBUG], [test "x$enable_debug" = "xyes"])
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
