@@ -146,7 +146,7 @@ option(BUILD_LIB "BUILD with lib" OFF)
 
 # 根据调试选项修改 CFLAGS
 if(ENABLE_DEBUG)
-    message(STATUS "Warning: DEBUG mode is enabled")
+    message(WARNING "Warning: DEBUG mode is enabled")
     enable_testing()
     add_subdirectory(test)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")

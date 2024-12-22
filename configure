@@ -5092,7 +5092,7 @@ LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 # Check whether --enable-debug was given.
 if test ${enable_debug+y}
 then :
-  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS  -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
+  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS  -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
 printf "%s\n" "$as_me: Warning: DEBUG mode is enabled." >&6;}; else CFLAGS="$CFLAGS -O3 -DNDEBUG"; fi
 fi
 
