@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(ruri_test LANGUAGES CXX)
+project(test-root LANGUAGES CXX)
 
 add_executable(test-root main.cpp)
 add_compile_options(-g3)
