@@ -14,12 +14,9 @@ ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
                 src/easteregg/typewriter.c src/ruri.c
 
 # Compiler and linker flags
-AM_CFLAGS = -Wall -Wextra -pedantic -Wconversion -Wno-unused-result -ffunction-sections -fdata-sections -fstack-protector-all  -D_FORTIFY_SOURCE=3
-# Include additional directories
-AM_CFLAGS = -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
+AM_CFLAGS = -Wall -Wextra -pedantic -Wconversion -Wno-unused-result -ffunction-sections -fdata-sections -fstack-protector-all  -D_FORTIFY_SOURCE=3  -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
 
-AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now
-AM_LDFLAGS += -Wl,--gc-sections -lcap -lseccomp -lpthread
+AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now -Wl,--gc-sections -lcap -lseccomp -lpthread
 
 if ENABLE_STRIP
 strip_target:
@@ -52,4 +49,4 @@ check:
 
 .PHONY: test
 test:
-	cd test && make -f test.mk test
+	$(MAKE) -C test -f Makefile.test test

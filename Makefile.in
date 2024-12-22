@@ -311,10 +311,10 @@ ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
                 src/easteregg/nekofeng.c src/easteregg/layer.c \
                 src/easteregg/typewriter.c src/ruri.c
 
-# Include additional directories
-AM_CFLAGS = -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
-AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now \
-	-Wl,--gc-sections -lcap -lseccomp -lpthread
+
+# Compiler and linker flags
+AM_CFLAGS = -Wall -Wextra -pedantic -Wconversion -Wno-unused-result -ffunction-sections -fdata-sections -fstack-protector-all  -D_FORTIFY_SOURCE=3  -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
+AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now -Wl,--gc-sections -lcap -lseccomp -lpthread
 AM_V_CC = $(AM_V)echo "  CC       " $@;
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -952,7 +952,7 @@ check:
 
 .PHONY: test
 test:
-	cd test && make -f test.mk test
+	$(MAKE) -C test -f Makefile.test test
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
