@@ -17,6 +17,7 @@ on:
       - 'test/**'
       - 'configure'
       - 'Makefile.in'
+      - '.github/workflows/test.yml'
   pull_request:
 
 jobs:
@@ -44,8 +45,7 @@ jobs:
     strategy:
       matrix:
         include:
-        - build: ubuntu-latest
-
+        - build: cmake
         - build: autoconf
     steps:
       - uses: actions/checkout@v4
