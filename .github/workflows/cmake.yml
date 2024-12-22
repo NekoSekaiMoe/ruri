@@ -1,4 +1,4 @@
-name: Build deb
+name: CMake test
 
 on:
   workflow_dispatch:
