@@ -52,4 +52,4 @@ check:
 
 .PHONY: test
 test:
-	make -C test
+	cd test && make -f test.mk test
