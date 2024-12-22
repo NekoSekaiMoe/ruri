@@ -63,4 +63,4 @@ jobs:
           if [ ${{ matrix.build }} = "cmake" ]; then
               sed -i 's|./configure --enable-debug|cmake . -G"Unix Makefiles" -DENABLE_DEBUG=on|' test/init-root-test.sh
           fi    
-          make -C test debug-gdb
+          make -C test -f Makefile.test debug-gdb
