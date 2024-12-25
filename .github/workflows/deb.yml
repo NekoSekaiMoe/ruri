@@ -41,7 +41,7 @@ jobs:
           git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
           sudo dpkg-buildpackage -F -d
       - name: build aarch64 deb
-        run: bash build/build-deb.sh
+        run: bash arm64.sh
 
       - name: Release
         uses: softprops/action-gh-release@v2
