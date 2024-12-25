@@ -39,5 +39,5 @@ apt build-dep . -y
 dpkg-buildpackage -b -us -uc -d
 EOF
 sudo chmod +x aarch64/build.sh
-sudo ./ruri/ruri -a aarch64 -q /usr/bin/qemu-aarch64-static ./aarch64 /bin/sh /build.sh
+sudo ruri -a aarch64 -q /usr/bin/qemu-aarch64-static ./aarch64 /bin/sh /build.sh
 sudo mv aarch64/*.deb ..
