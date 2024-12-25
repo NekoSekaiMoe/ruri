@@ -44,9 +44,9 @@ AM_V = $(if $(VERBOSE),, @)
 AM_V_CC = $(AM_V)echo "  CC       " $@;
 
 # Custom commands
-check:
-	clang-tidy $(ruri_SOURCES)
+.PHONY: ruritest codecheck
 
-.PHONY: ruritest
+codecheck:
+	clang-tidy $(ruri_SOURCES)
 ruritest:
 	$(MAKE) -C test -f Makefile.test test

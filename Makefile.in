@@ -947,10 +947,10 @@ uninstall-am: uninstall-binPROGRAMS
 @ENABLE_DEBUG_FALSE@install-data-hook: strip_target upx_target
 
 # Custom commands
-check:
-	clang-tidy $(ruri_SOURCES)
+.PHONY: ruritest codecheck
 
-.PHONY: ruritest
+codecheck:
+	clang-tidy $(ruri_SOURCES)
 ruritest:
 	$(MAKE) -C test -f Makefile.test test
 
