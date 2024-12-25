@@ -950,8 +950,8 @@ uninstall-am: uninstall-binPROGRAMS
 check:
 	clang-tidy $(ruri_SOURCES)
 
-.PHONY: test
-test:
+.PHONY: ruritest
+ruritest:
 	$(MAKE) -C test -f Makefile.test test
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
