@@ -6,6 +6,7 @@ on:
     paths:
       - 'debian/**'
       - '.github/workflows/deb.yml'
+      - 'build/build-deb.sh'
 
 jobs:
   check_update:
