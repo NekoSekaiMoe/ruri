@@ -26,10 +26,6 @@ mkdir aarch64
 #sudo debootstrap --arch=arm64 --variant=minbase bookworm aarch64
 aria2c https://github.com/2cd/debian-museum/releases/download/12/12_bookworm_arm64.tar.zst -o root.tar.zst
 tar -xf root.tar.zst -C aarch64
-rm -rf -v scripts/009-ps3libraries.sh
-sudo cp -rv depends patches scripts aarch64/
-sudo cp -v toolchain.sh aarch64/build.sh
-sudo chmod +x -v aarch64/build.sh
 sudo rm aarch64/etc/resolv.conf
 sudo echo nameserver 8.8.8.8 >aarch64/etc/resolv.conf
 sudo cat | sudo tee -a aarch64/build.sh <<EOF
@@ -42,5 +38,6 @@ cd ruri
 apt build-dep . -y
 dpkg-buildpackage -b -us -uc -d
 EOF
+sudo chmod +x aarch64/build.sh
 sudo ./ruri/ruri -a aarch64 -q /usr/bin/qemu-aarch64-static ./aarch64 /bin/sh /build.sh
 sudo mv aarch64/*.deb ..
