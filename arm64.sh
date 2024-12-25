@@ -10,8 +10,8 @@ sudo apt install --no-install-recommends -y curl xz-utils git aria2 \
   libc6-dev \
   binutils qemu-user-static
 
-git clone https://github.com/moe-hacker/ruri
-cd ruri
+git clone https://github.com/dpkg123/ruri 1
+cd 1
 cc -Wl,--gc-sections -ftree-vectorize -flto -funroll-loops -finline-functions -march=native -mtune=native -static src/*.c src/easteregg/*.c -o ruri -lcap -lseccomp -lpthread -O3 -Wno-error
 strip ruri
 cp -v ruri /usr/local/bin/
