@@ -14,9 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     container: debian:bookworm
     steps:
-      - name: Check latest version
-        uses: actions/checkout@v4
-
       - name: Test
         run: |
           apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf qemu-user-static
@@ -27,6 +24,9 @@ jobs:
           libcap-dev \
           libc6-dev \
           binutils uidmap
+
+      - name: Check latest version
+        uses: actions/checkout@v4
 
       - name: Setup Git
         run: |
