@@ -1,4 +1,4 @@
-ruri (3.8) unstable; urgency=medium
+ruri (3.8-1) unstable; urgency=medium
 
   [ Moe-hacker ]
   * Improve rootless container support.
@@ -27,7 +27,7 @@ ruri (3.8) unstable; urgency=medium
 
  -- Moe-hacker <admin@crack.moe>  Sat, 07 Dec 2024 17:36:54 +0800
 
-ruri (3.7) unstable; urgency=medium
+ruri (3.7-1) unstable; urgency=medium
 
   [ Moe-hacker ]
   * Initial release
