@@ -9,9 +9,10 @@ on:
       - 'arm64.sh'
 
 jobs:
-  check_update:
-    name: Build and Release
+  amd64:
+    name: Build amd64 deb
     runs-on: ubuntu-latest
+    container: debian:bookworm
     steps:
       - name: Check latest version
         uses: actions/checkout@v4
@@ -29,7 +30,7 @@ jobs:
 
       - name: Setup Git
         run: |
-          rm -rf -v build logo get-ruri.sh src/include/version.h
+          rm -rf -v build logo get-ruri.sh src/include/version.h arm64.sh
           bash autogen.sh
           git config --global user.name "root"
           git config --global user.email "your_email@example.com"
@@ -40,9 +41,36 @@ jobs:
         run: |
           git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
           sudo dpkg-buildpackage -F -d
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruri-deb-amd64
+          path: ../ruri*
+
+
+  arm64:
+    name: Build arm64 deb
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check latest version
+        uses: actions/checkout@v4
+
       - name: build aarch64 deb
         run: bash arm64.sh
 
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruri-deb-amd64
+          path: ../ruri*
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check latest version
+        uses: actions/download-artifact@v4
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
@@ -50,4 +78,4 @@ jobs:
           name: rurideb-${{ github.sha }}
           prerelease: false
           files: |
-             ../ruri*
+             ruri*
