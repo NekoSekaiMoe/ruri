@@ -65,7 +65,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: ruri-deb-amd64
+          name: ruri-deb-arm64
           path: build/ruri*
 
   release:
