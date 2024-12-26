@@ -60,7 +60,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: build aarch64 deb
-        run: mkdir -p build && bash arm64.sh && mv -v aarch64/ruri_3.8-1_arm64.deb build
+        run: mkdir -p build && bash arm64.sh && mv -v ../ruri_3.8-1_arm64.deb build
 
       - name: Upload
         uses: actions/upload-artifact@v4
