@@ -40,14 +40,16 @@ jobs:
 
       - name: build amd64 deb
         run: |
-          git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
+          git archive --prefix=ruri-3.8/ -o ../ruri_3.8-1.orig.tar.gz HEAD
           dpkg-buildpackage -F -d
+          mkdir -p build
+          mv ../ruri* build
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: ruri-deb-amd64
-          path: ../ruri*
+          path: build/ruri*
 
 
   arm64:
@@ -58,13 +60,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: build aarch64 deb
-        run: bash arm64.sh
+        run: mkdir -p build bash &&  arm64.sh && mv ../ruri* build
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: ruri-deb-amd64
-          path: ../ruri*
+          path: ruri*
 
   release:
     name: Release
