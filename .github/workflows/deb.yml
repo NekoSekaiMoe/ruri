@@ -41,7 +41,7 @@ jobs:
       - name: build amd64 deb
         run: |
           git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
-          sudo dpkg-buildpackage -F -d
+          dpkg-buildpackage -F -d
 
       - name: Upload
         uses: actions/upload-artifact@v4
