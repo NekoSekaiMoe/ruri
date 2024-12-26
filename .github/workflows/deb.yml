@@ -40,7 +40,7 @@ jobs:
 
       - name: build amd64 deb
         run: |
-          git archive --prefix=ruri-3.8/ -o ../ruri_3.8-1.orig.tar.gz HEAD
+          git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
           dpkg-buildpackage -F -d
           mkdir -p build
           mv ../ruri* build
