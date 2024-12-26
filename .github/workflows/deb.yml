@@ -19,8 +19,8 @@ jobs:
 
       - name: Test
         run: |
-          sudo apt update&&sudo apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf qemu-user-static
-          yes | sudo apt install --no-install-recommends -y curl xz-utils \
+          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf qemu-user-static
+          yes | apt install --no-install-recommends -y curl xz-utils \
           make \
           clang-tidy \
           libseccomp-dev \
