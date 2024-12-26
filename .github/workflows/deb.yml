@@ -67,6 +67,9 @@ jobs:
 
   release:
     name: Release
+    needs:
+      - amd64
+      - arm64
     runs-on: ubuntu-latest
     steps:
       - name: Check latest version
