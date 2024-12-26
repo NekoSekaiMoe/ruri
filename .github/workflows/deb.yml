@@ -30,6 +30,7 @@ jobs:
 
       - name: Setup Git
         run: |
+          git config --global --add safe.directory /__w/ruri/ruri
           rm -rf -v build logo get-ruri.sh src/include/version.h arm64.sh
           bash autogen.sh
           git config --global user.name "root"
