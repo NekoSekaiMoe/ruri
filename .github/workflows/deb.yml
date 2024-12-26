@@ -84,4 +84,5 @@ jobs:
           name: rurideb-${{ github.sha }}
           prerelease: false
           files: |
-             ruri*
+             ruri-deb-arm64/*
+             ruri-deb-amd64/*
