@@ -32,7 +32,7 @@ sudo cat | sudo tee -a aarch64/build.sh <<EOF
 #!/bin/bash
 set -x
 apt update
-apt install dpkg-dev git -y
+apt install dpkg-dev git upx strip -y
 git clone https://github.com/dpkg123/ruri --depth=1
 cd ruri
 apt build-dep . -y
