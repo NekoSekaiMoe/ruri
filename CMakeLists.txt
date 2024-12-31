@@ -196,9 +196,7 @@ else ()
         COMMAND strip ruri
         VERBATIM
         )
-    if(PROJECT_LICENSE)
         install (TARGETS ruri DESTINATION /usr/bin/)
-    endif()
 endif()
 
 # on linux clang 14
