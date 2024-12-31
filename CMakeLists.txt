@@ -169,20 +169,7 @@ execute_process(
 
 add_definitions(-DRURI_COMMIT_ID="${GIT_COMMIT_ID}")
 
-if(PROJECT_LICENSE)
-    file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/ruri/src/*.c ${CMAKE_SOURCE_DIR}/ruri/src/easteregg/*.c)
-else()
-    file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/easteregg/*.c)
-endif()
-
-set(VERSION 3.8)
-set(RURI_VERSION ${VERSION})
-
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in"  # 源文件路径
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/version.h"     # 目标文件路径
-  @ONLY
-)
+file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/easteregg/*.c)
 
 if (BUILD_LIB)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -207,9 +194,13 @@ endif()
 
 # on linux clang 14
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    find_library(LCAP cap)
-    find_library(LSECCOMP seccomp)
-    target_link_libraries(ruri ${LCAP} ${LSECCOMP})
+    if (ENABLE_STATIC)
+        target_link_libraries(ruri -lcap -lseccomp)
+    else()
+        find_library(LCAP cap)
+        find_library(LSECCOMP seccomp)
+        target_link_libraries(ruri ${LCAP} ${LSECCOMP})
+    endif()
 endif()
 
 add_custom_target(
