@@ -86,6 +86,15 @@ find_library(CAP_LIBRARY cap)
 find_library(SECCOMP_LIBRARY seccomp)
 find_library(PTHREAD_LIBRARY pthread)
 
+set(VERSION 3.8)
+set(RURI_VERSION ${VERSION})
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in"  # 源文件路径
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/version.h"     # 目标文件路径
+  @ONLY
+)
+
 # 检查每个库是否存在
 if(NOT CAP_LIBRARY)
     message(FATAL_ERROR "libcap is required")
