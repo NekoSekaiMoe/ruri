@@ -121,8 +121,6 @@ set(CFLAGS_LIST
     "-Wall"
     "-Wextra"
     "-Wconversion"
-    "-Wno-newline-eof"
-    "-Wno-gnu-zero-variadic-macro-arguments"
     "-pedantic"
     "-pipe"
 )
