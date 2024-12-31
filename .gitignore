@@ -37,3 +37,7 @@ Makefile
 CMakeFiles/
 CMakeCache.txt
 build.ninja
+libruri.so
+cmake_install.cmake
+.ninja_deps
+.ninja_log
