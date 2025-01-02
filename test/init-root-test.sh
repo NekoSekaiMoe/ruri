@@ -19,7 +19,7 @@ cd out
 cp ../* . -r
 ./configure --enable-debug
 check_if_succeed $?
-make -j8
+make -j8 VERBOSE=1 V=1
 check_if_succeed $?
 mv ruri ${TMPDIR}
 check_if_succeed $?
