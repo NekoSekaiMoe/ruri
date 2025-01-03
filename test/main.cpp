@@ -50,7 +50,8 @@ static void write_log(const char* msg) {
         logfile << "[" << timestamp << "] " << msg << std::endl;
         logfile.close();
     } else {
-        std::cerr << "Failed to open log file.\n";
+        std::cerr << "[ERROR] Failed to open log file.\n";
+        exit(123);
     }
 }
 
@@ -62,11 +63,11 @@ static void sighandle(int sig){
     close(clifd);
 
     // 记录崩溃日志
-    std::string errorMsg = "Fatal error (" + std::to_string(sig) + "), the program has been stopped.";
+    std::string errorMsg = "[ERROR] Fatal error (" + std::to_string(sig) + "), the program has been stopped.";
     std::cout << errorMsg << std::endl;
     LOG_ERROR();
     write_log(errorMsg.c_str());
-    std::cout << "Log file path: " << std::filesystem::current_path() << "/program_crash.log" << std::endl;
+    std::cout << "[INFO] Log file path: " << std::filesystem::current_path() << "/program_crash.log" << std::endl;
 
     // 获取调用栈
     #ifdef __GLIBC__
@@ -76,8 +77,8 @@ static void sighandle(int sig){
     char **stackTrace = backtrace_symbols(array, size);
 
     if (stackTrace) {
-    std::cout << "Stack trace:" << std::endl;
-        write_log("Stack trace:");
+    std::cout << "[INFO] Stack trace:" << std::endl;
+        write_log("[INFO] Stack trace:");
         for (int i = 0; i < size; i++) {  // 使用 int 类型
             std::cout << stackTrace[i] << std::endl;
             write_log(stackTrace[i]);
@@ -85,7 +86,7 @@ static void sighandle(int sig){
         free(stackTrace);
     }
     #else
-    write_log("Stack trace not available.");
+    write_log("[ERROR] Stack trace not available.");
     #endif
     exit(127);
 }
@@ -141,12 +142,12 @@ void execute_script(const std::string& scriptPath) {
         int status;
         waitpid(pid, &status, 0);
         if (WIFEXITED(status)) {
-            std::cout << "Script " << scriptPath << " exited with status " << WEXITSTATUS(status) << std::endl;
+            std::cout << "[INFO] Script " << scriptPath << " exited with status " << WEXITSTATUS(status) << std::endl;
         } else if (WIFSIGNALED(status)) {
-            std::cout << "Script " << scriptPath << " terminated by signal " << WTERMSIG(status) << std::endl;
+            std::cout << "[ERROR] Script " << scriptPath << " terminated by signal " << WTERMSIG(status) << std::endl;
         }
     } else {
-        std::cerr << "Failed to fork process.\n";
+        std::cerr << "[ERROR] Failed to fork process.\n";
         exit(1);
     }
 }
@@ -157,9 +158,9 @@ void monitor_child(pid_t pid) {
     for (int i = 0; i < timeout; ++i) {
         if (waitpid(pid, &status, WNOHANG) == pid) {
             if (WIFEXITED(status)) {
-                std::cout << "Script exited with status " << WEXITSTATUS(status) << std::endl;
+                std::cout << "[INFO] Script exited with status " << WEXITSTATUS(status) << std::endl;
             } else if (WIFSIGNALED(status)) {
-                std::cout << "Script terminated by signal " << WTERMSIG(status) << std::endl;
+                std::cout << "[ERROR] Script terminated by signal " << WTERMSIG(status) << std::endl;
             }
             return;
         }
@@ -168,9 +169,9 @@ void monitor_child(pid_t pid) {
     // 超时后强制终止子进程
     if (kill(pid, SIGKILL) == 0) {
         waitpid(pid, &status, 0); // 确保回收资源
-        std::cerr << "Child process killed due to timeout.\n";
+        std::cerr << "[INFO] Child process killed due to timeout.\n";
     } else {
-        std::cerr << "Failed to kill child process.\n";
+        std::cerr << "[ERROR] Failed to kill child process.\n";
         exit(4);
     }
 }
