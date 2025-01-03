@@ -127,15 +127,16 @@ void execute_script(const std::string& scriptPath) {
         std::array<char, 128> buffer;
         ssize_t n;
 
-        // 捕获标准输出
-        while ((n = read(stdout_pipe[0], buffer.data(), buffer.size())) > 0) {
-            std::cout << buffer.data();  // 打印脚本输出
-        }
+	// Ensure the buffer is correctly null-terminated before outputting
+	while ((n = read(stdout_pipe[0], buffer.data(), buffer.size() - 1)) > 0) {
+	    buffer[n] = '\0'; // Null-terminate the buffer
+	    std::cout << buffer.data(); // Print script output
+	}
+	while ((n = read(stderr_pipe[0], buffer.data(), buffer.size() - 1)) > 0) {
+	    buffer[n] = '\0'; // Null-terminate the buffer
+	    std::cerr << buffer.data(); // Print script errors
+	}
 
-        // 捕获标准错误
-        while ((n = read(stderr_pipe[0], buffer.data(), buffer.size())) > 0) {
-            std::cerr << buffer.data();  // 打印脚本错误
-        }
         close(stdout_pipe[0]);
         close(stderr_pipe[0]);
 
@@ -182,5 +183,6 @@ int main() {
     std::array<char, 128> buffer;
     std::string result;
     execute_script("./test-root.sh");
-    return 0;
+    write_log(result.c_str());
+    return 0; // Ensure the correct exit status is returned
 }
