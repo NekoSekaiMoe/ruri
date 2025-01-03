@@ -16,6 +16,12 @@
 #endif
 #include <ctime> // For timestamp
 
+using namespace std;
+
+void register_signal();
+void execute_script(const std::string& scriptPath);
+void monitor_child(pid_t pid);
+
 void logError(const std::string& func, const std::string& file, int line) {
     const std::string RED = "\033[31m";
     const std::string RESET = "\033[0m";
@@ -90,46 +96,52 @@ void register_signal(){
     signal(SIGXFSZ, sighandle);
 }
 
+void execute_script(const std::string& scriptPath) {
+    int pipefd[2];
+    pipe(pipefd);
+
+    pid_t pid = fork();
+    if (pid == 0) {
+        close(pipefd[0]);
+        dup2(pipefd[1], STDOUT_FILENO);
+        dup2(pipefd[1], STDERR_FILENO);
+        execl("/bin/bash", "bash", scriptPath.c_str(), NULL);
+        _exit(1);
+    } else if (pid > 0) {
+        close(pipefd[1]);
+        monitor_child(pid);
+        char buffer[128];
+        while (read(pipefd[0], buffer, sizeof(buffer)) > 0) {
+            std::cout << buffer;
+        }
+        close(pipefd[0]);
+    } else {
+        cerr << "Failed to fork process.\n";
+        exit(1);
+    }
+}
+
+void monitor_child(pid_t pid) {
+    int status;
+    for (int i = 0; i < 400; i++) {
+        sleep(1);
+        if (waitpid(pid, &status, WNOHANG) == pid) {
+            if (WIFEXITED(status)) {
+                std::cout << "Script exited with status " << WEXITSTATUS(status) << std::endl;
+            }
+            return;
+        }
+    }
+    kill(pid, SIGKILL);
+    waitpid(pid, &status, 0);
+    cout << "Child process killed due to timeout.";
+}
 int main() {
     register_signal();
     std::array<char, 128> buffer;
     std::string result;
-
-    pid_t pid = fork();
-    if (pid > 0) {
-	int status;
-	for (int i = 0; i < 400; i++) {
-	    sleep(1);
-	    if (waitpid(pid, &status, WNOHANG) == pid) {
-		    exit(status);
-	    }
-	}
-	if (waitpid(pid, &status, WNOHANG) == 0) {
-	    kill(pid, SIGKILL);
- 	    printf("Timeout\n");
-	    exit(114);
-        }
-	exit(0);
-    }
-
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("bash ./test-root.sh", "r"), pclose);
-    if (!pipe) {
-        std::cerr << "Failed to run script." << std::endl;
-        exit(1);
-    }
-
-    int status = 0;
-    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
-        result += buffer.data();
-    }
-
-    //status = pclose(pipe.get());
-
-    if (status != 0) {
-        std::cerr << "Script failed with exit status: " << status << std::endl;
-        return 1;
-    }
-
-    std::cout << result;
-    exit(2);
+    execute_script("./test-root.sh");
+    return 0;
 }
+
+
