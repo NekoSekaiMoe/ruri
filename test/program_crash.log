@@ -1,0 +1,8 @@
+[2025-01-03 11:45:36] [ERROR] Fatal error (11), the program has been stopped.
+[2025-01-03 11:45:36] [INFO] Stack trace:
+[2025-01-03 11:45:36] ./a.out(+0x2988) [0x3000002988]
+[2025-01-03 11:45:36] linux-vdso.so.1(__kernel_rt_sigreturn+0) [0x71bd04b628]
+[2025-01-03 11:45:36] ./a.out(+0x300c) [0x300000300c]
+[2025-01-03 11:45:36] /lib/aarch64-linux-gnu/libc.so.6(+0x27740) [0x71bcc27740]
+[2025-01-03 11:45:36] /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0x98) [0x71bcc27818]
+[2025-01-03 11:45:36] ./a.out(+0x23f0) [0x30000023f0]

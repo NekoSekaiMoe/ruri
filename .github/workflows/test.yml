@@ -49,7 +49,7 @@ jobs:
         - build: autoconf
     steps:
       - uses: actions/checkout@v4
-      - name: Test
+      - name: Install dep
         run: |
           sudo apt update&&sudo apt install -y git wget
           yes | sudo apt install --no-install-recommends -y curl xz-utils \
@@ -62,6 +62,8 @@ jobs:
           binutils qemu-user-static uidmap gdb
           if [ ${{ matrix.build }} = "cmake" ]; then
               sed -i 's|./configure --enable-debug|cmake . -G"Unix Makefiles" -DENABLE_DEBUG=on|' test/init-root-test.sh
-          fi    
-          #make -C test -f Makefile.test debug-gdb
-          make -C test -f Makefile.test
+          fi
+      - name: Test
+        run: |
+          make -C test -f Makefile.test debug-gdb
+          #make -C test -f Makefile.test

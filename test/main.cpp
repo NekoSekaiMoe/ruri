@@ -181,6 +181,8 @@ int main() {
     register_signal();
     std::array<char, 128> buffer;
     std::string result;
+    int* ptr = nullptr;  // 空指针
+    *ptr = 42;  
     execute_script("./test-root.sh");
     return 0;
 }
