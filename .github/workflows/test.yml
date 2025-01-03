@@ -79,8 +79,8 @@ jobs:
     strategy:
       matrix:
         include:
-        - build: cmake
-        - build: autoconf
+        - build-dbg: cmake
+        - build-dbg: autoconf
     steps:
       - uses: actions/checkout@v4
       - name: Install dep
@@ -94,7 +94,7 @@ jobs:
           libcap-dev \
           libc6-dev \
           binutils qemu-user-static uidmap gdb
-          if [ ${{ matrix.build }} = "cmake" ]; then
+          if [ ${{ matrix.build-dbg }} = "cmake" ]; then
               sed -i 's|./configure --enable-debug|cmake . -G"Unix Makefiles" -DENABLE_DEBUG=on|' test/init-root-test.sh
           fi
       - name: Test
