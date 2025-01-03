@@ -21,6 +21,7 @@ using namespace std;
 void register_signal();
 void execute_script(const std::string& scriptPath);
 void monitor_child(pid_t pid);
+void handle_signal(int sig);
 
 void logError(const std::string& func, const std::string& file, int line) {
     const std::string RED = "\033[31m";
@@ -30,21 +31,21 @@ void logError(const std::string& func, const std::string& file, int line) {
 
 #define LOG_ERROR() logError(__func__, __FILE__, __LINE__)
 
+static std::string get_log_path() {
+    const char* logPath = getenv("LOG_PATH");
+    return logPath ? logPath : "./program_crash.log";
+}
 
 static void write_log(const char* msg) {
-    // 打开日志文件
-    std::ofstream logfile("./program_crash.log", std::ios::app);
+    std::ofstream logfile(get_log_path(), std::ios::app);
     if (logfile.is_open()) {
-        // 获取当前时间戳
         std::time_t t = std::time(nullptr);
         char timestamp[100];
         std::strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", std::localtime(&t));
-
-        // 写入日志信息
         logfile << "[" << timestamp << "] " << msg << std::endl;
-
-        // 关闭日志文件
         logfile.close();
+    } else {
+        std::cerr << "Failed to open log file.\n";
     }
 }
 
@@ -64,8 +65,9 @@ static void sighandle(int sig){
 
     // 获取调用栈
     #ifdef __GLIBC__
-    void *array[10];
-    int size = backtrace(array, 10);  // 将 size 的类型改为 int
+    #define BACKTRACE_DEPTH 50
+    void* array[BACKTRACE_DEPTH];
+    int size = backtrace(array, BACKTRACE_DEPTH);
     char **stackTrace = backtrace_symbols(array, size);
 
     if (stackTrace) {
@@ -97,26 +99,41 @@ void register_signal(){
 }
 
 void execute_script(const std::string& scriptPath) {
-    int pipefd[2];
-    pipe(pipefd);
+    int stdout_pipe[2], stderr_pipe[2];
+    pipe(stdout_pipe);
+    pipe(stderr_pipe);
 
     pid_t pid = fork();
     if (pid == 0) {
-        close(pipefd[0]);
-        dup2(pipefd[1], STDOUT_FILENO);
-        dup2(pipefd[1], STDERR_FILENO);
+        close(stdout_pipe[0]);
+        close(stderr_pipe[0]);
+        dup2(stdout_pipe[1], STDOUT_FILENO);
+        dup2(stderr_pipe[1], STDERR_FILENO);
         execl("/bin/bash", "bash", scriptPath.c_str(), NULL);
         _exit(1);
     } else if (pid > 0) {
-        close(pipefd[1]);
-        monitor_child(pid);
+        close(stdout_pipe[1]);
+        close(stderr_pipe[1]);
+
+        std::stringstream stdoutStream, stderrStream;
         char buffer[128];
-        while (read(pipefd[0], buffer, sizeof(buffer)) > 0) {
-            std::cout << buffer;
+        ssize_t n;
+
+        while ((n = read(stdout_pipe[0], buffer, sizeof(buffer))) > 0) {
+            stdoutStream.write(buffer, n);
         }
-        close(pipefd[0]);
+        while ((n = read(stderr_pipe[0], buffer, sizeof(buffer))) > 0) {
+            stderrStream.write(buffer, n);
+        }
+
+        close(stdout_pipe[0]);
+        close(stderr_pipe[0]);
+
+        std::cout << "[STDOUT] " << stdoutStream.str();
+        std::cerr << "[STDERR] " << stderrStream.str();
+        monitor_child(pid);
     } else {
-        cerr << "Failed to fork process.\n";
+        std::cerr << "Failed to fork process.\n";
         exit(1);
     }
 }
@@ -128,14 +145,21 @@ void monitor_child(pid_t pid) {
         if (waitpid(pid, &status, WNOHANG) == pid) {
             if (WIFEXITED(status)) {
                 std::cout << "Script exited with status " << WEXITSTATUS(status) << std::endl;
+            } else if (WIFSIGNALED(status)) {
+                std::cout << "Script terminated by signal " << WTERMSIG(status) << std::endl;
             }
             return;
         }
     }
-    kill(pid, SIGKILL);
-    waitpid(pid, &status, 0);
-    cout << "Child process killed due to timeout.";
+    if (kill(pid, SIGKILL) == 0) {
+        waitpid(pid, &status, 0);
+        std::cerr << "Child process killed due to timeout.\n";
+    } else {
+        std::cerr << "Failed to kill child process.\n";
+        exit(4);
+    }
 }
+
 int main() {
     register_signal();
     std::array<char, 128> buffer;
@@ -143,5 +167,3 @@ int main() {
     execute_script("./test-root.sh");
     return 0;
 }
-
-
