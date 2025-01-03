@@ -95,10 +95,27 @@ int main() {
     std::array<char, 128> buffer;
     std::string result;
 
+    pid_t pid = fork();
+    if (pid > 0) {
+	int status;
+	for (int i = 0; i < 400; i++) {
+	    sleep(1);
+	    if (waitpid(pid, &status, WNOHANG) == pid) {
+		    exit(status);
+	    }
+	}
+	if (waitpid(pid, &status, WNOHANG) == 0) {
+	    kill(pid, SIGKILL);
+ 	    printf("Timeout\n");
+	    exit(114);
+        }
+	exit(0);
+    }
+
     std::unique_ptr<FILE, decltype(&pclose)> pipe(popen("bash ./test-root.sh", "r"), pclose);
     if (!pipe) {
         std::cerr << "Failed to run script." << std::endl;
-        return 1;
+        exit(1);
     }
 
     int status = 0;
@@ -114,5 +131,5 @@ int main() {
     }
 
     std::cout << result;
-    return 0;
+    exit(2);
 }
