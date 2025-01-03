@@ -129,12 +129,12 @@ void execute_script(const std::string& scriptPath) {
 
         // 捕获标准输出
         while ((n = read(stdout_pipe[0], buffer.data(), buffer.size())) > 0) {
-            std::cout << "[STDOUT] " << buffer.data();  // 打印脚本输出
+            std::cout << buffer.data();  // 打印脚本输出
         }
 
         // 捕获标准错误
         while ((n = read(stderr_pipe[0], buffer.data(), buffer.size())) > 0) {
-            std::cerr << "[STDERR] " << buffer.data();  // 打印脚本错误
+            std::cerr << buffer.data();  // 打印脚本错误
         }
         close(stdout_pipe[0]);
         close(stderr_pipe[0]);
