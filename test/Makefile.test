@@ -9,8 +9,8 @@ test:
 	@sudo ./test-root
 
 debug-gdb:
-	cc -v -o test-root main.cpp -lstdc++ -g3 -O0
-	gdb -batch -ex "run" -ex "bt" ./a.out
+	c++ -v -o test-root main.cpp --std=c++17 -g3 -O0
+	gdb -batch -ex "run" -ex "bt" ./test-root
 
 debug:
 	sudo bash -x test-root.sh

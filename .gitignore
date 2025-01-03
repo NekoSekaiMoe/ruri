@@ -41,3 +41,5 @@ libruri.so
 cmake_install.cmake
 .ninja_deps
 .ninja_log
+test/program_crash.log
+test/a.out
