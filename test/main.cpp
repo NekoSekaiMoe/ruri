@@ -130,11 +130,11 @@ void execute_script(const std::string& scriptPath) {
 	// Ensure the buffer is correctly null-terminated before outputting
 	while ((n = read(stdout_pipe[0], buffer.data(), buffer.size() - 1)) > 0) {
 	    buffer[n] = '\0'; // Null-terminate the buffer
-	    std::cout << "[SHINFO]" << buffer.data(); // Print script output
+	    std::cout << "[SHINFO] " << buffer.data(); // Print script output
 	}
 	while ((n = read(stderr_pipe[0], buffer.data(), buffer.size() - 1)) > 0) {
 	    buffer[n] = '\0'; // Null-terminate the buffer
-	    std::cerr << "[SHERR]" << buffer.data(); // Print script errors
+	    std::cerr << "[SHERR] " << buffer.data(); // Print script errors
 	}
 
         close(stdout_pipe[0]);
