@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <filesystem>
+#include <cstdlib>
 #ifdef __GLIBC__
 #include <execinfo.h> // For backtrace
 #else
@@ -180,6 +181,7 @@ int main() {
     register_signal();
     std::array<char, 128> buffer;
     std::string result;
+    abort();
     execute_script("./test-root.sh");
     return 0;
 }

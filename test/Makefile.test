@@ -10,7 +10,7 @@ test:
 
 debug-gdb:
 	cc -v -o test-root main.cpp -lstdc++ -g3 -O0
-	echo "run" | sudo gdb ./test-root
+	gdb -batch -ex "run" -ex "bt" ./a.out
 
 debug:
 	sudo bash -x test-root.sh
