@@ -31,9 +31,14 @@ void logError(const std::string& func, const std::string& file, int line) {
 
 #define LOG_ERROR() logError(__func__, __FILE__, __LINE__)
 
+static std::string log_path = "./program_crash.log";
+
+static void set_log_path(const std::string& path) {
+    log_path = path;
+}
+
 static std::string get_log_path() {
-    const char* logPath = getenv("LOG_PATH");
-    return logPath ? logPath : "./program_crash.log";
+    return log_path;
 }
 
 static void write_log(const char* msg) {
@@ -140,8 +145,8 @@ void execute_script(const std::string& scriptPath) {
 
 void monitor_child(pid_t pid) {
     int status;
-    for (int i = 0; i < 400; i++) {
-        sleep(1);
+    const int timeout = 400; // 超时时间为 400 秒
+    for (int i = 0; i < timeout; ++i) {
         if (waitpid(pid, &status, WNOHANG) == pid) {
             if (WIFEXITED(status)) {
                 std::cout << "Script exited with status " << WEXITSTATUS(status) << std::endl;
@@ -150,9 +155,11 @@ void monitor_child(pid_t pid) {
             }
             return;
         }
+        sleep(1);
     }
+    // 超时后强制终止子进程
     if (kill(pid, SIGKILL) == 0) {
-        waitpid(pid, &status, 0);
+        waitpid(pid, &status, 0); // 确保回收资源
         std::cerr << "Child process killed due to timeout.\n";
     } else {
         std::cerr << "Failed to kill child process.\n";
