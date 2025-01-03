@@ -110,33 +110,41 @@ void execute_script(const std::string& scriptPath) {
 
     pid_t pid = fork();
     if (pid == 0) {
-        close(stdout_pipe[0]);
-        close(stderr_pipe[0]);
-        dup2(stdout_pipe[1], STDOUT_FILENO);
-        dup2(stderr_pipe[1], STDERR_FILENO);
-        execl("/bin/bash", "bash", scriptPath.c_str(), NULL);
-        _exit(1);
+        // 子进程执行脚本
+        close(stdout_pipe[0]);  // 关闭不需要的管道读端
+        close(stderr_pipe[0]);  // 关闭不需要的管道读端
+        dup2(stdout_pipe[1], STDOUT_FILENO);  // 重定向标准输出
+        dup2(stderr_pipe[1], STDERR_FILENO);  // 重定向标准错误
+        execl("/bin/bash", "bash", scriptPath.c_str(), NULL);  // 执行脚本
+        _exit(1);  // 如果 execl 失败，退出子进程
     } else if (pid > 0) {
-        close(stdout_pipe[1]);
-        close(stderr_pipe[1]);
+        // 父进程捕获子进程输出
+        close(stdout_pipe[1]);  // 关闭不需要的管道写端
+        close(stderr_pipe[1]);  // 关闭不需要的管道写端
 
-        std::stringstream stdoutStream, stderrStream;
-        char buffer[128];
+        std::array<char, 128> buffer;
         ssize_t n;
 
-        while ((n = read(stdout_pipe[0], buffer, sizeof(buffer))) > 0) {
-            stdoutStream.write(buffer, n);
-        }
-        while ((n = read(stderr_pipe[0], buffer, sizeof(buffer))) > 0) {
-            stderrStream.write(buffer, n);
+        // 捕获标准输出
+        while ((n = read(stdout_pipe[0], buffer.data(), buffer.size())) > 0) {
+            std::cout << "[STDOUT] " << buffer.data();  // 打印脚本输出
         }
 
+        // 捕获标准错误
+        while ((n = read(stderr_pipe[0], buffer.data(), buffer.size())) > 0) {
+            std::cerr << "[STDERR] " << buffer.data();  // 打印脚本错误
+        }
         close(stdout_pipe[0]);
         close(stderr_pipe[0]);
 
-        std::cout << "[STDOUT] " << stdoutStream.str();
-        std::cerr << "[STDERR] " << stderrStream.str();
-        monitor_child(pid);
+        // 等待子进程结束
+        int status;
+        waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            std::cout << "Script " << scriptPath << " exited with status " << WEXITSTATUS(status) << std::endl;
+        } else if (WIFSIGNALED(status)) {
+            std::cout << "Script " << scriptPath << " terminated by signal " << WTERMSIG(status) << std::endl;
+        }
     } else {
         std::cerr << "Failed to fork process.\n";
         exit(1);
