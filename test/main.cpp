@@ -182,7 +182,7 @@ int main() {
     register_signal();
     std::array<char, 128> buffer;
     std::string result;
-    execute_script("./test-root.sh");
+    execute_script("./log.sh");
     write_log(result.c_str());
     return 0; // Ensure the correct exit status is returned
 }
