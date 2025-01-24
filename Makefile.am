@@ -15,8 +15,7 @@ ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
 
 # Compiler and linker flags
 AM_CFLAGS = -Wall -Wextra -pedantic -Wconversion -Wno-unused-result -ffunction-sections -fdata-sections -fstack-protector-all  -D_FORTIFY_SOURCE=3  -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
-
-AM_LDFLAGS = -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now -Wl,--gc-sections -lcap -lseccomp -lpthread
+AM_LDFLAGS = $(LINKER_FLAGS)
 
 if ENABLE_STRIP
 strip_target:
@@ -44,9 +43,10 @@ AM_V = $(if $(VERBOSE),, @)
 AM_V_CC = $(AM_V)echo "  CC       " $@;
 
 # Custom commands
-.PHONY: ruritest codecheck
+.PHONY: ruritest check
 
-codecheck:
+check:
 	clang-tidy $(ruri_SOURCES)
+	true
 ruritest:
 	$(MAKE) -C test -f Makefile.test test

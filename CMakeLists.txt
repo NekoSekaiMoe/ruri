@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 # set the project name
 project(ruri LANGUAGES C)
+set(VERSION 3.8)
+set(RURI_VERSION ${VERSION})
 
 # 检查头文件
 include(CheckIncludeFile)
@@ -29,6 +31,12 @@ if(CCACHE_FOUND)
 else()
     message(STATUS "Ccache not found. Compiling with cache will be disabled.")
 endif(CCACHE_FOUND)
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in"  # 源文件路径
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/version.h"     # 目标文件路径
+  @ONLY
+)
 
 check_include_file("time.h" HAVE_TIME_H)
 check_include_file("grp.h" HAVE_GRP_H)
@@ -79,6 +87,28 @@ if(NOT HAVE_SECCOMP_H)
 endif()
 if(NOT HAVE_PTHREAD_H)
     message(FATAL_ERROR "Missing required header: pthread.h")
+endif()
+
+if(CMAKE_C_COMPILER MATCHES "tcc")
+    # 根据系统架构设置库路径
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/x86_64-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/x86_64-linux-gnu/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/aarch64-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/aarch64-linux-gnu/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "armv7l")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/arm-linux-gnueabihf/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i386")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/i386-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/i386-linux-gnu/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "powerpc64le")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/powerpc64le-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/powerpc64le-linux-gnu/")
+    endif()
+    add_definitions(-D__VERSION__="TinyCC")
+    add_definitions(-D__TIMESTAMP__="unknown")
 endif()
 
 # 查找库

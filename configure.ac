@@ -4,6 +4,7 @@ AC_PREREQ([2.69])
 AC_INIT([ruri], [3.8], [moe-hacker@crack.moe])
 AC_PROG_CC
 AM_INIT_AUTOMAKE
+m4_pattern_allow([AC_CHECK_LDFLAGS])
 
 # Define AC_CHECK_CFLAGS macro
 AC_DEFUN([AC_CHECK_CFLAGS], [
@@ -25,6 +26,9 @@ AC_PROG_RANLIB
 AM_PROG_AR
 AC_PROG_MAKE_SET
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+# Initialize supported flags variables
+SUPPORTED_CFLAGS=""
+SUPPORTED_LDFLAGS=""
 
 # Check strip and upx
 AC_CHECK_TOOL([STRIP], [strip], [no])
@@ -55,7 +59,7 @@ AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([pthread is require
 
 # Enable optional flags
 CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe"
-LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
+LDFLAGS_LIST="-pipe -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
 AC_ARG_ENABLE([debug],
@@ -68,9 +72,40 @@ AC_ARG_ENABLE([static],
 
 # Check CFLAGS
 AC_MSG_CHECKING([whether the following CFLAGS are supported])
+# Check compiler flags
+AC_MSG_NOTICE([Checking compiler flag support...])
 for flag in $CFLAGS_LIST; do
-    AC_CHECK_CFLAGS([$flag])
+    save_CFLAGS="$CFLAGS"
+    AC_MSG_CHECKING([whether $CC supports $flag])
+    CFLAGS="$CFLAGS $flag"
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM()],
+        [AC_MSG_RESULT([yes])
+         SUPPORTED_CFLAGS="$SUPPORTED_CFLAGS $flag"],
+        [AC_MSG_RESULT([no])
+         CFLAGS="$save_CFLAGS"])
 done
+
+# Check linker flags
+AC_MSG_NOTICE([Checking linker flag support...])
+for flag in $LDFLAGS_LIST; do
+    save_LDFLAGS="$LDFLAGS"
+    AC_MSG_CHECKING([whether the linker accepts $flag])
+    LDFLAGS="$LDFLAGS $flag"
+    AC_LINK_IFELSE([AC_LANG_PROGRAM()],
+        [AC_MSG_RESULT([yes])
+         SUPPORTED_LDFLAGS="$SUPPORTED_LDFLAGS $flag"],
+        [AC_MSG_RESULT([no])
+         LDFLAGS="$save_LDFLAGS"])
+done
+
+# Apply supported flags
+CFLAGS="$CFLAGS $SUPPORTED_CFLAGS"
+LDFLAGS="$LDFLAGS $SUPPORTED_LDFLAGS"
+
+if test "$CC" = "tcc"; then
+    AC_DEFINE([__VERSION__], [1], [TinyCC])
+    AC_DEFINE([__TIMESTAMP__], [1], [unknown])
+fi
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

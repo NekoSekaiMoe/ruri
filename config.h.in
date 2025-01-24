@@ -91,3 +91,9 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* unknown */
+#undef __TIMESTAMP__
+
+/* TinyCC */
+#undef __VERSION__

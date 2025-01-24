@@ -43,3 +43,10 @@ cmake_install.cmake
 .ninja_log
 test/program_crash.log
 test/a.out
+src/include/version.h
+src/*.o
+src/easteregg/*.o
+config.log
+configure~
+src/easteregg/.dirstamp
+src/.dirstamp

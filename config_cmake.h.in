@@ -35,4 +35,10 @@
 // Version info.
 #cmakedefine RURI_VERSION "@VERSION@"
 
+#ifdef __TINYC__
+    #define COMPILER_VERSION "TinyCC"
+#else
+    #define COMPILER_VERSION __VERSION__
+#endif
+
 #endif // CONFIG_H

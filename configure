@@ -4250,6 +4250,7 @@ END
 fi
 
 
+
 # Define AC_CHECK_CFLAGS macro
 
 
@@ -4618,6 +4619,9 @@ else
 fi
 AM_BACKSLASH='\'
 
+# Initialize supported flags variables
+SUPPORTED_CFLAGS=""
+SUPPORTED_LDFLAGS=""
 
 # Check strip and upx
 if test -n "$ac_tool_prefix"; then
@@ -5086,7 +5090,7 @@ fi
 
 # Enable optional flags
 CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe"
-LDFLAGS="$LDFLAGS -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
+LDFLAGS_LIST="-pipe -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
 # Check whether --enable-debug was given.
@@ -5114,11 +5118,13 @@ fi
 # Check CFLAGS
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the following CFLAGS are supported" >&5
 printf %s "checking whether the following CFLAGS are supported... " >&6; }
+# Check compiler flags
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: Checking compiler flag support..." >&5
+printf "%s\n" "$as_me: Checking compiler flag support..." >&6;}
 for flag in $CFLAGS_LIST; do
-
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $flag is supported" >&5
-printf %s "checking whether $flag is supported... " >&6; }
-    save_CFLAGS=$CFLAGS
+    save_CFLAGS="$CFLAGS"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether $CC supports $flag" >&5
+printf %s "checking whether $CC supports $flag... " >&6; }
     CFLAGS="$CFLAGS $flag"
     cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -5135,14 +5141,60 @@ if ac_fn_c_try_compile "$LINENO"
 then :
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 printf "%s\n" "yes" >&6; }
+         SUPPORTED_CFLAGS="$SUPPORTED_CFLAGS $flag"
 else $as_nop
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }; CFLAGS=$save_CFLAGS
-
+printf "%s\n" "no" >&6; }
+         CFLAGS="$save_CFLAGS"
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
-
 done
+
+# Check linker flags
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: Checking linker flag support..." >&5
+printf "%s\n" "$as_me: Checking linker flag support..." >&6;}
+for flag in $LDFLAGS_LIST; do
+    save_LDFLAGS="$LDFLAGS"
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the linker accepts $flag" >&5
+printf %s "checking whether the linker accepts $flag... " >&6; }
+    LDFLAGS="$LDFLAGS $flag"
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+int
+main (void)
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+         SUPPORTED_LDFLAGS="$SUPPORTED_LDFLAGS $flag"
+else $as_nop
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+         LDFLAGS="$save_LDFLAGS"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+done
+
+# Apply supported flags
+CFLAGS="$CFLAGS $SUPPORTED_CFLAGS"
+LDFLAGS="$LDFLAGS $SUPPORTED_LDFLAGS"
+
+if test "$CC" = "tcc"; then
+
+printf "%s\n" "#define __VERSION__ 1" >>confdefs.h
+
+
+printf "%s\n" "#define __TIMESTAMP__ 1" >>confdefs.h
+
+fi
 
 ac_config_files="$ac_config_files Makefile"
 
