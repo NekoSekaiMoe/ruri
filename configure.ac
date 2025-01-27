@@ -5,6 +5,26 @@ AC_INIT([ruri], [3.8], [moe-hacker@crack.moe])
 AC_PROG_CC
 AM_INIT_AUTOMAKE
 m4_pattern_allow([AC_CHECK_LDFLAGS])
+AC_USE_SYSTEM_EXTENSIONS
+gl_EARLY
+gl_INIT
+AC_PROG_LN_S
+AC_SEARCH_LIBS([strerror], [cposix])
+AC_SYS_LARGEFILE
+PKG_PROG_PKG_CONFIG
+gl_cv_func_printf_directive_n=yes
+gl_cv_func_printf_infinite_long_double=yes
+gl_cv_func_printf_long_double=yes
+gl_cv_func_snprintf_directive_n=yes
+gl_cv_glob_lists_symlinks=yes
+AC_SEARCH_LIBS([strerror], [cposix])
+AC_SYS_LARGEFILE
+PKG_PROG_PKG_CONFIG
+AM_MAINTAINER_MODE([enable])
+
+dnl Internationalization macros.
+
+AM_CONDITIONAL(USE_NLS, test x$USE_NLS = xyes)
 
 # Define AC_CHECK_CFLAGS macro
 AC_DEFUN([AC_CHECK_CFLAGS], [
