@@ -1,14 +1,14 @@
 #!/bin/bash
-#if DEBUG=1; then set -x; fi
 source global.sh
 
 export TEST_NO=0
 export DESCRIPTION="This script is used to create files and directories for testing."
 show_test_description
 
+export RANDOMS=$(head -20 /dev/urandom | cksum | cut -c 1-10)
 export SUBTEST_NO=1
 export SUBTEST_DESCRIPTION="Build ruri"
-export TMPDIR=tmpdir-$RANDOM
+export TMPDIR=tmpdir-$RANDOMS
 show_subtest_description
 cd ..
 mkdir ${TMPDIR}
