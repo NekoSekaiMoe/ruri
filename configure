@@ -4886,6 +4886,38 @@ then :
 
 fi
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether ${MAKE-make} sets \$(MAKE)" >&5
+printf %s "checking whether ${MAKE-make} sets \$(MAKE)... " >&6; }
+set x ${MAKE-make}
+ac_make=`printf "%s\n" "$2" | sed 's/+/p/g; s/[^a-zA-Z0-9_]/_/g'`
+if eval test \${ac_cv_prog_make_${ac_make}_set+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat >conftest.make <<\_ACEOF
+SHELL = /bin/sh
+all:
+	@echo '@@@%%%=$(MAKE)=@@@%%%'
+_ACEOF
+# GNU make sometimes prints "make[1]: Entering ...", which would confuse us.
+case `${MAKE-make} -f conftest.make 2>/dev/null` in
+  *@@@%%%=?*=@@@%%%*)
+    eval ac_cv_prog_make_${ac_make}_set=yes;;
+  *)
+    eval ac_cv_prog_make_${ac_make}_set=no;;
+esac
+rm -f conftest.make
+fi
+if eval test \$ac_cv_prog_make_${ac_make}_set = yes; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+  SET_MAKE=
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+  SET_MAKE="MAKE=${MAKE-make}"
+fi
+
 # Check whether --enable-largefile was given.
 if test ${enable_largefile+y}
 then :
@@ -5424,6 +5456,49 @@ printf "%s\n" "#define _UINT32_T 1" >>confdefs.h
 printf "%s\n" "#define uint32_t $ac_cv_c_uint32_t" >>confdefs.h
 ;;
   esac
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for sys/wait.h that is POSIX.1 compatible" >&5
+printf %s "checking for sys/wait.h that is POSIX.1 compatible... " >&6; }
+if test ${ac_cv_header_sys_wait_h+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <sys/types.h>
+#include <sys/wait.h>
+#ifndef WEXITSTATUS
+# define WEXITSTATUS(stat_val) ((unsigned int) (stat_val) >> 8)
+#endif
+#ifndef WIFEXITED
+# define WIFEXITED(stat_val) (((stat_val) & 255) == 0)
+#endif
+
+int
+main (void)
+{
+  int s;
+  wait (&s);
+  s = WIFEXITED (s) ? WEXITSTATUS (s) : 1;
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ac_cv_header_sys_wait_h=yes
+else $as_nop
+  ac_cv_header_sys_wait_h=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_header_sys_wait_h" >&5
+printf "%s\n" "$ac_cv_header_sys_wait_h" >&6; }
+if test $ac_cv_header_sys_wait_h = yes; then
+
+printf "%s\n" "#define HAVE_SYS_WAIT_H 1" >>confdefs.h
+
+fi
 
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes

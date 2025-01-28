@@ -8,6 +8,7 @@ m4_pattern_allow([AC_CHECK_LDFLAGS])
 AC_USE_SYSTEM_EXTENSIONS
 AC_PROG_LN_S
 AC_SEARCH_LIBS([strerror], [cposix])
+AC_PROG_MAKE_SET
 AC_SYS_LARGEFILE
 PKG_PROG_PKG_CONFIG
 AC_CHECK_SIZEOF(char)
@@ -19,6 +20,7 @@ AC_TYPE_INT16_T
 AC_TYPE_UINT16_T
 AC_TYPE_INT32_T
 AC_TYPE_UINT32_T
+AC_HEADER_SYS_WAIT
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
