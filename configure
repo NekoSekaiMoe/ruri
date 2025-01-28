@@ -6441,67 +6441,21 @@ printf "%s\n" "$as_me: UPX not found, skipping binary compression." >&6;}
 fi
 
 # Check for required headers
-ac_fn_c_check_header_compile "$LINENO" "time.h" "ac_cv_header_time_h" "$ac_includes_default"
-if test "x$ac_cv_header_time_h" = xyes
+       for ac_header in time.h grp.h fcntl.h sys/ioctl.h sys/mount.h sys/socket.h sys/wait.h linux/fs.h linux/version.h linux/sched.h
+do :
+  as_ac_Header=`printf "%s\n" "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_c_check_header_compile "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+if eval test \"x\$"$as_ac_Header"\" = x"yes"
 then :
-  printf "%s\n" "#define HAVE_TIME_H 1" >>confdefs.h
+  cat >>confdefs.h <<_ACEOF
+#define `printf "%s\n" "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
 
-fi
-ac_fn_c_check_header_compile "$LINENO" "grp.h" "ac_cv_header_grp_h" "$ac_includes_default"
-if test "x$ac_cv_header_grp_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_GRP_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "fcntl.h" "ac_cv_header_fcntl_h" "$ac_includes_default"
-if test "x$ac_cv_header_fcntl_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_FCNTL_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "sys/ioctl.h" "ac_cv_header_sys_ioctl_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_ioctl_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_SYS_IOCTL_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "sys/mount.h" "ac_cv_header_sys_mount_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_mount_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_SYS_MOUNT_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "sys/socket.h" "ac_cv_header_sys_socket_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_socket_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_SYS_SOCKET_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "sys/wait.h" "ac_cv_header_sys_wait_h" "$ac_includes_default"
-if test "x$ac_cv_header_sys_wait_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_SYS_WAIT_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "linux/fs.h" "ac_cv_header_linux_fs_h" "$ac_includes_default"
-if test "x$ac_cv_header_linux_fs_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_LINUX_FS_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "linux/version.h" "ac_cv_header_linux_version_h" "$ac_includes_default"
-if test "x$ac_cv_header_linux_version_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_LINUX_VERSION_H 1" >>confdefs.h
-
-fi
-ac_fn_c_check_header_compile "$LINENO" "linux/sched.h" "ac_cv_header_linux_sched_h" "$ac_includes_default"
-if test "x$ac_cv_header_linux_sched_h" = xyes
-then :
-  printf "%s\n" "#define HAVE_LINUX_SCHED_H 1" >>confdefs.h
-
+else $as_nop
+  as_fn_error $? "Missing required headers in standard C library." "$LINENO" 5
 fi
 
+done
        for ac_header in sys/capability.h seccomp.h pthread.h
 do :
   as_ac_Header=`printf "%s\n" "ac_cv_header_$ac_header" | $as_tr_sh`
@@ -6513,7 +6467,7 @@ then :
 _ACEOF
 
 else $as_nop
-  as_fn_error $? "Missing required headers" "$LINENO" 5
+  as_fn_error $? "Missing required headers for libraries." "$LINENO" 5
 fi
 
 done
