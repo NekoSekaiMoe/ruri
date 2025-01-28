@@ -4816,8 +4816,6 @@ then :
 
 fi
 
-gl_EARLY
-gl_INIT
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether ln -s works" >&5
 printf %s "checking whether ln -s works... " >&6; }
 LN_S=$as_ln_s
