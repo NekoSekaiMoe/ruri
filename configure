@@ -5465,7 +5465,6 @@ else
 printf "%s\n" "no, using $LN_S" >&6; }
 fi
 
-CC_DYNAMIC_INITIALIZERS
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
