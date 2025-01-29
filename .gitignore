@@ -16,7 +16,7 @@ t.c
 config.mk
 *.pyc
 debian/ruri
-debian/source
+#debian/source
 debian/.debhelper
 debian/debhelper-build-stamp
 debian/files
@@ -49,3 +49,5 @@ build.ninja
 libruri.so
 test/a.out
 test/out
+.editorconfig
+.idea
