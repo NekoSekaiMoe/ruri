@@ -20,14 +20,14 @@ AC_TYPE_INT16_T
 AC_TYPE_UINT16_T
 AC_TYPE_INT32_T
 AC_TYPE_UINT32_T
+AC_PROG_LN_S
+CC_DYNAMIC_INITIALIZERS
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
 gl_cv_func_snprintf_directive_n=yes
 gl_cv_glob_lists_symlinks=yes
 AC_SEARCH_LIBS([strerror], [cposix])
-AC_SYS_LARGEFILE
-PKG_PROG_PKG_CONFIG
 AM_MAINTAINER_MODE([enable])
 
 dnl Internationalization macros.
@@ -50,8 +50,6 @@ AC_CONFIG_SRCDIR([src/ruri.c])
 AC_CONFIG_HEADERS([config.h])
 
 # Check for programs
-AC_PROG_RANLIB
-AM_PROG_AR
 AC_PROG_MAKE_SET
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 # Initialize supported flags variables
