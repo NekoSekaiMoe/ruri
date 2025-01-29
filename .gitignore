@@ -4,41 +4,27 @@ ruri-amd64.zip
 ruri-arm64.zip
 # Editor configuration.
 .vscode/
-.idea/
-.editorconfig
 # Gdb log
 peda-*
 # Build dir.
 out
-test/out
 # Tmp file.
 TODO
 *.save
 a.out
-test/a.out
 t.c
 config.mk
 *.pyc
 debian/ruri
-#debian/source
+debian/source
 debian/.debhelper
 debian/debhelper-build-stamp
 debian/files
 tmpdir*
 test-root
-#build system files
-src/.deps/
-autom4te.cache
-.deps/
-src/.deps/
-config.h
-config.status
-Makefile
-CMakeFiles/
-CMakeCache.txt
-build.ninja
-libruri.so
 cmake_install.cmake
+CMakeCache.txt
+CMakeFiles
 .ninja_deps
 .ninja_log
 test/program_crash.log
@@ -50,3 +36,16 @@ config.log
 configure~
 src/easteregg/.dirstamp
 src/.dirstamp
+src/.deps/
+autom4te.cache
+.deps/
+src/.deps/
+config.h
+config.status
+Makefile
+CMakeFiles/
+CMakeCache.txt
+build.ninja
+libruri.so
+test/a.out
+test/out
