@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 # set the project name
 project(ruri LANGUAGES C)
+set(VERSION 3.8)
+set(RURI_VERSION ${VERSION})
 
 # Check for header
 include(CheckIncludeFile)
@@ -20,6 +22,12 @@ execute_process(
 
 add_definitions(-DBUILD_DATE="${CMAKE_CURRENT_DATE}")
 add_definitions(-DBUILD_TIME="${CMAKE_CURRENT_TIME}")
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/version.h"
+  @ONLY
+)
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
@@ -135,6 +143,27 @@ foreach(flag IN LISTS CFLAGS_LIST)
     endif()
 endforeach()
 
+if(CMAKE_C_COMPILER MATCHES "tcc")
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/x86_64-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/x86_64-linux-gnu/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/aarch64-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/aarch64-linux-gnu/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "armv7l")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/arm-linux-gnueabihf/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/arm-linux-gnueabihf/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "i386")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/i386-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/i386-linux-gnu/")
+    elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "powerpc64le")
+        set(CMAKE_LIBRARY_PATH "/usr/lib/powerpc64le-linux-gnu/")
+        set(CMAKE_INCLUDE_PATH "/usr/include/powerpc64le-linux-gnu/")
+    endif()
+    add_definitions(-D__VERSION__="TinyCC")
+    add_definitions(-D__TIMESTAMP__="unknown")
+endif()
+
 set(LDFLAGS "-Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now")
 
 option(ENABLE_DEBUG "Enable debug build" OFF)
@@ -186,6 +215,13 @@ else ()
         )
         install (TARGETS ruri DESTINATION /usr/bin/)
 endif()
+
+add_custom_target(
+    tidy
+    COMMAND clang-tidy --checks=*,-clang-analyzer-security.insecureAPI.strcpy,-altera-unroll-loops,-cert-err33-c,-concurrency-mt-unsafe,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,-readability-function-cognitive-complexity,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers,-bugprone-easily-swappable-parameters,-cert-err34-c,-misc-include-cleaner,-readability-identifier-length,-bugprone-signal-handler,-cert-msc54-cpp,-cert-sig30-c,-altera-id-dependent-backward-branch,-bugprone-suspicious-realloc-usage,-hicpp-signed-bitwise,-clang-analyzer-security.insecureAPI.UncheckedReturn --list-checks ${SOURCES} -- -lpthread -lseccomp -lcap -Wall -Wextra
+    COMMENT "Running tidy"
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/ruri/src/ # Set correct path where main.go is located
+)
 
 # on linux clang 14
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
