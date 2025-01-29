@@ -215,10 +215,10 @@
    #define below would cause a syntax error. */
 #undef _UINT32_T
 
-/* unknown */
+/* "unknown" */
 #undef __TIMESTAMP__
 
-/* TinyCC */
+/* "TinyCC" */
 #undef __VERSION__
 
 /* Define to the type of a signed integer type of width exactly 16 bits if

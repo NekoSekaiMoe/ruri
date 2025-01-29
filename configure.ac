@@ -128,8 +128,8 @@ CFLAGS="$CFLAGS $SUPPORTED_CFLAGS"
 LDFLAGS="$LDFLAGS $SUPPORTED_LDFLAGS"
 
 if test "$CC" = "tcc"; then
-    AC_DEFINE([__VERSION__], [1], [TinyCC])
-    AC_DEFINE([__TIMESTAMP__], [1], [unknown])
+    AC_DEFINE([__VERSION__], [1], ["TinyCC"])
+    AC_DEFINE([__TIMESTAMP__], [1], ["unknown"])
 fi
 
 AC_CONFIG_FILES([Makefile])

@@ -113,7 +113,6 @@ if(CMAKE_C_COMPILER MATCHES "tcc")
     add_definitions(-D__TIMESTAMP__="unknown")
 endif()
 
-
 # Search for libs
 find_library(CAP_LIBRARY cap)
 find_library(SECCOMP_LIBRARY seccomp)
@@ -130,6 +129,24 @@ endif()
 
 if(NOT PTHREAD_LIBRARY)
     message(FATAL_ERROR "pthread is required")
+endif()
+
+
+option(ENABLE_DEBUG "Enable debug build" OFF)
+option(ENABLE_STATIC "Enable static linking" OFF)
+option(BUILD_LIB "BUILD with lib" OFF)
+
+# For Debug build
+if(ENABLE_DEBUG)
+    message(WARNING "Warning: DEBUG mode is enabled")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")
+else()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
+endif()
+
+# For static build
+if(ENABLE_STATIC)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 endif()
 
 # Set default CFLAGS and LDFLAGS
@@ -169,23 +186,6 @@ foreach(flag IN LISTS CFLAGS_LIST)
 endforeach()
 
 set(LDFLAGS "-Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now")
-
-option(ENABLE_DEBUG "Enable debug build" OFF)
-option(ENABLE_STATIC "Enable static linking" OFF)
-option(BUILD_LIB "BUILD with lib" OFF)
-
-# For Debug build
-if(ENABLE_DEBUG)
-    message(WARNING "Warning: DEBUG mode is enabled")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")
-else()
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
-endif()
-
-# For static build
-if(ENABLE_STATIC)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-endif()
 
 # Add LDFLAGS
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
