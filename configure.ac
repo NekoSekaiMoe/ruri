@@ -21,6 +21,16 @@ AC_TYPE_UINT16_T
 AC_TYPE_INT32_T
 AC_TYPE_UINT32_T
 AC_PROG_LN_S
+
+AC_DEFINE([HAVE_STRDUP], 1, [Define to 1 if you have the 'strdup' function.])
+AC_DEFINE([HAVE_ISATTY], 1, [Define to 1 if you have the 'isatty' function.])
+AC_HEADER_STDBOOL
+AC_SYS_LARGEFILE
+AC_CHECK_SIZEOF(off_t)
+AC_C_CONST
+AC_C_INLINE
+AC_C_VOLATILE
+
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
