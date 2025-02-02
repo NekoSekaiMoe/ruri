@@ -24,7 +24,6 @@ AC_PROG_LN_S
 
 AC_DEFINE([HAVE_STRDUP], 1, [Define to 1 if you have the 'strdup' function.])
 AC_DEFINE([HAVE_ISATTY], 1, [Define to 1 if you have the 'isatty' function.])
-AC_HEADER_STDBOOL
 AC_SYS_LARGEFILE
 AC_CHECK_SIZEOF(off_t)
 AC_C_CONST
