@@ -21,14 +21,25 @@ AC_TYPE_UINT16_T
 AC_TYPE_INT32_T
 AC_TYPE_UINT32_T
 AC_PROG_LN_S
-
-AC_DEFINE([HAVE_STRDUP], 1, [Define to 1 if you have the 'strdup' function.])
-AC_DEFINE([HAVE_ISATTY], 1, [Define to 1 if you have the 'isatty' function.])
 AC_SYS_LARGEFILE
 AC_CHECK_SIZEOF(off_t)
 AC_C_CONST
 AC_C_INLINE
 AC_C_VOLATILE
+
+AC_CHECK_PROG(SPELL,aspell,aspell,ispell)
+AC_FUNC_STAT
+AC_FUNC_FORK
+AC_PROG_GCC_TRADITIONAL
+AC_FUNC_LSTAT
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
+AC_TYPE_OFF_T
+AC_CHECK_SIZEOF(off_t, 4)
+AC_PROG_EGREP
+AC_PROG_INSTALL
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
 
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
