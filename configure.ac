@@ -6,10 +6,7 @@ AC_PROG_CC
 AM_INIT_AUTOMAKE
 m4_pattern_allow([AC_CHECK_LDFLAGS])
 AC_USE_SYSTEM_EXTENSIONS
-AC_PROG_LN_S
-AC_SEARCH_LIBS([strerror], [cposix])
 AC_PROG_MAKE_SET
-AC_SYS_LARGEFILE
 PKG_PROG_PKG_CONFIG
 AC_CHECK_SIZEOF(char)
 AC_CHECK_SIZEOF(short)
@@ -20,23 +17,18 @@ AC_TYPE_INT16_T
 AC_TYPE_UINT16_T
 AC_TYPE_INT32_T
 AC_TYPE_UINT32_T
-AC_PROG_LN_S
 AC_SYS_LARGEFILE
 AC_CHECK_SIZEOF(off_t)
 AC_C_CONST
 AC_C_INLINE
 AC_C_VOLATILE
-
-AC_CHECK_PROG(SPELL,aspell,aspell,ispell)
 AC_FUNC_STAT
 AC_FUNC_FORK
-AC_PROG_GCC_TRADITIONAL
 AC_FUNC_LSTAT
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_CHECK_SIZEOF(off_t, 4)
-AC_PROG_EGREP
 AC_PROG_INSTALL
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
@@ -46,7 +38,7 @@ gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
 gl_cv_func_snprintf_directive_n=yes
 gl_cv_glob_lists_symlinks=yes
-AC_SEARCH_LIBS([strerror], [cposix])
+
 AM_MAINTAINER_MODE([enable])
 
 dnl Internationalization macros.

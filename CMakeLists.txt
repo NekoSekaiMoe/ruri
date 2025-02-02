@@ -5,6 +5,12 @@ project(ruri LANGUAGES C)
 set(VERSION 3.8)
 set(RURI_VERSION ${VERSION})
 
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/version.h"
+  @ONLY
+)
+
 # Check for header
 include(CheckIncludeFile)
 
@@ -22,12 +28,6 @@ execute_process(
 
 add_definitions(-DBUILD_DATE="${CMAKE_CURRENT_DATE}")
 add_definitions(-DBUILD_TIME="${CMAKE_CURRENT_TIME}")
-
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in"
-  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/version.h"
-  @ONLY
-)
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
@@ -113,6 +113,7 @@ if(CMAKE_C_COMPILER MATCHES "tcc")
     add_definitions(-D__TIMESTAMP__="unknown")
 endif()
 
+
 # Search for libs
 find_library(CAP_LIBRARY cap)
 find_library(SECCOMP_LIBRARY seccomp)
@@ -129,24 +130,6 @@ endif()
 
 if(NOT PTHREAD_LIBRARY)
     message(FATAL_ERROR "pthread is required")
-endif()
-
-
-option(ENABLE_DEBUG "Enable debug build" OFF)
-option(ENABLE_STATIC "Enable static linking" OFF)
-option(BUILD_LIB "BUILD with lib" OFF)
-
-# For Debug build
-if(ENABLE_DEBUG)
-    message(WARNING "Warning: DEBUG mode is enabled")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")
-else()
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
-endif()
-
-# For static build
-if(ENABLE_STATIC)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 endif()
 
 # Set default CFLAGS and LDFLAGS
@@ -187,6 +170,23 @@ endforeach()
 
 set(LDFLAGS "-Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now")
 
+option(ENABLE_DEBUG "Enable debug build" OFF)
+option(ENABLE_STATIC "Enable static linking" OFF)
+option(BUILD_LIB "BUILD with lib" OFF)
+
+# For Debug build
+if(ENABLE_DEBUG)
+    message(WARNING "Warning: DEBUG mode is enabled")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")
+else()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
+endif()
+
+# For static build
+if(ENABLE_STATIC)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
+endif()
+
 # Add LDFLAGS
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
 
@@ -198,6 +198,9 @@ execute_process(
 )
 
 add_definitions(-DRURI_COMMIT_ID="${GIT_COMMIT_ID}")
+
+# Enable LFS
+add_definitions(-D_FILE_OFFSET_BITS=64)
 
 file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/easteregg/*.c)
 

@@ -1,8 +1,8 @@
 #!/bin/sh
 
-set -eu
+set -euo pipefail
 
-rm -rf configure Makefile Makefile.in config.*
+rm -rfd configure configure~ config.* Makefile Makefile.in compile* missing* ltmain.sh* install-sh* 
 
 echo
 echo Running autogen script...
