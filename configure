@@ -6346,19 +6346,16 @@ fi
 if test "x$PKG_CONFIG" = "x"; then
   as_fn_error $? "you need to have pkgconfig installed!" "$LINENO" 5
 fi
-
 # REQUIRE a standard (ANSI/ISO) C compiler
 if test "$ac_cv_prog_cc_stdc" = no; then
 	as_fn_error $? "A standard (ANSI/ISO C89) C compiler is required." "$LINENO" 5
 fi
-
 
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
 gl_cv_func_snprintf_directive_n=yes
 gl_cv_glob_lists_symlinks=yes
-
 
  if test x$USE_NLS = xyes; then
   USE_NLS_TRUE=
@@ -6367,7 +6364,6 @@ else
   USE_NLS_TRUE='#'
   USE_NLS_FALSE=
 fi
-
 
 # Define AC_CHECK_CFLAGS macro
 

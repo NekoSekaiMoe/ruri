@@ -39,12 +39,10 @@ dnl Give error and exit if we dont have pkgconfig
 if test "x$PKG_CONFIG" = "x"; then
   AC_MSG_ERROR([you need to have pkgconfig installed!])
 fi
-
 # REQUIRE a standard (ANSI/ISO) C compiler
 if test "$ac_cv_prog_cc_stdc" = no; then
 	AC_MSG_ERROR([A standard (ANSI/ISO C89) C compiler is required.])
 fi
-
 
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
@@ -53,9 +51,7 @@ gl_cv_func_snprintf_directive_n=yes
 gl_cv_glob_lists_symlinks=yes
 
 dnl Internationalization macros.
-
 AM_CONDITIONAL(USE_NLS, test x$USE_NLS = xyes)
-
 # Define AC_CHECK_CFLAGS macro
 AC_DEFUN([AC_CHECK_CFLAGS], [
     AC_MSG_CHECKING([whether $1 is supported])
