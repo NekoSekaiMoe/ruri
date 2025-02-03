@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.10)
 
 # set the project name
 project(ruri LANGUAGES C)
+set(VERSION 3.8)
+set(RURI_VERSION ${VERSION})
+
+configure_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/config_cmake.h.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/src/include/version.h"
+  @ONLY
+)
 
 # Check for header
 include(CheckIncludeFile)

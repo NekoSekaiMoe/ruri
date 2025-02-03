@@ -33,6 +33,14 @@ AC_PROG_INSTALL
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 
+AH_TEMPLATE([ENABLE_INSTALLER])
+AH_TEMPLATE([HAVE_CATGETS])
+AH_TEMPLATE([HAVE_LC_MESSAGES])
+dnl Give error and exit if we dont have pkgconfig
+if test "x$PKG_CONFIG" = "x"; then
+  AC_MSG_ERROR([you need to have pkgconfig installed!])
+fi
+
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
@@ -147,3 +155,18 @@ fi
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
+dnl ==========================================================================
+
+echo "
+Configure summary:
+
+    ${PACKAGE_STRING}
+    `echo $PACKAGE_STRING | sed "s/./=/g"`
+
+    prefix:                       ${prefix}
+    source code location:         ${srcdir}
+    compiler:                     ${CC}
+    compiler flags:               ${CFLAGS}
+    linker flags:                 ${LDFLAGS}
+
+"
