@@ -1,11 +1,12 @@
 # SPDX-License-Identifier: MIT
 # Process this file with autoconf to produce a configure script.
-AC_PREREQ([2.69])
-AC_INIT([ruri], [3.8], [moe-hacker@crack.moe])
+AC_PREREQ([2.71])
+AC_INIT([ruri],[3.8],[moe-hacker@crack.moe])
 AC_PROG_CC
 AM_INIT_AUTOMAKE
 m4_pattern_allow([AC_CHECK_LDFLAGS])
 AC_USE_SYSTEM_EXTENSIONS
+AM_MAINTAINER_MODE
 AC_PROG_MAKE_SET
 PKG_PROG_PKG_CONFIG
 AC_CHECK_SIZEOF(char)
@@ -30,24 +31,26 @@ AC_TYPE_SIZE_T
 AC_TYPE_OFF_T
 AC_CHECK_SIZEOF(off_t, 4)
 AC_PROG_INSTALL
+AC_C_PROTOTYPES
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 
-AH_TEMPLATE([ENABLE_INSTALLER])
-AH_TEMPLATE([HAVE_CATGETS])
-AH_TEMPLATE([HAVE_LC_MESSAGES])
 dnl Give error and exit if we dont have pkgconfig
 if test "x$PKG_CONFIG" = "x"; then
   AC_MSG_ERROR([you need to have pkgconfig installed!])
 fi
+
+# REQUIRE a standard (ANSI/ISO) C compiler
+if test "$ac_cv_prog_cc_stdc" = no; then
+	AC_MSG_ERROR([A standard (ANSI/ISO C89) C compiler is required.])
+fi
+
 
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
 gl_cv_func_snprintf_directive_n=yes
 gl_cv_glob_lists_symlinks=yes
-
-AM_MAINTAINER_MODE([enable])
 
 dnl Internationalization macros.
 

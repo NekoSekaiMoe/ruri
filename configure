@@ -662,9 +662,6 @@ ENABLE_STRIP_TRUE
 UPX
 USE_NLS_FALSE
 USE_NLS_TRUE
-MAINT
-MAINTAINER_MODE_FALSE
-MAINTAINER_MODE_TRUE
 LIBOBJS
 host_os
 host_vendor
@@ -677,6 +674,9 @@ build
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
+MAINT
+MAINTAINER_MODE_FALSE
+MAINTAINER_MODE_TRUE
 AM_BACKSLASH
 AM_DEFAULT_VERBOSITY
 AM_DEFAULT_V
@@ -768,8 +768,8 @@ ac_user_opts='
 enable_option_checking
 enable_dependency_tracking
 enable_silent_rules
-enable_largefile
 enable_maintainer_mode
+enable_largefile
 enable_debug
 enable_static
 '
@@ -1417,10 +1417,10 @@ Optional Features:
                           speeds up one-time build
   --enable-silent-rules   less verbose build output (undo: "make V=1")
   --disable-silent-rules  verbose build output (undo: "make V=0")
-  --disable-largefile     omit support for large files
-  --disable-maintainer-mode
-                          disable make rules and dependencies not useful (and
+  --enable-maintainer-mode
+                          enable make rules and dependencies not useful (and
                           sometimes confusing) to the casual installer
+  --disable-largefile     omit support for large files
   --enable-debug          Enable debug build
   --enable-static         Enable static linking
 
@@ -4947,6 +4947,30 @@ then :
 
 fi
 
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
+printf %s "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
+    # Check whether --enable-maintainer-mode was given.
+if test ${enable_maintainer_mode+y}
+then :
+  enableval=$enable_maintainer_mode; USE_MAINTAINER_MODE=$enableval
+else $as_nop
+  USE_MAINTAINER_MODE=no
+fi
+
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $USE_MAINTAINER_MODE" >&5
+printf "%s\n" "$USE_MAINTAINER_MODE" >&6; }
+   if test $USE_MAINTAINER_MODE = yes; then
+  MAINTAINER_MODE_TRUE=
+  MAINTAINER_MODE_FALSE='#'
+else
+  MAINTAINER_MODE_TRUE='#'
+  MAINTAINER_MODE_FALSE=
+fi
+
+  MAINT=$MAINTAINER_MODE_TRUE
+
+
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether ${MAKE-make} sets \$(MAKE)" >&5
 printf %s "checking whether ${MAKE-make} sets \$(MAKE)... " >&6; }
 set x ${MAKE-make}
@@ -6307,8 +6331,14 @@ printf "%s\n" "#define SIZEOF_OFF_T $ac_cv_sizeof_off_t" >>confdefs.h
 
 
 
+if test "$ac_prog_cc_stdc" != no; then
+
+printf "%s\n" "#define PROTOTYPES 1" >>confdefs.h
 
 
+printf "%s\n" "#define __PROTOTYPES 1" >>confdefs.h
+
+fi
 
 
 
@@ -6317,36 +6347,17 @@ if test "x$PKG_CONFIG" = "x"; then
   as_fn_error $? "you need to have pkgconfig installed!" "$LINENO" 5
 fi
 
+# REQUIRE a standard (ANSI/ISO) C compiler
+if test "$ac_cv_prog_cc_stdc" = no; then
+	as_fn_error $? "A standard (ANSI/ISO C89) C compiler is required." "$LINENO" 5
+fi
+
+
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
 gl_cv_func_printf_long_double=yes
 gl_cv_func_snprintf_directive_n=yes
 gl_cv_glob_lists_symlinks=yes
-
-
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
-printf %s "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
-    # Check whether --enable-maintainer-mode was given.
-if test ${enable_maintainer_mode+y}
-then :
-  enableval=$enable_maintainer_mode; USE_MAINTAINER_MODE=$enableval
-else $as_nop
-  USE_MAINTAINER_MODE=yes
-fi
-
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $USE_MAINTAINER_MODE" >&5
-printf "%s\n" "$USE_MAINTAINER_MODE" >&6; }
-   if test $USE_MAINTAINER_MODE = yes; then
-  MAINTAINER_MODE_TRUE=
-  MAINTAINER_MODE_FALSE='#'
-else
-  MAINTAINER_MODE_TRUE='#'
-  MAINTAINER_MODE_FALSE=
-fi
-
-  MAINT=$MAINTAINER_MODE_TRUE
-
-
 
 
  if test x$USE_NLS = xyes; then

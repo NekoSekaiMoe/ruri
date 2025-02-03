@@ -1,11 +1,5 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* */
-#undef ENABLE_INSTALLER
-
-/* */
-#undef HAVE_CATGETS
-
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
@@ -17,9 +11,6 @@
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
-
-/* */
-#undef HAVE_LC_MESSAGES
 
 /* Define to 1 if you have the <linux/fs.h> header file. */
 #undef HAVE_LINUX_FS_H
@@ -128,6 +119,9 @@
 
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
+
+/* Define to 1 if the C compiler supports function prototypes. */
+#undef PROTOTYPES
 
 /* The size of `char', as computed by sizeof. */
 #undef SIZEOF_CHAR
@@ -253,6 +247,9 @@
    <pthread.h>, or <semaphore.h> is not used. If the typedef were allowed, the
    #define below would cause a syntax error. */
 #undef _UINT32_T
+
+/* Define like PROTOTYPES; this can be used by system headers. */
+#undef __PROTOTYPES
 
 /* "unknown" */
 #undef __TIMESTAMP__
