@@ -6343,7 +6343,6 @@ fi
 
 
 
-
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for unsigned long long int" >&5
 printf %s "checking for unsigned long long int... " >&6; }
 if test ${ac_cv_type_unsigned_long_long_int+y}
