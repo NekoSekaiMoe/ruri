@@ -5,7 +5,6 @@ AC_INIT([ruri],[3.8],[moe-hacker@crack.moe])
 AC_PROG_CC
 AM_INIT_AUTOMAKE
 m4_pattern_allow([AC_CHECK_LDFLAGS])
-AC_USE_SYSTEM_EXTENSIONS
 AM_MAINTAINER_MODE
 AC_PROG_MAKE_SET
 PKG_PROG_PKG_CONFIG
@@ -34,7 +33,6 @@ AC_PROG_INSTALL
 AC_C_PROTOTYPES
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
-AC_TYPE_UNSIGNED_LONG_LONG_INT
 
 dnl Give error and exit if we dont have pkgconfig
 if test "x$PKG_CONFIG" = "x"; then
@@ -148,15 +146,14 @@ CFLAGS="$CFLAGS $SUPPORTED_CFLAGS"
 LDFLAGS="$LDFLAGS $SUPPORTED_LDFLAGS"
 
 if test "$CC" = "tcc"; then
-    AC_DEFINE([__VERSION__], [1], ["TinyCC"])
-    AC_DEFINE([__TIMESTAMP__], [1], ["unknown"])
+    AC_DEFINE([__VERSION__], ["TinyCC"], ["1"])
+    AC_DEFINE([__TIMESTAMP__], ["unknown"], ["1"])
 fi
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
 dnl ==========================================================================
-
 echo "
 Configure summary:
 
@@ -168,5 +165,4 @@ Configure summary:
     compiler:                     ${CC}
     compiler flags:               ${CFLAGS}
     linker flags:                 ${LDFLAGS}
-
 "
