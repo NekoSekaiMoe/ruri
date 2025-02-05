@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -euo pipefail
+set -eu
 
 rm -rfd configure configure~ config.* Makefile Makefile.in compile* missing* ltmain.sh* install-sh* 
 
