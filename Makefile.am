@@ -14,7 +14,7 @@ ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
                 src/easteregg/typewriter.c src/ruri.c
 
 # Compiler and linker flags
-AM_CFLAGS = -Wall -Wextra -pedantic -Wconversion -Wno-unused-result -ffunction-sections -fdata-sections -fstack-protector-all  -D_FORTIFY_SOURCE=3  -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
+AM_CFLAGS = $(CFLAGS)
 AM_LDFLAGS = $(LINKER_FLAGS)
 
 if ENABLE_STRIP

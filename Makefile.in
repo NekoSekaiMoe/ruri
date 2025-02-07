@@ -325,7 +325,7 @@ ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
 
 
 # Compiler and linker flags
-AM_CFLAGS = -Wall -Wextra -pedantic -Wconversion -Wno-unused-result -ffunction-sections -fdata-sections -fstack-protector-all  -D_FORTIFY_SOURCE=3  -I$(srcdir)/src/include -I$(srcdir)/src/easteregg/include
+AM_CFLAGS = $(CFLAGS)
 AM_LDFLAGS = $(LINKER_FLAGS)
 AM_V_CC = $(AM_V)echo "  CC       " $@;
 all: config.h
