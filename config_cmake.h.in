@@ -35,7 +35,7 @@
 // Version info.
 #cmakedefine RURI_VERSION "@VERSION@"
 
-#ifdef __TINYC__
+#ifdef __TINYCC__
     #define COMPILER_VERSION "TinyCC"
 #else
     #define COMPILER_VERSION __VERSION__
