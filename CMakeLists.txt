@@ -26,9 +26,6 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-add_definitions(-DBUILD_DATE="${CMAKE_CURRENT_DATE}")
-add_definitions(-DBUILD_TIME="${CMAKE_CURRENT_TIME}")
-
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
@@ -110,9 +107,8 @@ if(CMAKE_C_COMPILER MATCHES "tcc")
     endif()
     # Fix tcc not defined __VERSION__ and __TIMPSTAMP__
     add_definitions(-D__VERSION__="TinyCC")
-    add_definitions(-D__TIMESTAMP__="unknown")
+    add_definitions(-D__TIMESTAMP__="${CMAKE_CURRENT_DATE} ${CMAKE_CURRENT_TIME}")
 endif()
-
 
 # Search for libs
 find_library(CAP_LIBRARY cap)
