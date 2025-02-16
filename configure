@@ -7032,8 +7032,8 @@ rm -f core conftest.err conftest.$ac_objext conftest.beam \
 done
 
 # Apply supported flags
-CFLAGS="$CFLAGS $SUPPORTED_CFLAGS"
-LDFLAGS="$LDFLAGS $SUPPORTED_LDFLAGS"
+CFLAGS="$SUPPORTED_CFLAGS"
+LDFLAGS="$SUPPORTED_LDFLAGS"
 
 if test "$CC" = "tcc"; then
 

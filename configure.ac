@@ -143,8 +143,8 @@ for flag in $LDFLAGS_LIST; do
 done
 
 # Apply supported flags
-CFLAGS="$CFLAGS $SUPPORTED_CFLAGS"
-LDFLAGS="$LDFLAGS $SUPPORTED_LDFLAGS"
+CFLAGS="$SUPPORTED_CFLAGS"
+LDFLAGS="$SUPPORTED_LDFLAGS"
 
 if test "$CC" = "tcc"; then
     AC_DEFINE([__VERSION__], ["TinyCC"], ["1"])
