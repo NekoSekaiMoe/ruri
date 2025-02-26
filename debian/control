@@ -2,7 +2,7 @@ Source: ruri
 Section: admin
 Priority: optional
 Maintainer: Moe-hacker <admin@crack.moe>
-Build-Depends: debhelper-compat (= 13), libcap-dev, libseccomp-dev, clang-tidy pkg-config
+Build-Depends: debhelper-compat (= 13), libcap-dev, libseccomp-dev, clang-tidy, pkg-config
 Standards-Version: 4.6.0
 Homepage: https://github.com/Moe-hacker/ruri
 #Vcs-Browser: https://salsa.debian.org/debian/ruri

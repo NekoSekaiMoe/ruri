@@ -17,13 +17,6 @@ jobs:
       - name: Test
         run: |
           apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf qemu-user-static
-          yes | apt install --no-install-recommends -y curl xz-utils \
-          make \
-          clang-tidy \
-          libseccomp-dev \
-          libcap-dev \
-          libc6-dev \
-          binutils uidmap
 
       - name: Check latest version
         uses: actions/checkout@v4
@@ -41,6 +34,7 @@ jobs:
       - name: build amd64 deb
         run: |
           git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
+          apt build-dep .
           dpkg-buildpackage -F -d
           mkdir -p build
           mv ../ruri_* build
