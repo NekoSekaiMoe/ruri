@@ -46,7 +46,7 @@ AM_V_CC = $(AM_V)echo "  CC       " $@;
 .PHONY: ruritest check
 
 check:
-	clang-tidy $(ruri_SOURCES)
-	true
-ruritest:
+	clang-tidy $(ruri_SOURCES) || true
+
+testuite:
 	$(MAKE) -C test -f Makefile.test test
