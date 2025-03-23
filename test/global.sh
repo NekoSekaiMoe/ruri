@@ -1,3 +1,4 @@
+PS4='+ [DEBUG] ${BASH_SOURCE}:${LINENO}: ' && export PS4
 export BASE="\033[1;38;2;254;228;208m"
 export RED="\033[31m"
 export GREEN="\033[32m"

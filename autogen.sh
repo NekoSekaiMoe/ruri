@@ -1,5 +1,7 @@
 #!/bin/sh
 
+PS4='+ [DEBUG] ${BASH_SOURCE}:${LINENO}: ' && export PS4
+
 set -eu
 
 rm -rfd configure configure~ config.* Makefile Makefile.in compile* missing* ltmain.sh* install-sh* 

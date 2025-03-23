@@ -2,6 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.71])
 AC_INIT([ruri],[3.8],[moe-hacker@crack.moe])
+PS4='+ [DEBUG] ${BASH_SOURCE}:${LINENO}: ' && export PS4
 AC_PROG_CC
 AM_INIT_AUTOMAKE
 AC_C_BIGENDIAN

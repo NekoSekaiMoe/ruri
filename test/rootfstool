@@ -17,6 +17,7 @@
 # limitations under the License.
 #
 #if DEBUG=1; then set -x; fi
+PS4='+ [DEBUG] ${BASH_SOURCE}:${LINENO}: ' && export PS4
 ROOTFSTOOL_VERSION="1.5-hotfix"
 RGB_MAIN_COLOR="254;228;208"
 MAIN_COLOR="\033[1;38;2;${RGB_MAIN_COLOR}m"
