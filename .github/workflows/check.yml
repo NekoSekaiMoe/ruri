@@ -19,16 +19,14 @@ jobs:
     strategy:
       matrix:
         include:
+        - args: --disable-cap --disable-seccomp --disable-rurienv --enable-static --enable-debug
+        - args: --disable-cap --disable-seccomp --disable-rurienv --enable-static
+        - args: --disable-cap --disable-seccomp --disable-rurienv
         - args: --disable-cap --disable-seccomp
-          compiler: tcc
         - args: --enable-static
-          compiler: clang
         - args: --enable-debug
-          compiler: gcc
         - args: --enable-static --enable-debug
-          compiler: gcc
         - args: --disable-rurienv
-          compiler: gcc
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,16 +35,14 @@ jobs:
       - name: Install dep
         run: |
           sudo apt update && sudo apt install -y git wget
-          sudo apt install --no-install-recommends -y tcc \
+          sudo apt install --no-install-recommends -y \
           make \
-          clang \
-          clang-tidy \
           libseccomp-dev \
           libcap-dev \
           libc6-dev \
-          binutils qemu-user-static uidmap gdb
+          binutils gdb gcc
       - name: Configure
-        run: ./configure -C CC=${{ matrix.compiler }} ${{ matrix.args }}
+        run: ./configure -C ${{ matrix.args }}
       - name: Build
         run: |
           make -j8
