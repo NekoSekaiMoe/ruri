@@ -34,6 +34,17 @@
 #else
 #define _GNU_SOURCE
 #endif
+#ifdef RURI_CORE_ONLY
+#ifndef DISABLE_LIBSECCOMP
+#define DISABLE_LIBSECCOMP
+#endif
+#ifndef DISABLE_LIBCAP
+#define DISABLE_LIBCAP
+#endif
+#ifndef DISABLE_RURIENV
+#define DISABLE_RURIENV
+#endif
+#endif
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -63,10 +74,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <grp.h>
+#ifndef DISABLE_LIBSECCOMP
 // This program need to be linked with `-lseccomp`.
 #include <seccomp.h>
+#endif
+#ifndef DISABLE_LIBCAP
 // This program need to be linked with `-lcap`.
 #include <sys/capability.h>
+#else
+typedef int cap_value_t;
+#endif
 // Fix definition of HOST_NAME_MAX
 #ifndef HOST_NAME_MAX
 #define HOST_NAME_MAX 64
@@ -269,7 +286,9 @@ void ruri_correct_config(const char *_Nonnull path);
 void ruri_init_config(struct RURI_CONTAINER *_Nonnull container);
 int ruri_mkdirs(const char *_Nonnull dir, mode_t mode);
 int ruri_get_groups(uid_t uid, gid_t groups[]);
+#ifndef DISABLE_LIBCAP
 int ruri_cap_from_name(const char *str, cap_value_t *cap);
+#endif
 //   ██╗ ██╗  ███████╗   ████╗   ███████╗
 //  ████████╗ ██╔════╝ ██╔═══██╗ ██╔════╝
 //  ╚██╔═██╔╝ █████╗   ██║   ██║ █████╗
