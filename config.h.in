@@ -3,6 +3,15 @@
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
 
+/* Define to 1 if libcap support is disabled */
+#undef DISABLE_LIBCAP
+
+/* Define to 1 if libseccomp support is disabled */
+#undef DISABLE_LIBSECCOMP
+
+/* Define to 1 if rurienv support is disabled */
+#undef DISABLE_RURIENV
+
 /* Define to 1 if you have the <fcntl.h> header file. */
 #undef HAVE_FCNTL_H
 
@@ -27,9 +36,6 @@
 /* Define to 1 if `lstat' has the bug that it succeeds when given the
    zero-length file name argument. */
 #undef HAVE_LSTAT_EMPTY_STRING_BUG
-
-/* Define to 1 if you have the <pthread.h> header file. */
-#undef HAVE_PTHREAD_H
 
 /* Define to 1 if you have the <seccomp.h> header file. */
 #undef HAVE_SECCOMP_H

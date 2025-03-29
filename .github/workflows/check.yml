@@ -1,0 +1,56 @@
+name: Build check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/**'
+      - 'build/**'
+      - 'test/**'
+      - 'configure'
+      - 'Makefile.in'
+      - '.github/workflows/test.yml'
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    strategy:
+      matrix:
+        include:
+        - args: --disable-cap --disable-seccomp
+          compiler: tcc
+        - args: --enable-static
+          compiler: clang
+        - args: --enable-debug
+          compiler: gcc
+        - args: --enable-static --enable-debug
+          compiler: gcc
+        - args: --disable-rurienv
+          compiler: gcc
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dep
+        run: |
+          sudo apt update && sudo apt install -y git wget
+          sudo apt install --no-install-recommends -y tcc \
+          make \
+          clang \
+          clang-tidy \
+          libseccomp-dev \
+          libcap-dev \
+          libc6-dev \
+          binutils qemu-user-static uidmap gdb
+      - name: Configure
+        run: ./configure -C CC=${{ matrix.compiler }} ${{ matrix.args }}
+      - name: Build
+        run: |
+          make -j8
+      - name: Show version
+        run: ./ruri -v
+
+
