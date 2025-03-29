@@ -95,12 +95,6 @@ fi
 
 # Check for required headers
 AC_CHECK_HEADERS([time.h grp.h fcntl.h sys/ioctl.h sys/mount.h sys/socket.h sys/wait.h linux/fs.h linux/version.h linux/sched.h], [], AC_MSG_ERROR([Missing required headers in standard C library.]))
-AC_CHECK_HEADERS([sys/capability.h seccomp.h pthread.h], [], AC_MSG_ERROR([Missing required headers for libraries.]))
-
-# Check for libraries
-AC_SEARCH_LIBS([cap_init], [cap], [], AC_MSG_ERROR([libcap is required]))
-AC_SEARCH_LIBS([seccomp_init], [seccomp], [], AC_MSG_ERROR([libseccomp is required]))
-AC_SEARCH_LIBS([pthread_create], [pthread], [], AC_MSG_ERROR([pthread is required]))
 
 # Enable optional flags
 CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe"
@@ -114,6 +108,44 @@ AC_ARG_ENABLE([debug],
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
     [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi])
+# Option to disable libseccomp
+AC_ARG_ENABLE([libseccomp],
+    AS_HELP_STRING([--disable-libseccomp], [Disable libseccomp support]),
+    [], [enable_libseccomp=yes])
+
+# Option to disable libcap
+AC_ARG_ENABLE([libcap],
+    AS_HELP_STRING([--disable-libcap], [Disable libcap support]),
+    [], [enable_libcap=yes])
+
+# Option to disable rurienv
+AC_ARG_ENABLE([rurienv],
+    AS_HELP_STRING([--disable-rurienv], [Disable .rurienv support]),
+    [], [enable_rurienv=yes])
+
+# Replace the existing library checks with these conditional versions
+# Check for libseccomp
+AS_IF([test "x$enable_libseccomp" = "xyes"], [
+    AC_CHECK_HEADERS([seccomp.h], [], [AC_MSG_ERROR([seccomp.h header not found])])
+    AC_SEARCH_LIBS([seccomp_init], [seccomp], [], 
+        [AC_MSG_ERROR([libseccomp is required unless --disable-libseccomp is used])])
+], [
+    AC_DEFINE([DISABLE_LIBSECCOMP], [1], [Define to 1 if libseccomp support is disabled])
+])
+
+# Check for libcap
+AS_IF([test "x$enable_libcap" = "xyes"], [
+    AC_CHECK_HEADERS([sys/capability.h], [], [AC_MSG_ERROR([sys/capability.h header not found])])
+    AC_SEARCH_LIBS([cap_init], [cap], [], 
+        [AC_MSG_ERROR([libcap is required unless --disable-libcap is used])])
+], [
+    AC_DEFINE([DISABLE_LIBCAP], [1], [Define to 1 if libcap support is disabled])
+])
+
+# Add rurienv conditional define
+AS_IF([test "x$enable_rurienv" != "xyes"], [
+    AC_DEFINE([DISABLE_RURIENV], [1], [Define to 1 if rurienv support is disabled])
+])
 
 # Check CFLAGS
 AC_MSG_CHECKING([whether the following CFLAGS are supported])
