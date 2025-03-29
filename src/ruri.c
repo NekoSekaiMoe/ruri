@@ -361,6 +361,14 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 				ruri_error("{red}hidepid should be in range 0-2\n");
 			}
 		}
+		// OOM score.
+		else if (strcmp(argv[index], "-O") == 0 || strcmp(argv[index], "--oom-score-adj") == 0) {
+			index++;
+			container->oom_score_adj = atoi(argv[index]);
+			if (container->oom_score_adj < -1000 || container->oom_score_adj > 1000) {
+				ruri_error("{red}oom_score_adj should be in range [-1000]-[1000]\n");
+			}
+		}
 		// Join ns.
 		else if (strcmp(argv[index], "-J") == 0 || strcmp(argv[index], "--join-ns") == 0) {
 			index++;
@@ -556,7 +564,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 				// we can not use the name to match it in current libcap.
 				if (atoi(argv[index]) != 0) {
 					ruri_add_to_caplist(keep_caplist_extra, atoi(argv[index]));
-				} else if (cap_from_name(argv[index], &cap) == 0) {
+				} else if (ruri_cap_from_name(argv[index], &cap) == 0) {
 					ruri_add_to_caplist(keep_caplist_extra, cap);
 					ruri_log("{base}Keep capability: %s\n", argv[index]);
 				} else {
@@ -739,7 +747,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 							// we can not use the name to match it in current libcap.
 							if (atoi(argv[index]) != 0) {
 								ruri_add_to_caplist(keep_caplist_extra, atoi(argv[index]));
-							} else if (cap_from_name(argv[index], &cap) == 0) {
+							} else if (ruri_cap_from_name(argv[index], &cap) == 0) {
 								ruri_add_to_caplist(keep_caplist_extra, cap);
 								ruri_log("{base}Keep capability: %s\n", argv[index]);
 							} else {
@@ -758,7 +766,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 						if (argv[index] != NULL) {
 							if (atoi(argv[index]) != 0) {
 								ruri_add_to_caplist(drop_caplist_extra, atoi(argv[index]));
-							} else if (cap_from_name(argv[index], &cap) == 0) {
+							} else if (ruri_cap_from_name(argv[index], &cap) == 0) {
 								ruri_add_to_caplist(drop_caplist_extra, cap);
 							} else {
 								ruri_error("{red}Error: unknown capability `%s`\nQwQ{clear}\n", argv[index]);
@@ -957,6 +965,17 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 						container->hidepid = atoi(argv[index]);
 						if (container->hidepid < 0 || container->hidepid > 2) {
 							ruri_error("{red}hidepid should be in range 0-2\n");
+						}
+					} else {
+						ruri_error("Invalid argument %s\n", argv[index]);
+					}
+					break;
+				case 'O':
+					if (i == (strlen(argv[index]) - 1)) {
+						index++;
+						container->oom_score_adj = atoi(argv[index]);
+						if (container->oom_score_adj < -1000 || container->oom_score_adj > 1000) {
+							ruri_error("{red}oom_score_adj should be in range [-1000]-[1000]\n");
 						}
 					} else {
 						ruri_error("Invalid argument %s\n", argv[index]);

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-# set the project name
+# Set the project name
 project(ruri LANGUAGES C)
 set(VERSION 3.8)
 set(RURI_VERSION ${VERSION})
@@ -226,7 +226,6 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/ruri/src/
 )
 
-# on linux clang 14
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
     if (ENABLE_STATIC)
         target_link_libraries(ruri -lcap -lseccomp)
