@@ -15,19 +15,24 @@ on:
 
 jobs:
   test:
-    name: Test
+    name: checksuite
     strategy:
       matrix:
         include:
-        - args: --disable-cap --disable-seccomp --disable-rurienv --enable-static --enable-debug
-        - args: --disable-cap --disable-seccomp --disable-rurienv --enable-static
-        - args: --disable-cap --disable-seccomp --disable-rurienv
-        - args: --disable-cap --disable-seccomp
+        - args: --disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug
+        - args: --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
+        - args: --disable-libcap --disable-libseccomp --disable-rurienv
+        - args: --disable-libcap --disable-libseccomp
         - args: --enable-static
         - args: --enable-debug
         - args: --enable-static --enable-debug
+        - args: --enable-static --disable-rurienv
+        - args: --enable-static --enable-debug --disable-rurienv
         - args: --disable-rurienv
-    runs-on: ubuntu-latest
+        - os: ubuntu-latest
+        - os: ubuntu-22.04-arm64
+        - os: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     permissions:
       contents: read
     steps:
@@ -37,8 +42,8 @@ jobs:
           sudo apt update && sudo apt install -y git wget
           sudo apt install --no-install-recommends -y \
           make \
-          libseccomp-dev \
-          libcap-dev \
+          liblibseccomp-dev \
+          liblibcap-dev \
           libc6-dev \
           binutils gdb gcc
       - name: Configure
