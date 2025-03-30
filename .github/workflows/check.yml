@@ -6,11 +6,10 @@ on:
     branches: [ "main" ]
     paths:
       - 'src/**'
-      - 'build/**'
-      - 'test/**'
+      - 'autogen.sh'
       - 'configure'
       - 'Makefile.in'
-      - '.github/workflows/test.yml'
+      - '.github/workflows/check.yml'
   pull_request:
 
 jobs:
