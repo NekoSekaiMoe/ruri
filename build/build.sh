@@ -15,9 +15,10 @@ done
 
 mkdir output output2 output3
 
-git clone --depth 1 https://github.com/moe-hacker/ruri.git
+git clone --depth 1 https://github.com/dpkg123/ruri.git
 cd ruri
-./configure -s
+bash autogen.sh
+./configure --enable-static
 make
 strip ruri
 
