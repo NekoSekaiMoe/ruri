@@ -1,3 +1,5 @@
+set -x
+
 if [ -f /etc/resolv.conf ]; then
     rm /etc/resolv.conf
 fi
