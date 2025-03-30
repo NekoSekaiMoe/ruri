@@ -17,20 +17,9 @@ jobs:
     name: checksuite
     strategy:
       matrix:
-        include:
-        - args: --disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug
-        - args: --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
-        - args: --disable-libcap --disable-libseccomp --disable-rurienv
-        - args: --disable-libcap --disable-libseccomp
-        - args: --enable-static
-        - args: --enable-debug
-        - args: --enable-static --enable-debug
-        - args: --enable-static --disable-rurienv
-        - args: --enable-static --enable-debug --disable-rurienv
-        - args: --disable-rurienv
-        - os: ubuntu-latest
-        - os: ubuntu-22.04-arm64
-        - os: ubuntu-22.04
+        os: [ubuntu-latest, ubuntu-22.04-arm64, ubuntu-22.04]
+        args: ["--disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug", "--disable-libcap --disable-libseccomp --disable-rurienv --enable-static", "--disable-libcap --disable-libseccomp --disable-rurienv", "--disable-libcap --disable-libseccomp", "--enable-static", "--enable-debug", "--enable-static --enable-debug", "--enable-static --disable-rurienv", "--enable-static --enable-debug --disable-rurienv", "--disable-rurienv"]
+        
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read
