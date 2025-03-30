@@ -17,10 +17,10 @@ jobs:
     name: checksuite
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-22.04-arm64, ubuntu-22.04]
+        os: [ubuntu-latest, ubuntu-22.04-arm, ubuntu-22.04]
         cc: [gcc, clang]
         args: ["--disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug", "--disable-libcap --disable-libseccomp --disable-rurienv --enable-static", "--disable-libcap --disable-libseccomp --disable-rurienv", "--disable-libcap --disable-libseccomp", "--enable-static", "--enable-debug", "--enable-static --enable-debug", "--enable-static --disable-rurienv", "--enable-static --enable-debug --disable-rurienv", "--disable-rurienv"]
-        
+
     runs-on: ${{ matrix.os }}
     permissions:
       contents: read

@@ -30,7 +30,7 @@ upx_target:
 	$(UPX) --best --lzma $(bin_PROGRAMS)
 else
 upx_target:
-	@echo "UPX not found, skipping compression."
+	$(AM_V)echo "UPX not found, skipping compression."
 endif
 
 if !ENABLE_DEBUG
@@ -46,7 +46,7 @@ AM_V_CC = $(AM_V)echo "  CC       " $@;
 .PHONY: ruritest check
 
 check:
-	clang-tidy $(ruri_SOURCES) || true
+	$(AM_V)clang-tidy $(ruri_SOURCES) || true
 
 testuite:
-	$(MAKE) -C test -f Makefile.test test
+	$(AM_V)$(MAKE) -C test -f Makefile.test test
