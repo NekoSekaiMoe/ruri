@@ -146,7 +146,7 @@ jobs:
       - name: download latest minirootfs
         env:
           ARCHITECTURE: ${{ matrix.arch }}
-          URL: https://dl-cdn.alpinelinux.org/alpine/edge/releases
+          URL: https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases
         run: |
           cd build
           mkdir -p $ARCHITECTURE
