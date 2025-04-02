@@ -6,7 +6,7 @@ test:
 	@echo "\033[33mYou have 5 seconds to press Ctrl+C to cancel.\033[0m"
 	@sleep 5
 	@cc -o test-root main.cpp -lstdc++ -g
-	@./testroot
+	@./test-root
 
 debug-gdb:
 	c++ -v -o test-root main.cpp --std=c++17 -g3 -O0
