@@ -1,5 +1,3 @@
-set -x
-
 if [ -f /etc/resolv.conf ]; then
     rm /etc/resolv.conf
 fi
@@ -17,10 +15,9 @@ done
 
 mkdir output output2 output3
 
-git clone --depth 1 https://github.com/dpkg123/ruri.git
+git clone --depth 1 https://github.com/moe-hacker/ruri.git
 cd ruri
-bash autogen.sh
-./configure --enable-static
+./configure -s
 make
 strip ruri
 
