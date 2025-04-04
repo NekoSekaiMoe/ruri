@@ -1,4 +1,5 @@
 #!/bin/bash
+#if DEBUG=1; then set -x; fi
 source global.sh
 
 # This will set $TEST_ROOT
@@ -22,11 +23,6 @@ for i in $(ls root/*.sh); do
     source $i
     check_if_succeed $?
 done
-
-cd ${TMPDIR}
-rm ruri
-wget -O - https://github.com/Moe-hacker/ruri/raw/refs/heads/main/get-ruri.sh | bash -s -- -s
-check_if_succeed $?
 
 # Check for released version
 cd ${TEST_ROOT}

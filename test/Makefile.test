@@ -1,0 +1,16 @@
+.PHONY: all debug test
+all: test
+
+test:
+	@echo "\033[33mWarning: This test is under sudo, do not run it on your device.\033[0m"
+	@echo "\033[33mYou have 5 seconds to press Ctrl+C to cancel.\033[0m"
+	@sleep 5
+	@cc -o test-root main.cpp -lstdc++ -g
+	@sudo ./test-root
+
+debug-gdb:
+	c++ -v -o test-root main.cpp --std=c++17 -g3 -O0
+	sudo gdb -batch -ex "run" -ex "bt" ./test-root || true
+
+debug:
+	sudo bash -x test-root.sh

@@ -9,7 +9,8 @@ on:
       - 'build/**'
       - 'test/**'
       - 'configure'
-      - 'Makefile'
+      - 'Makefile.in'
+      - '.github/workflows/test.yml'
   pull_request:
 
 jobs:
@@ -17,17 +18,62 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+    strategy:
+      matrix:
+        include:
+        - build: cmake
+        - build: autoconf
     steps:
       - uses: actions/checkout@v4
-      - name: Test
+      - name: Install dep
         run: |
           sudo apt update && sudo apt install -y git wget
           sudo apt install --no-install-recommends -y curl xz-utils \
           make \
           clang \
+          clang-tidy \
           libseccomp-dev \
           libcap-dev \
           libc6-dev \
-          binutils qemu-user-static uidmap
-          make test
+          binutils qemu-user-static uidmap gdb
+          if [ ${{ matrix.build }} = "cmake" ]; then
+              sed -i 's|./configure --enable-debug|cmake . -G"Unix Makefiles" -DENABLE_DEBUG=off|' test/init-root-test.sh
+          else
+              sed -i 's|./configure --enable-debug|./configure|' test/init-root-test.sh
+          fi
+      - name: Test
+        run: |
+          make -C test -f Makefile.test
+
+
+  build-dbg:
+    name: Build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        include:
+        - build-dbg: cmake-dbg
+        - build-dbg: autoconf-dbg
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dep
+        run: |
+          sudo apt update&&sudo apt install -y git wget
+          yes | sudo apt install --no-install-recommends -y curl xz-utils \
+          make \
+          clang \
+          clang-tidy \
+          libseccomp-dev \
+          libcap-dev \
+          libc6-dev \
+          binutils qemu-user-static uidmap gdb
+          if [ ${{ matrix.build-dbg }} = "cmake-dbg" ]; then
+              sed -i 's|./configure --enable-debug|cmake . -G"Unix Makefiles" -DENABLE_DEBUG=on|' test/init-root-test.sh
+          fi
+      - name: Test
+        run: |
+          make -C test -f Makefile.test debug-gdb
+          #make -C test -f Makefile.test
