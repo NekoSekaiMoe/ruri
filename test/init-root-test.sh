@@ -5,21 +5,17 @@ export TEST_NO=0
 export DESCRIPTION="This script is used to create files and directories for testing."
 show_test_description
 
-export RANDOMS=$(head -20 /dev/urandom | cksum | cut -c 1-10)
 export SUBTEST_NO=1
 export SUBTEST_DESCRIPTION="Build ruri"
-export TMPDIR=tmpdir-$RANDOMS
+export TMPDIR=tmpdir-$RANDOM
 show_subtest_description
 cd ..
 mkdir ${TMPDIR}
 check_if_succeed $?
 export TMPDIR=$(realpath ${TMPDIR})
-mkdir out
-cd out
-cp ../* . -r
-./configure --enable-debug
+./configure -d
 check_if_succeed $?
-make -j8 VERBOSE=1 V=1
+make dev
 check_if_succeed $?
 mv ruri ${TMPDIR}
 check_if_succeed $?
@@ -36,8 +32,9 @@ pass_subtest
 export SUBTEST_NO=3
 export SUBTEST_DESCRIPTION="Get rootfs.tar.xz"
 show_subtest_description
+git clone https://github.com/moe-hacker/rootfstool
 check_if_succeed $?
-../test/rootfstool d -d alpine -v edge
+rootfstool/rootfstool d -d alpine -v edge
 check_if_succeed $?
 pass_subtest
 
@@ -49,7 +46,7 @@ if [[ -e /tmp/test ]]; then
 fi
 if [[ -d /tmp/test ]]; then
     ./ruri -U /tmp/test
-     rm -rf /tmp/test
+    rm -rf /tmp/test
 fi
 dd if=/dev/zero of=test.img bs=1M count=256
 check_if_succeed $?
@@ -101,7 +98,7 @@ show_subtest_description
 mkdir aarch64
 check_if_succeed $?
 rm rootfs.tar.xz || true
-../test/rootfstool d -d alpine -v edge -a arm64
+rootfstool/rootfstool d -d alpine -v edge -a arm64
 check_if_succeed $?
 tar -xf rootfs.tar.xz -C aarch64
 check_if_succeed $?
@@ -113,11 +110,10 @@ show_subtest_description
 mkdir armhf
 check_if_succeed $?
 rm rootfs.tar.xz || true
-../test/rootfstool d -d alpine -v edge -a armhf
+rootfstool/rootfstool d -d alpine -v edge -a armhf
 check_if_succeed $?
 tar -xf rootfs.tar.xz -C armhf
 check_if_succeed $?
 pass_subtest
 
 pass_test
-cd ..

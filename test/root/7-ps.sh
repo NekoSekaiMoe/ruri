@@ -33,8 +33,7 @@ export SUBTEST_DESCRIPTION="-P with stopped container"
 show_subtest_description
 cd ${TMPDIR}
 if [[ "$(./ruri -P ./test)" != "" ]]; then
-    echo "ruri -P has output, expect not!"
-    echo skipping subtest2
+    error "ruri -P has output, expect not!"
 fi
 echo -e "${BASE}==> -P for stopped container passed!${CLEAR}\n"
 ./ruri -U ./test
