@@ -16,14 +16,20 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
     strategy:
       matrix:
         include:
         - build: cmake
+          os: ubuntu-latest
         - build: autoconf
+          os: ubuntu-latest
+        - build: cmake
+          os: ubuntu-22.04-arm
+        - build: autoconf
+          os: ubuntu-22.04-arm
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Install dep
