@@ -122,13 +122,7 @@ typedef int cap_value_t;
 #define RURI_MAX_CHAR_DEVS (128 * 3)
 #define RURI_MAX_SECCOMP_DENIED_SYSCALL (2048)
 // Include other headers.
-#include "elf-magic.h"
-#ifdef HAVE_CONFIG_H
-#include "../../config.h"
-#define RURI_VERSION VERSION
-#else
 #include "version.h"
-#endif
 #include "k2v.h"
 #include "cprintf.h"
 #include "hostarch.h"
@@ -283,6 +277,7 @@ gid_t ruri_get_user_gid(const char *_Nonnull username);
 pid_t ruri_get_ns_pid(const char *_Nonnull container_dir);
 void ruri_fetch(void);
 void ruri_correct_config(const char *_Nonnull path);
+int ruri(int argc, char **argv);
 void ruri_init_config(struct RURI_CONTAINER *_Nonnull container);
 int ruri_mkdirs(const char *_Nonnull dir, mode_t mode);
 int ruri_get_groups(uid_t uid, gid_t groups[]);
