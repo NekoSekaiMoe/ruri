@@ -964,6 +964,16 @@ uninstall-am: uninstall-binPROGRAMS
 check:
 	$(AM_V)clang-tidy $(ruri_SOURCES) || true
 
+format:
+	shfmt -i 4 -w test/*.sh
+	shfmt -i 4 -w test/root/*.sh
+	shfmt -i 4 -w configure
+	shfmt -i 4 -w get-ruri.sh
+	chmod 777 test/*.sh
+	chmod 777 test/root/*
+	sed -i "s/U '/U'/g" src/easteregg/*.c
+	sed -i "s/U \"/U\"/g" src/easteregg/*.c
+
 testuite:
 	$(AM_V)$(MAKE) -C test -f Makefile.test test
 
