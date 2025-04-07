@@ -15,10 +15,11 @@ done
 
 mkdir output output2 output3
 
-git clone --depth 1 https://github.com/moe-hacker/ruri.git
+git clone --depth 1 https://github.com/dpkg123/ruri.git --depth=1
 cd ruri
-./configure -s
-make
+./configure --enable-static
+make -j$(nproc)
+
 strip ruri
 
 cp ruri ../output/ruri
