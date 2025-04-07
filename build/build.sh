@@ -1,3 +1,7 @@
+PS4='+ [DEBUG] ${BASH_SOURCE}:${LINENO}: ' && export PS4
+
+set -x
+
 if [ -f /etc/resolv.conf ]; then
     rm /etc/resolv.conf
 fi
@@ -27,6 +31,8 @@ cp LICENSE ../output/LICENSE
 
 cp ruri ../output2/ruri
 cp LICENSE ../output2/LICENSE
+
+git clean -dxf
 
 ./configure --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
 make
