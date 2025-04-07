@@ -28,7 +28,7 @@ cp LICENSE ../output/LICENSE
 cp ruri ../output2/ruri
 cp LICENSE ../output2/LICENSE
 
-./configure -c -s
+./configure --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
 make
 strip ruri
 cp ruri ../output3/ruri
