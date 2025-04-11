@@ -93,7 +93,7 @@ jobs:
           echo nameserver 1.1.1.1 > /etc/resolv.conf
           apt-get update
           apt-get install -y wget make clang git libseccomp-dev libcap-dev libc-dev binutils upx-ucl tar
-          git clone --depth 1 https://github.com/dpkg123/ruri.git
+          git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
           cd ruri
           ./configure --enable-static
           make

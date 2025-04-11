@@ -19,7 +19,7 @@ done
 
 mkdir output output2 output3
 
-git clone --depth 1 https://github.com/dpkg123/ruri.git --depth=1
+git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git --depth=1
 cd ruri
 ./configure --enable-static
 make -j$(nproc)
