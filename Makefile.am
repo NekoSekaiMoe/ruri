@@ -17,6 +17,8 @@ ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
 AM_CFLAGS = $(CFLAGS)
 AM_LDFLAGS = $(LINKER_FLAGS)
 
+TIDY_FLAGS = --checks=*,-clang-analyzer-security.insecureAPI.strcpy,-altera-unroll-loops,-cert-err33-c,-concurrency-mt-unsafe,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,-readability-function-cognitive-complexity,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers,-bugprone-easily-swappable-parameters,-cert-err34-c,-misc-include-cleaner,-readability-identifier-length,-bugprone-signal-handler,-cert-msc54-cpp,-cert-sig30-c,-altera-id-dependent-backward-branch,-bugprone-suspicious-realloc-usage,-hicpp-signed-bitwise,-clang-analyzer-security.insecureAPI.UncheckedReturn --list-checks ${SOURCES} -- -lpthread -lseccomp -lcap -Wall -Wextra
+
 if ENABLE_STRIP
 strip_target:
 	$(STRIP) $(bin_PROGRAMS)
@@ -46,7 +48,7 @@ AM_V_CC = $(AM_V)echo "  CC       " $@;
 .PHONY: ruritest check
 
 check:
-	$(AM_V)clang-tidy $(ruri_SOURCES) || true
+	$(AM_V)clang-tidy $(TIDY_FLAGS) $(ruri_SOURCES) || true
 
 format:
 	shfmt -i 4 -w test/*.sh
