@@ -126,6 +126,9 @@
 /* Define to 1 if the C compiler supports function prototypes. */
 #undef PROTOTYPES
 
+/* Define to 1 if all optional features are disabled */
+#undef RURI_CORE_ONLY
+
 /* The size of `char', as computed by sizeof. */
 #undef SIZEOF_CHAR
 

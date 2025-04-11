@@ -148,6 +148,14 @@ AS_IF([test "x$enable_rurienv" != "xyes"], [
     AC_DEFINE([DISABLE_RURIENV], [1], [Define to 1 if rurienv support is disabled])
 ])
 
+AS_IF([test "x$enable_rurienv" = xno &&
+       test "x$enable_libcap" = xno &&
+       test "x$enable_libseccomp" = xno],
+    [
+        AC_DEFINE([RURI_CORE_ONLY], [1],
+                  [Define to 1 if all optional features are disabled])
+    ])
+
 # Check CFLAGS
 AC_MSG_CHECKING([whether the following CFLAGS are supported])
 # Check compiler flags
