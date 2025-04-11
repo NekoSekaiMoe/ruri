@@ -7,6 +7,7 @@ on:
       - 'debian/**'
       - '.github/workflows/deb.yml'
       - 'arm64.sh'
+      - 'Makefile.am'
 
 jobs:
   amd64:
