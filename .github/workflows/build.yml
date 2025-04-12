@@ -101,12 +101,12 @@ jobs:
           apt-get install -y wget make clang git libseccomp-dev libcap-dev libc-dev binutils upx-ucl tar dpkg-dev pkg-config
           git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
           cd ruri
-          apt build-dep .
+          apt build-dep . -y
           ./configure --enable-static
           make
           strip ruri
           tar -cf ../loong64.tar ./ruri ./LICENSE
-          ./configure --disable-libcap --lisable-libseccomp --disable-rurienv --enable-static
+          ./configure --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
           make
           strip ruri
           tar -cf ../loong64-core.tar ./ruri ./LICENSE
