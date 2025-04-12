@@ -50,11 +50,17 @@ jobs:
   buildloong64:
     runs-on: ubuntu-latest
     steps:
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          create-symlink: true
+          key: ${{ github.job }}-${{ matrix.os }}  # Eg. "some_build-ubuntu-latest"
+
       - name: Install toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y binfmt-support binutils build-essential debootstrap libcap-dev libfdt-dev libglib2.0-dev libpixman-1-dev libseccomp-dev ninja-build pkg-config python3 python3-pip python3-tomli qemu-system-misc tree upx-ucl xz-utils zlib1g-dev
-          pip3 install meson
+          sudo apt-get install -y binfmt-support binutils build-essential debootstrap libcap-dev libfdt-dev libglib2.0-dev libpixman-1-dev libseccomp-dev ninja-build pkg-config python3 python3-pip python3-tomli qemu-system-misc tree upx-ucl xz-utils zlib1g-dev meson
 
       - name: Build x86_64 Ruri
         run: |
@@ -62,15 +68,18 @@ jobs:
           cd build
           git clone --depth 1 https://github.com/moe-hacker/ruri.git
           cd ruri
-          cc -Wl,--gc-sections -static src/*.c src/easteregg/*.c -o ruri -lcap -lseccomp -lpthread
+          ccache gcc -Wl,--gc-sections -static src/*.c src/easteregg/*.c -o ruri -lcap -lseccomp -lpthread
 
       - name: Build loong64 qemu
         run: |
           cd build
           git clone --depth=1 https://github.com/qemu/qemu.git
           cd qemu
+          export CC="ccache gcc"
+          export CXX="ccache g++"
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           ./configure --static --disable-system --target-list=loongarch64-linux-user
-          make -j$(nproc)
+          ninja -C build -v
 
           sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
 
