@@ -60,7 +60,7 @@ jobs:
       - name: Install toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y binfmt-support binutils build-essential debootstrap libcap-dev libfdt-dev libglib2.0-dev libpixman-1-dev libseccomp-dev ninja-build pkg-config python3 python3-pip python3-tomli qemu-system-misc tree upx-ucl xz-utils zlib1g-dev meson
+          sudo apt-get install -y binfmt-support binutils build-essential libcap-dev libfdt-dev libglib2.0-dev libpixman-1-dev libseccomp-dev ninja-build pkg-config python3 python3-tomli tree upx-ucl xz-utils zlib1g-dev meson
 
       - name: Build x86_64 Ruri
         run: |
@@ -90,7 +90,6 @@ jobs:
           aria2c https://github.com/2cd/debian-museum/releases/download/unstable/unstable_sid_loong64_2024-03-15.tar.zst -o root.tar.zst
           tar -xf root.tar.zst -C debian
           sudo cp /usr/bin/qemu-loongarch64-static ./debian/usr/bin/
-          sudo ./ruri/ruri -p -a loong64 -q /usr/bin/qemu-loongarch64-static ./debian /debootstrap/debootstrap --second-stage
 
       - name: Build loong64 Ruri
         run: |
