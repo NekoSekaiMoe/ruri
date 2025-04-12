@@ -82,11 +82,81 @@ jobs:
           name: ruri-deb-arm64
           path: build/ruri*
 
+  loong64:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          create-symlink: true
+          key: ${{ github.job }}-${{ matrix.os }}  # Eg. "some_build-ubuntu-latest"
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y binfmt-support binutils build-essential debootstrap libcap-dev libfdt-dev libglib2.0-dev libpixman-1-dev libseccomp-dev ninja-build pkg-config python3 python3-pip python3-tomli qemu-system-misc tree upx-ucl xz-utils zlib1g-dev meson
+
+      - name: Build x86_64 Ruri
+        run: |
+          mkdir -p build
+          cd build
+          git clone --depth 1 https://github.com/moe-hacker/ruri.git
+          cd ruri
+          ccache gcc -Wl,--gc-sections -static src/*.c src/easteregg/*.c -o ruri -lcap -lseccomp -lpthread
+
+      - name: Build loong64 qemu
+        run: |
+          cd build
+          git clone --depth=1 https://github.com/qemu/qemu.git
+          cd qemu
+          export CC="ccache gcc"
+          export CXX="ccache g++"
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          ./configure --static --disable-system --target-list=loongarch64-linux-user
+          ninja -C build
+
+          sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
+
+      - name: Build loongarch64 system
+        run: |
+          cd build
+          mkdir debian
+          aria2c https://github.com/2cd/debian-museum/releases/download/unstable/unstable_sid_loong64_2024-03-15.tar.zst -o root.tar.zst
+          tar -xf root.tar.zst
+          sudo cp /usr/bin/qemu-loongarch64-static ./debian/usr/bin/
+          sudo ./ruri/ruri -p -a loong64 -q /usr/bin/qemu-loongarch64-static ./debian /debootstrap/debootstrap --second-stage
+
+      - name: Build loong64 Ruri
+        run: |
+          cd build
+          sudo bash -c 'cat <<EOF >> ./debian/build.sh
+          rm -f /etc/resolv.conf
+          echo nameserver 1.1.1.1 > /etc/resolv.conf
+          apt-get update
+          apt-get install -y wget make clang git libseccomp-dev libcap-dev libc-dev binutils upx-ucl tar dpkg-dev pkg-config
+          git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
+          cd ruri
+          apt build-dep .
+          dpkg-buildpackage -b -us -uc -d
+          EOF'
+
+          sudo chmod +x ./debian/build.sh
+          sudo ./ruri/ruri -p -a loong64 -q /usr/bin/qemu-loongarch64-static ./debian /bin/sh /build.sh
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ruri-deb-loong64
+          path: |
+            debian/ruri*.deb
+
   release:
     name: Release
     needs:
       - amd64
       - arm64
+      - loong64
     runs-on: ubuntu-latest
     steps:
       - name: Check latest version
@@ -100,3 +170,4 @@ jobs:
           files: |
              ruri-deb-arm64/*
              ruri-deb-amd64/*
+             ruri-deb-loong64/*
