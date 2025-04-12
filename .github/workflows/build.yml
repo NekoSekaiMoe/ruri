@@ -79,18 +79,16 @@ jobs:
           export CXX="ccache g++"
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
           ./configure --static --disable-system --target-list=loongarch64-linux-user
-          ninja -C build -v
+          ninja -C build
 
           sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
 
       - name: Build loongarch64 system
         run: |
           cd build
-          sudo debootstrap --no-check-gpg \
-            --foreign --arch=loong64 --variant=buildd --include=debian-ports-archive-keyring \
-            --verbose --components=main --resolve-deps --extra-suites=unreleased \
-            unstable ./debian http://ftp.ports.debian.org/debian-ports
-
+          mkdir debian
+          aria2c https://github.com/2cd/debian-museum/releases/download/unstable/unstable_sid_loong64_2024-03-15.tar.zst -o root.tar.zst
+          tar -xf root.tar.zst
           sudo cp /usr/bin/qemu-loongarch64-static ./debian/usr/bin/
           sudo ./ruri/ruri -p -a loong64 -q /usr/bin/qemu-loongarch64-static ./debian /debootstrap/debootstrap --second-stage
 
