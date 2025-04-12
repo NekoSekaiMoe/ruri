@@ -133,10 +133,9 @@ jobs:
           rm -f /etc/resolv.conf
           echo nameserver 1.1.1.1 > /etc/resolv.conf
           apt-get update
-          apt-get install -y wget make clang git libseccomp-dev libcap-dev libc-dev binutils upx-ucl tar dpkg-dev pkg-config debhelper dh-make
+          apt-get install -y wget make clang-tidy git libseccomp-dev libcap-dev libc-dev binutils tar dpkg-dev pkg-config debhelper dh-make
           git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
           cd ruri
-          apt build-dep . -y
           dpkg-buildpackage -b -us -uc -d
           EOF'
 
