@@ -30,6 +30,9 @@
 #include "include/ruri.h"
 /*
  * This file was the main.c of ruri.
+ * It will parse the arguments, and do the action.
+ * I know code here is too shit, but it works,
+ * maybe I will rewrite it one day, I hope.
  */
 // Do some checks before chroot(2),called by main().
 static void check_container(const struct RURI_CONTAINER *_Nonnull container)
@@ -136,12 +139,6 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 	// A very large and shit-code for() loop.
 	// At least it works fine...
 	for (int index = 1; index < argc; index++) {
-		/**** For other options ****/
-		// As an easter egg.
-		if (strcmp(argv[index], "AwA") == 0) {
-			ruri_AwA();
-			exit(EXIT_SUCCESS);
-		}
 		// Show version info.
 		if (strcmp(argv[index], "-v") == 0 || strcmp(argv[index], "--version") == 0) {
 			ruri_show_version_info();
@@ -160,11 +157,6 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 		// Show help page and example usage.
 		if (strcmp(argv[index], "-H") == 0 || strcmp(argv[index], "--show-examples") == 0) {
 			ruri_show_examples();
-			exit(EXIT_SUCCESS);
-		}
-		// Show neofeth-like ruri version info.
-		if (strcmp(argv[index], "-F") == 0 || strcmp(argv[index], "--ruri-fetch") == 0) {
-			ruri_fetch();
 			exit(EXIT_SUCCESS);
 		}
 		// Umount a container.
@@ -1182,7 +1174,7 @@ int main(int argc, char **argv)
 	// Catch coredump signal.
 	ruri_register_signal();
 // Warning for dev/debug build.
-#ifdef RURI_DEBUG
+#if defined(RURI_DEBUG) || defined(RURI_DEV)
 	cprintf("{red}Warning: this is a dev/debug build, do not use it in production{clear}\n");
 #endif
 	// Info of container to run.

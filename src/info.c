@@ -28,47 +28,30 @@
  *
  */
 #include "include/ruri.h"
+
+#if defined(RURI_COMMIT_ID)
+#define ID RURI_COMMIT_ID
+#else
+#define  RURI_COMMIT_ID 0
+#endif
+
 /*
  * This file provides some functions to show help/version info.
  * As ruri_fetch() is too long but useless, I put it in rurifetch.c.
+ * Emmm... I hope users can understand the help page.
  */
 void ruri_show_version_info(void)
 {
-	/*
-	 * Just show some info.
-	 * Version info is defined in macro RURI_VERSION.
-	 * RURI_COMMIT_ID is defined as -D option of compiler.
-	 */
-	cprintf("\n");
-	cprintf("{base}      ●●●●  ●   ● ●●●●   ●●●\n");
-	cprintf("{base}      ●   ● ●   ● ●   ●   ●\n");
-	cprintf("{base}      ●●●●  ●   ● ●●●●    ●\n");
-	cprintf("{base}      ●  ●  ●   ● ●  ●    ●\n");
-	cprintf("{base}      ●   ●  ●●●  ●   ●  ●●●\n");
-	cprintf("{base}    Revamp, Until Reach Ideal\n");
-	cprintf("{base}  Licensed under the MIT License\n");
-	cprintf("{base}    <https://mit-license.org>\n");
-	cprintf("{base}Copyright (C) 2022-2024 Moe-hacker\n\n");
-	cprintf("{base}%s%s%s", "ruri version .....:  ", RURI_VERSION, "\n");
-#if defined(RURI_COMMIT_ID)
-	cprintf("{base}%s%s%s", "ruri commit id ...:  ", RURI_COMMIT_ID, "\n");
-#endif
-	cprintf("{base}%s%s%s", "Architecture .....:  ", RURI_HOST_ARCH, "\n");
-	struct stat st;
-	if (stat("/proc/self/exe", &st) == 0) {
-		cprintf(_Generic((off_t)0, long: "{base}Binary size ......:  %ldK\n", long long: "{base}Binary size ......:  %lldK\n", default: "{base}Binary size ......:  %ldK\n"), (st.st_size / 1024));
-	}
+	printf("The ruri version is %s with commit %s\n", RURI_VERSION, RURI_COMMIT_ID);
+	printf("Build date is %s\n", __TIMESTAMP__);
+	printf("Compiled by %s\n", __VERSION__);
 #if defined(LIBCAP_MAJOR) && defined(LIBCAP_MINOR)
-	cprintf("{base}%s%d%s%d%s", "libcap ...........:  ", LIBCAP_MAJOR, ".", LIBCAP_MINOR, "\n");
+	cprintf("Cap version is %d.%d\n", LIBCAP_MAJOR, LIBCAP_MINOR);
 #endif
 #if defined(SCMP_VER_MAJOR) && defined(SCMP_VER_MINOR) && defined(SCMP_VER_MICRO)
-	cprintf("{base}%s%d%s%d%s%d%s", "libseccomp .......:  ", SCMP_VER_MAJOR, ".", SCMP_VER_MINOR, ".", SCMP_VER_MICRO, "\n");
+	cprintf("Seccomp version is %d.%d.%d\n", SCMP_VER_MAJOR, SCMP_VER_MINOR, SCMP_VER_MICRO);
 #endif
-	cprintf("{base}%s%d%s%d%s", "libk2v ...........:  ", LIBK2V_MAJOR, ".", LIBK2V_MINOR, "\n");
-	cprintf("{base}%s%d%s%d%s", "cprintf ..........:  ", CPRINTF_MAJOR, ".", CPRINTF_MINOR, "\n");
-	cprintf("{base}%s%s\n", "Compiler version .:  ", __VERSION__);
-	cprintf("{base}%s%s\n", "Build date .......:  ", __TIMESTAMP__);
-	cprintf("{base}\nThere is NO WARRANTY, to the extent permitted by law\n");
+	cprintf("Copyright (C) 2022-2024 Moe-hacker with MIT license\n\n");
 	cprintf("{clear}\n");
 }
 // For `ruri -V`.
@@ -168,29 +151,32 @@ void ruri_show_examples(void)
 	 * I think you can understand...
 	 */
 	cprintf("\n");
-	cprintf("{base}# Quickly setup a container(with rootfstool):\n");
-	cprintf("  {green}git {yellow}clone {purple}https://github.com/Moe-hacker/rootfstool\n");
-	cprintf("  {green}cd {purple}rootfstool\n");
-	cprintf("  {green}./rootfstool {yellow}download {blue}-d {purple}alpine {blue}-v {purple}edge\n");
-	cprintf("  {green}mkdir {purple}/tmp/alpine\n");
-	cprintf("  {green}sudo tar {blue}-xvf {purple}rootfs.tar.xz {blue}-C {purple}/tmp/alpine\n");
+	cprintf("{base}# Quickly setup a container(with rurima):\n");
+	cprintf("  {green}. {yellow}<({green}curl {blue}-sL {purple}https://get.ruri.zip/rurima{yellow})\n");
+	cprintf("  {green}./rurima lxc {blue}pull {blue}-a {purple}alpine {blue} -v {purple}edge {blue}-s {purple} /tmp/alpine\n");
+	cprintf("\n");
 	cprintf("{base}# Run chroot container:\n");
 	cprintf("  {green}sudo ruri {purple}/tmp/alpine\n");
 	cprintf("{base}# Very simple as you can see.\n");
+	cprintf("\n");
 	cprintf("{base}# About the capabilities:\n");
 	cprintf("{base}# Run privileged chroot container:\n");
 	cprintf("  {green}sudo ruri {blue}-p {purple}/tmp/alpine\n");
+	cprintf("\n");
 	cprintf("{base}# If you want to run privileged chroot container,\n");
 	cprintf("{base}# but you don't want to give the container cap_sys_chroot privileges:\n");
 	cprintf("  {green}sudo ruri {blue}-p -d \033[36mcap_sys_chroot {purple}/tmp/alpine\n");
+	cprintf("\n");
 	cprintf("{base}# If you want to run chroot container with common privileges,\n");
 	cprintf("{base}# but you want cap_sys_admin to be kept:\n");
 	cprintf("  {green}sudo ruri {blue}-k \033[36mcap_sys_admin {purple}/tmp/alpine\n");
+	cprintf("\n");
 	cprintf("{base}# About unshare:\n");
 	cprintf("{base}# Unshare container's capability options are same with chroot.\n");
 	cprintf("{base}# Run unshare container:\n");
 	cprintf("  {green}sudo ruri {blue}-u {purple}/tmp/alpine\n");
-	cprintf("{base}# Umount the container:\n");
+	cprintf("\n");
+	cprintf("{base}# Finally, umount the container:\n");
 	cprintf("  {green}sudo ruri {blue}-U {purple}/tmp/alpine\n");
 	cprintf("{clear}\n");
 }

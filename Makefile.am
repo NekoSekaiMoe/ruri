@@ -6,12 +6,10 @@ bin_PROGRAMS = ruri
 
 # Source files
 ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
-                src/info.c src/rurienv.c src/rurifetch.c src/seccomp.c \
+                src/info.c src/rurienv.c src/seccomp.c \
                 src/signal.c src/umount.c src/unshare.c src/rootless.c \
                 src/mount.c src/k2v.c src/elf-magic.c src/config.c \
-                src/cgroup.c src/passwd.c src/ps.c src/easteregg/action.c \
-                src/easteregg/nekofeng.c src/easteregg/layer.c \
-                src/easteregg/typewriter.c src/ruri.c
+                src/cgroup.c src/passwd.c src/ps.c  src/ruri.c
 
 # Compiler and linker flags
 AM_CFLAGS = $(CFLAGS)

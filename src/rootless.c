@@ -32,6 +32,8 @@
  * This file provides rootless container support,
  * as ruri_run_rootless_chroot_container() needs some functions in chroot.c,
  * it's in chroot.c, not here.
+ * This part need newuidmap and newgidmap binary,
+ * that's the only runtime dependency for ruri, and it's optional.
  */
 static int try_execvp(char *_Nonnull argv[])
 {
@@ -141,12 +143,13 @@ static void init_rootless_container(struct RURI_CONTAINER *_Nonnull container)
 		devshm_options = strdup("mode=1777");
 	} else {
 		devshm_options = malloc(strlen(container->memory) + strlen("mode=1777") + 114);
-		sprintf(devshm_options, "size=%s,mode=1777", container->memory);
+		sprintf(devshm_options, "size=65536k,mode=1777");
 	}
 	mkdir("./dev/shm", S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH | S_IRGRP | S_IWGRP);
 	mount("tmpfs", "./dev/shm", "tmpfs", MS_NOSUID | MS_NOEXEC | MS_NODEV, devshm_options);
 	usleep(100000);
 	free(devshm_options);
+	mount("binfmt_misc", "./proc/sys/fs/binfmt_misc", "binfmt_misc", 0, NULL);
 	if (!container->unmask_dirs) {
 		// Protect some dirs in /proc and /sys.
 		mount("./proc/bus", "./proc/bus", NULL, MS_BIND | MS_REC, NULL);
@@ -365,14 +368,14 @@ void ruri_run_rootless_container(struct RURI_CONTAINER *_Nonnull container)
 			usleep(1000);
 			int fd = open("/proc/self/timens_offsets", O_WRONLY | O_CLOEXEC);
 			char buf[1024] = { '\0' };
-			sprintf(buf, _Generic((time_t)0, long: "monotonic %ld 0", long long: "monotonic %lld 0", default: "monotonic %ld 0"), container->timens_monotonic_offset);
+			sprintf(buf, _Generic((time_t)0, long : "monotonic %ld 0", long long : "monotonic %lld 0", default : "monotonic %ld 0"), container->timens_monotonic_offset);
 			write(fd, buf, strlen(buf));
 			close(fd);
 		}
 		if (container->timens_realtime_offset != 0) {
 			int fd = open("/proc/self/timens_offsets", O_WRONLY | O_CLOEXEC);
 			char buf[1024] = { '\0' };
-			sprintf(buf, _Generic((time_t)0, long: "boottime %ld 0", long long: "boottime %lld 0", default: "boottime %ld 0"), container->timens_realtime_offset);
+			sprintf(buf, _Generic((time_t)0, long : "boottime %ld 0", long long : "boottime %lld 0", default : "boottime %ld 0"), container->timens_realtime_offset);
 			write(fd, buf, strlen(buf));
 			close(fd);
 		}

@@ -32,6 +32,7 @@
  * This file is the core of ruri.
  * It provides functions to run container as info in struct RURI_CONTAINER.
  * Bisic functions of ruri is implemented here.
+ * Thanks docker and podman for the device list and mask/protect list.
  */
 static bool su_biany_exist(char *_Nonnull container_dir)
 {
@@ -44,6 +45,38 @@ static bool su_biany_exist(char *_Nonnull container_dir)
 	sprintf(su_path, "%s/bin/su", container_dir);
 	int fd = open(su_path, O_RDONLY | O_CLOEXEC);
 	if (fd < 0) {
+		return false;
+	}
+	struct stat su_stat;
+	if (fstat(fd, &su_stat) != 0) {
+		close(fd);
+		return false;
+	}
+	if (!S_ISREG(su_stat.st_mode)) {
+		close(fd);
+		return false;
+	}
+	close(fd);
+	return true;
+}
+static bool busybox_exists(char *_Nonnull container_dir)
+{
+	/*
+	 * Check if busybox exists in container.
+	 */
+	char busybox_path[PATH_MAX] = { '\0' };
+	sprintf(busybox_path, "%s/bin/busybox", container_dir);
+	int fd = open(busybox_path, O_RDONLY | O_CLOEXEC);
+	if (fd < 0) {
+		return false;
+	}
+	struct stat busybox_stat;
+	if (fstat(fd, &busybox_stat) != 0) {
+		close(fd);
+		return false;
+	}
+	if (!S_ISREG(busybox_stat.st_mode)) {
+		close(fd);
 		return false;
 	}
 	close(fd);
@@ -110,7 +143,7 @@ static void init_container(struct RURI_CONTAINER *_Nonnull container)
 			devshm_options = strdup("mode=1777");
 		} else {
 			devshm_options = malloc(strlen(container->memory) + strlen("mode=1777") + 114);
-			sprintf(devshm_options, "size=%s,mode=1777", container->memory);
+			sprintf(devshm_options, "size=65536k,mode=1777");
 		}
 		mkdir("/dev/shm", S_IRUSR | S_IWUSR | S_IROTH | S_IWOTH | S_IRGRP | S_IWGRP);
 		mount("tmpfs", "/dev/shm", "tmpfs", MS_NOSUID | MS_NOEXEC | MS_NODEV, devshm_options);
@@ -765,8 +798,14 @@ void ruri_run_rootless_chroot_container(struct RURI_CONTAINER *_Nonnull containe
 			container->command[1] = "-";
 			container->command[2] = NULL;
 		} else {
-			container->command[0] = "/bin/sh";
-			container->command[1] = NULL;
+			if (busybox_exists(container->container_dir)) {
+				container->command[0] = "/bin/busybox";
+				container->command[1] = "sh";
+				container->command[2] = NULL;
+			} else {
+				container->command[0] = "/bin/sh";
+				container->command[1] = NULL;
+			}
 		}
 	}
 	// Check binary used.
