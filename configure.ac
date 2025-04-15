@@ -2,8 +2,6 @@
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.69])
 AC_INIT([ruri],[3.8],[moe-hacker@crack.moe])
-PS4='+ [DEBUG] ${BASH_SOURCE}:${LINENO}: '
-export PS4
 AC_PROG_CC
 AM_INIT_AUTOMAKE
 AC_C_BIGENDIAN
@@ -44,6 +42,16 @@ fi
 # REQUIRE a standard (ANSI/ISO) C compiler
 if test "$ac_cv_prog_cc_stdc" = no; then
 	AC_MSG_ERROR([A standard (ANSI/ISO C89) C compiler is required.])
+fi
+
+AC_MSG_CHECKING([for commit id])
+RURI_COMMIT_ID=`git rev-parse --short HEAD 2>/dev/null`
+if test "$RURI_COMMIT_ID" == "";then
+    AC_MSG_RESULT([no])
+    RURI_COMMIT_ID="-DRURI_COMMIT_ID=\\\"null\\\""
+else
+    AC_MSG_RESULT([$RURI_COMMIT_ID])
+    RURI_COMMIT_ID="-DRURI_COMMIT_ID=\\\"$RURI_COMMIT_ID\\\""
 fi
 
 gl_cv_func_printf_directive_n=yes
@@ -98,7 +106,7 @@ fi
 AC_CHECK_HEADERS([time.h grp.h fcntl.h sys/ioctl.h sys/mount.h sys/socket.h sys/wait.h linux/fs.h linux/version.h linux/sched.h], [], AC_MSG_ERROR([Missing required headers in standard C library.]))
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe"
+CFLAGS_LIST="-flto=auto -fPIE -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe $RURI_COMMIT_ID"
 LDFLAGS_LIST="-pipe -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds

@@ -29,12 +29,6 @@
  */
 #include "include/ruri.h"
 
-#if defined(RURI_COMMIT_ID)
-#define ID RURI_COMMIT_ID
-#else
-#define  RURI_COMMIT_ID 0
-#endif
-
 /*
  * This file provides some functions to show help/version info.
  * As ruri_fetch() is too long but useless, I put it in rurifetch.c.
@@ -51,8 +45,7 @@ void ruri_show_version_info(void)
 #if defined(SCMP_VER_MAJOR) && defined(SCMP_VER_MINOR) && defined(SCMP_VER_MICRO)
 	cprintf("Seccomp version is %d.%d.%d\n", SCMP_VER_MAJOR, SCMP_VER_MINOR, SCMP_VER_MICRO);
 #endif
-	cprintf("Copyright (C) 2022-2024 Moe-hacker with MIT license\n\n");
-	cprintf("{clear}\n");
+	cprintf("Copyright (C) 2022-2024 Moe-hacker with MIT license\n");
 }
 // For `ruri -V`.
 void ruri_show_version_code(void)
