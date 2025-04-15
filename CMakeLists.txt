@@ -110,19 +110,6 @@ if(CMAKE_C_COMPILER MATCHES "tcc")
     add_definitions(-D__TIMESTAMP__="${CMAKE_CURRENT_DATE} ${CMAKE_CURRENT_TIME}")
 endif()
 
-# Check dependent library
-if(NOT CAP_LIBRARY)
-    message(FATAL_ERROR "libcap is required")
-endif()
-
-if(NOT SECCOMP_LIBRARY)
-    message(FATAL_ERROR "libseccomp is required")
-endif()
-
-if(NOT PTHREAD_LIBRARY)
-    message(FATAL_ERROR "pthread is required")
-endif()
-
 # Set default CFLAGS and LDFLAGS
 set(CFLAGS_LIST
     "-flto=auto"

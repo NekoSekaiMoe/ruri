@@ -59,29 +59,7 @@ static bool su_biany_exist(char *_Nonnull container_dir)
 	close(fd);
 	return true;
 }
-static bool busybox_exists(char *_Nonnull container_dir)
-{
-	/*
-	 * Check if busybox exists in container.
-	 */
-	char busybox_path[PATH_MAX] = { '\0' };
-	sprintf(busybox_path, "%s/bin/busybox", container_dir);
-	int fd = open(busybox_path, O_RDONLY | O_CLOEXEC);
-	if (fd < 0) {
-		return false;
-	}
-	struct stat busybox_stat;
-	if (fstat(fd, &busybox_stat) != 0) {
-		close(fd);
-		return false;
-	}
-	if (!S_ISREG(busybox_stat.st_mode)) {
-		close(fd);
-		return false;
-	}
-	close(fd);
-	return true;
-}
+
 static void check_binary(const struct RURI_CONTAINER *_Nonnull container)
 {
 	/*
