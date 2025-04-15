@@ -51,10 +51,6 @@ static void check_container(const struct RURI_CONTAINER *_Nonnull container)
 	if (strcmp(container->container_dir, "/") == 0) {
 		ruri_error("{red}Error: `/` is not allowed to use as a container directory QwQ\n");
 	}
-	// rootless container should not be run with root privileges.
-	if (container->rootless && (geteuid() == 0 || getuid() == 0 || getgid() == 0 || getegid() == 0)) {
-		ruri_error("{red}Error: rootless container should not be run with root privileges QwQ\n");
-	}
 	// `--arch` and `--qemu-path` should be set at the same time.
 	if ((container->cross_arch == NULL) != (container->qemu_path == NULL)) {
 		ruri_error("{red}Error: --arch and --qemu-path should be set at the same time QwQ\n");
@@ -311,10 +307,6 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 		// Run privileged container.
 		else if (strcmp(argv[index], "-p") == 0 || strcmp(argv[index], "--privileged") == 0) {
 			privileged = true;
-		}
-		// Run rootless container.
-		else if (strcmp(argv[index], "-r") == 0 || strcmp(argv[index], "--rootless") == 0) {
-			container->rootless = true;
 		}
 		// Do not show warnings.
 		else if (strcmp(argv[index], "-w") == 0 || strcmp(argv[index], "--no-warnings") == 0) {
@@ -644,9 +636,6 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 					break;
 				}
 				switch (argv[index][i]) {
-				case 'r':
-					container->rootless = true;
-					break;
 				case 'D':
 					dump_config = true;
 					break;
@@ -1130,7 +1119,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 	}
 	// Fork before running chroot container.
 	// So the chroot container can have a parent process called ruri.
-	if (fork_exec && !container->enable_unshare && !container->rootless) {
+	if (fork_exec && !container->enable_unshare) {
 		pid_t pid = fork();
 		if (pid > 0) {
 			waitpid(pid, NULL, 0);
@@ -1181,9 +1170,9 @@ int main(int argc, char **argv)
 	struct RURI_CONTAINER *container = (struct RURI_CONTAINER *)malloc(sizeof(struct RURI_CONTAINER));
 	// Parse arguments.
 	parse_args(argc, argv, container);
-	// Detect rootless mode.
 	if (geteuid() != 0) {
-		container->rootless = true;
+		cprintf("ruri must run in root mode\n");
+		exit(1);
 	}
 	// Check container and the running environment.
 	check_container(container);
@@ -1194,12 +1183,9 @@ int main(int argc, char **argv)
 	ruri_log("{base}Container config:{cyan}\n%s", info);
 	free(info);
 	// Run container.
-	if ((container->enable_unshare) && !(container->rootless)) {
+	if ((container->enable_unshare)) {
 		// Unshare container.
 		ruri_run_unshare_container(container);
-	} else if ((container->rootless)) {
-		// Rootless container.
-		ruri_run_rootless_container(container);
 	} else {
 		// Common chroot container.
 		ruri_run_chroot_container(container);

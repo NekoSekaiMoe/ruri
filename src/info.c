@@ -81,7 +81,6 @@ void ruri_show_helps(void)
 	cprintf("{base}  -C, --correct-config [config]................: Correct a container config\n");
 	cprintf("\n");
 	cprintf("{base}ARGS:\n");
-	cprintf("{base}  -r, --rootless ..............................: Run rootless container\n");
 	cprintf("{base}  -D, --dump-config ...........................: Dump the config\n");
 	cprintf("{base}  -o, --output [config] .......................: Set output file of `-D` option\n");
 	cprintf("{base}  -c, --config [config] [args] [COMMAND [ARGS]]: Use config file\n");

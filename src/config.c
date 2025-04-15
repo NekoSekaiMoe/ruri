@@ -49,7 +49,6 @@ void ruri_init_config(struct RURI_CONTAINER *_Nonnull container)
 	container->no_new_privs = false;
 	container->no_warnings = false;
 	container->enable_unshare = false;
-	container->rootless = false;
 	container->mount_host_runtime = false;
 	container->command[0] = NULL;
 	container->env[0] = NULL;
@@ -151,12 +150,6 @@ char *ruri_container_info_to_k2v(const struct RURI_CONTAINER *_Nonnull container
 	ret = k2v_add_comment(ret, "Enable unshare feature.");
 	ret = k2v_add_comment(ret, "Default is false.");
 	ret = k2v_add_config(bool, ret, "enable_unshare", container->enable_unshare);
-	ret = k2v_add_newline(ret);
-	// rootless.
-	ret = k2v_add_comment(ret, "Run rootless container.");
-	ret = k2v_add_comment(ret, "Need user ns support.");
-	ret = k2v_add_comment(ret, "Default is false.");
-	ret = k2v_add_config(bool, ret, "rootless", container->rootless);
 	ret = k2v_add_newline(ret);
 	// no_warnings.
 	ret = k2v_add_comment(ret, "Disable warnings.");
@@ -365,7 +358,7 @@ void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_No
 	close(fd);
 	char *buf = k2v_open_file(path, (size_t)size);
 	// Check if config is valid.
-	char *key_list[] = { "timens_realtime_offset", "timens_monotonic_offset", "hidepid", "char_devs", "use_kvm", "no_network", "container_dir", "user", "drop_caplist", "no_new_privs", "enable_seccomp", "rootless", "no_warnings", "cross_arch", "qemu_path", "use_rurienv", "cpuset", "memory", "cpupercent", "just_chroot", "unmask_dirs", "mount_host_runtime", "work_dir", "rootfs_source", "ro_root", "extra_mountpoint", "extra_ro_mountpoint", "env", "command", "hostname", NULL };
+	char *key_list[] = { "timens_realtime_offset", "timens_monotonic_offset", "hidepid", "char_devs", "use_kvm", "no_network", "container_dir", "user", "drop_caplist", "no_new_privs", "enable_seccomp", "no_warnings", "cross_arch", "qemu_path", "use_rurienv", "cpuset", "memory", "cpupercent", "just_chroot", "unmask_dirs", "mount_host_runtime", "work_dir", "rootfs_source", "ro_root", "extra_mountpoint", "extra_ro_mountpoint", "env", "command", "hostname", NULL };
 	for (int i = 0; key_list[i] != NULL; i++) {
 		if (!have_key(key_list[i], buf)) {
 			ruri_error("{red}Invalid config file, there is no key:%s\nHint:\n You can try to use `ruri -C config` to fix the config file{clear}", key_list[i]);
@@ -401,8 +394,6 @@ void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_No
 	container->qemu_path = k2v_get_key(char, "qemu_path", buf);
 	// Get cross_arch.
 	container->cross_arch = k2v_get_key(char, "cross_arch", buf);
-	// Get rootless.
-	container->rootless = k2v_get_key(bool, "rootless", buf);
 	// Get mount_host_runtime.
 	container->mount_host_runtime = k2v_get_key(bool, "mount_host_runtime", buf);
 	// Get ro_root.
@@ -612,12 +603,6 @@ void ruri_correct_config(const char *_Nonnull path)
 		container.enable_unshare = false;
 	} else {
 		container.enable_unshare = k2v_get_key(bool, "enable_unshare", buf);
-	}
-	if (!have_key("rootless", buf)) {
-		ruri_warning("{green}No key rootless found, set to false\n{clear}");
-		container.rootless = false;
-	} else {
-		container.rootless = k2v_get_key(bool, "rootless", buf);
 	}
 	if (!have_key("mount_host_runtime", buf)) {
 		ruri_warning("{green}No key mount_host_runtime found, set to false\n{clear}");

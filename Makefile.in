@@ -106,11 +106,10 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_ruri_OBJECTS = src/caplist.$(OBJEXT) src/chroot.$(OBJEXT) \
-	src/cprintf.$(OBJEXT) src/info.$(OBJEXT) src/rurienv.$(OBJEXT) \
+	src/cprintf.$(OBJEXT) src/info.$(OBJEXT) src/env.$(OBJEXT) \
 	src/seccomp.$(OBJEXT) src/signal.$(OBJEXT) \
-	src/umount.$(OBJEXT) src/unshare.$(OBJEXT) \
-	src/rootless.$(OBJEXT) src/mount.$(OBJEXT) src/k2v.$(OBJEXT) \
-	src/elf-magic.$(OBJEXT) src/config.$(OBJEXT) \
+	src/umount.$(OBJEXT) src/unshare.$(OBJEXT) src/mount.$(OBJEXT) \
+	src/k2v.$(OBJEXT) src/elf-magic.$(OBJEXT) src/config.$(OBJEXT) \
 	src/cgroup.$(OBJEXT) src/passwd.$(OBJEXT) src/ps.$(OBJEXT) \
 	src/ruri.$(OBJEXT)
 ruri_OBJECTS = $(am_ruri_OBJECTS)
@@ -133,12 +132,12 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = src/$(DEPDIR)/caplist.Po src/$(DEPDIR)/cgroup.Po \
 	src/$(DEPDIR)/chroot.Po src/$(DEPDIR)/config.Po \
 	src/$(DEPDIR)/cprintf.Po src/$(DEPDIR)/elf-magic.Po \
-	src/$(DEPDIR)/info.Po src/$(DEPDIR)/k2v.Po \
-	src/$(DEPDIR)/mount.Po src/$(DEPDIR)/passwd.Po \
-	src/$(DEPDIR)/ps.Po src/$(DEPDIR)/rootless.Po \
-	src/$(DEPDIR)/ruri.Po src/$(DEPDIR)/rurienv.Po \
-	src/$(DEPDIR)/seccomp.Po src/$(DEPDIR)/signal.Po \
-	src/$(DEPDIR)/umount.Po src/$(DEPDIR)/unshare.Po
+	src/$(DEPDIR)/env.Po src/$(DEPDIR)/info.Po \
+	src/$(DEPDIR)/k2v.Po src/$(DEPDIR)/mount.Po \
+	src/$(DEPDIR)/passwd.Po src/$(DEPDIR)/ps.Po \
+	src/$(DEPDIR)/ruri.Po src/$(DEPDIR)/seccomp.Po \
+	src/$(DEPDIR)/signal.Po src/$(DEPDIR)/umount.Po \
+	src/$(DEPDIR)/unshare.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -310,8 +309,8 @@ AUTOMAKE_OPTIONS = subdir-objects
 
 # Source files
 ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
-                src/info.c src/rurienv.c src/seccomp.c \
-                src/signal.c src/umount.c src/unshare.c src/rootless.c \
+                src/info.c src/env.c src/seccomp.c \
+                src/signal.c src/umount.c src/unshare.c \
                 src/mount.c src/k2v.c src/elf-magic.c src/config.c \
                 src/cgroup.c src/passwd.c src/ps.c  src/ruri.c
 
@@ -429,8 +428,7 @@ src/chroot.$(OBJEXT): src/$(am__dirstamp) \
 src/cprintf.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/info.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/rurienv.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
+src/env.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/seccomp.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/signal.$(OBJEXT): src/$(am__dirstamp) \
@@ -438,8 +436,6 @@ src/signal.$(OBJEXT): src/$(am__dirstamp) \
 src/umount.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/unshare.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/rootless.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/mount.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/k2v.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
@@ -471,14 +467,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/config.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/cprintf.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/elf-magic.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/env.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/info.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/k2v.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/mount.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/passwd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ps.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rootless.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/ruri.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/rurienv.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/seccomp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/signal.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/umount.Po@am__quote@ # am--include-marker
@@ -788,14 +783,13 @@ distclean: distclean-am
 	-rm -f src/$(DEPDIR)/config.Po
 	-rm -f src/$(DEPDIR)/cprintf.Po
 	-rm -f src/$(DEPDIR)/elf-magic.Po
+	-rm -f src/$(DEPDIR)/env.Po
 	-rm -f src/$(DEPDIR)/info.Po
 	-rm -f src/$(DEPDIR)/k2v.Po
 	-rm -f src/$(DEPDIR)/mount.Po
 	-rm -f src/$(DEPDIR)/passwd.Po
 	-rm -f src/$(DEPDIR)/ps.Po
-	-rm -f src/$(DEPDIR)/rootless.Po
 	-rm -f src/$(DEPDIR)/ruri.Po
-	-rm -f src/$(DEPDIR)/rurienv.Po
 	-rm -f src/$(DEPDIR)/seccomp.Po
 	-rm -f src/$(DEPDIR)/signal.Po
 	-rm -f src/$(DEPDIR)/umount.Po
@@ -854,14 +848,13 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/$(DEPDIR)/config.Po
 	-rm -f src/$(DEPDIR)/cprintf.Po
 	-rm -f src/$(DEPDIR)/elf-magic.Po
+	-rm -f src/$(DEPDIR)/env.Po
 	-rm -f src/$(DEPDIR)/info.Po
 	-rm -f src/$(DEPDIR)/k2v.Po
 	-rm -f src/$(DEPDIR)/mount.Po
 	-rm -f src/$(DEPDIR)/passwd.Po
 	-rm -f src/$(DEPDIR)/ps.Po
-	-rm -f src/$(DEPDIR)/rootless.Po
 	-rm -f src/$(DEPDIR)/ruri.Po
-	-rm -f src/$(DEPDIR)/rurienv.Po
 	-rm -f src/$(DEPDIR)/seccomp.Po
 	-rm -f src/$(DEPDIR)/signal.Po
 	-rm -f src/$(DEPDIR)/umount.Po

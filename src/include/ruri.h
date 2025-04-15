@@ -154,8 +154,6 @@ struct RURI_CONTAINER {
 	bool no_warnings;
 	// Unshare container.
 	bool enable_unshare;
-	// Useless rootless container support.
-	bool rootless;
 	// Mount host runtime.
 	bool mount_host_runtime;
 	// Container pid for setns(2).
@@ -267,8 +265,6 @@ struct RURI_ELF_MAGIC *ruri_get_magic(const char *_Nonnull cross_arch);
 void ruri_run_unshare_container(struct RURI_CONTAINER *_Nonnull container);
 char *ruri_container_info_to_k2v(const struct RURI_CONTAINER *_Nonnull container);
 void ruri_run_chroot_container(struct RURI_CONTAINER *_Nonnull container);
-void ruri_run_rootless_container(struct RURI_CONTAINER *_Nonnull container);
-void ruri_run_rootless_chroot_container(struct RURI_CONTAINER *_Nonnull container);
 int ruri_trymount(const char *_Nonnull source, const char *_Nonnull target, unsigned int mountflags);
 void ruri_umount_container(const char *_Nonnull container_dir);
 void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_Nonnull path);

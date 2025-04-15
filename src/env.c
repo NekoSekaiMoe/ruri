@@ -170,9 +170,6 @@ static char *build_container_info(const struct RURI_CONTAINER *_Nonnull containe
 	// no_network.
 	ret = k2v_add_comment(ret, "Disable network.");
 	ret = k2v_add_config(bool, ret, "no_network", container->no_network);
-	// rootless
-	ret = k2v_add_comment(ret, "Run rootless container.");
-	ret = k2v_add_config(bool, ret, "rootless", container->rootless);
 	// user.
 	ret = k2v_add_comment(ret, "User to run command in the container.");
 	ret = k2v_add_config(char, ret, "user", container->user);
@@ -289,7 +286,6 @@ struct RURI_CONTAINER *ruri_read_info(struct RURI_CONTAINER *_Nullable container
 			container->extra_mountpoint[0] = NULL;
 			container->extra_ro_mountpoint[0] = NULL;
 			container->ns_pid = RURI_INIT_VALUE;
-			container->rootless = false;
 		}
 		return container;
 	}
@@ -317,15 +313,13 @@ struct RURI_CONTAINER *ruri_read_info(struct RURI_CONTAINER *_Nullable container
 		} else {
 			container->ns_pid = RURI_INIT_VALUE;
 		}
-		// Get rootless.
-		container->rootless = k2v_get_key(bool, "rootless", buf);
 		close(fd);
 		free(buf);
 		return container;
 	}
 	// Check if ns_pid is a ruri process.
 	// If not, that means the container is not running.
-	if ((container->enable_unshare || container->rootless) && !is_ruri_pid(k2v_get_key(int, "ns_pid", buf))) {
+	if ((container->enable_unshare) && !is_ruri_pid(k2v_get_key(int, "ns_pid", buf))) {
 		ruri_log("{base}pid %d is not a ruri process.\n", k2v_get_key(int, "ns_pid", buf));
 		free(buf);
 		// Unset immutable flag of .rurienv.
@@ -341,22 +335,6 @@ struct RURI_CONTAINER *ruri_read_info(struct RURI_CONTAINER *_Nullable container
 		remove(file);
 		close(fd);
 		remove(file);
-		return container;
-	}
-	// Rootless container will only get ns_pid, work_dir and user.
-	// Because these config are safe.
-	if (container->rootless) {
-		container->ns_pid = k2v_get_key(int, "ns_pid", buf);
-		if (container->work_dir == NULL) {
-			container->work_dir = k2v_get_key(char, "work_dir", buf);
-		}
-		if (container->user == NULL) {
-			container->user = k2v_get_key(char, "user", buf);
-		}
-		free(buf);
-		// Unset timens offsets because it's already set.
-		container->timens_realtime_offset = 0;
-		container->timens_monotonic_offset = 0;
 		return container;
 	}
 	// Backup container config.

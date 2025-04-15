@@ -395,7 +395,7 @@ static void mount_mountpoints(const struct RURI_CONTAINER *_Nonnull container)
 	 * Mount extra_mountpoint and extra_ro_mountpoint.
 	 * It will be called before chroot(2).
 	 */
-	if (!container->rootless && (container->rootfs_source == NULL)) {
+	if ((container->rootfs_source == NULL)) {
 		// '/' should be a mountpoint in container.
 		mount(container->container_dir, container->container_dir, NULL, MS_BIND, NULL);
 	}
@@ -753,105 +753,6 @@ void ruri_run_chroot_container(struct RURI_CONTAINER *_Nonnull container)
 	// We only need 0(stdin), 1(stdout), 2(stderr),
 	// So we close the other fds to avoid security issues.
 	// NOTE: this might cause unknown issues.
-	for (int i = 3; i <= 10; i++) {
-		close(i);
-	}
-	// Fix console color.
-	cprintf("{clear}");
-	// Change uid and gid.
-	change_user(container);
-	// Execute command in container.
-	// Use exec(3) function because system(3) may be unavailable now.
-	if (execvp(container->command[0], container->command) == -1) {
-		// Catch exceptions.
-		ruri_error("{red}Failed to execute `%s`\nexecv() returned: %d\nerror reason: %s\nNote: unset $LD_PRELOAD before running ruri might fix this{clear}\n", container->command[0], errno, strerror(errno));
-	}
-}
-// Run chroot container.
-void ruri_run_rootless_chroot_container(struct RURI_CONTAINER *_Nonnull container)
-{
-	/*
-	 * It's called by ruri_run_rootless_container().
-	 * It will run container as the config in RURI_CONTAINER struct.
-	 *
-	 * This function is modified from ruri_run_chroot_container().
-	 */
-	// Ignore SIGTTIN, if we are running in the background, SIGTTIN may kill this process.
-	sigset_t sigs;
-	sigemptyset(&sigs);
-	sigaddset(&sigs, SIGTTIN);
-	sigaddset(&sigs, SIGTTOU);
-	sigprocmask(SIG_BLOCK, &sigs, 0);
-	// Mount mountpoints.
-	mount_rootfs(container);
-	mount_mountpoints(container);
-	// Copy qemu binary into container.
-	copy_qemu_binary(container);
-	// If `-R` option is set, make / read-only.
-	if (container->ro_root) {
-		mount(container->container_dir, container->container_dir, NULL, MS_BIND | MS_REMOUNT | MS_RDONLY, NULL);
-	}
-	// Set default command for exec().
-	if (container->command[0] == NULL) {
-		if (su_biany_exist(container->container_dir) && container->user == NULL) {
-			container->command[0] = "/bin/su";
-			container->command[1] = "-";
-			container->command[2] = NULL;
-		} else {
-			if (busybox_exists(container->container_dir)) {
-				container->command[0] = "/bin/busybox";
-				container->command[1] = "sh";
-				container->command[2] = NULL;
-			} else {
-				container->command[0] = "/bin/sh";
-				container->command[1] = NULL;
-			}
-		}
-	}
-	// Check binary used.
-	check_binary(container);
-	// chroot(2) into container.
-	chdir(container->container_dir);
-	if (chroot(".") == -1) {
-		ruri_error("{red}Error: failed to chroot(2) into container QwQ\n");
-	}
-	chdir("/");
-	// Change to the work dir.
-	if (container->work_dir != NULL) {
-		if (chdir(container->work_dir) == -1 && !container->no_warnings) {
-			ruri_warning("{yellow}Warning: Failed to change to work dir `%s`\n", container->work_dir);
-		}
-	}
-	// Fix /etc/mtab.
-	remove("/etc/mtab");
-	unlink("/etc/mtab");
-	symlink("/proc/mounts", "/etc/mtab");
-	// Hide pid.
-	hidepid(container->hidepid);
-	// Setup binfmt_misc.
-	if (container->cross_arch != NULL) {
-		setup_binfmt_misc(container);
-	}
-	// Set up Seccomp BPF.
-	if (container->enable_default_seccomp || container->seccomp_denied_syscall[0] != NULL) {
-		ruri_setup_seccomp(container);
-	}
-	// Drop caps.
-	drop_caps(container);
-	// Set envs.
-	set_envs(container);
-	// Fix a bug that the terminal is frozen.
-	usleep(2000);
-	// Set NO_NEW_PRIVS Flag.
-	// It requires Linux3.5 or later.
-	// It will make sudo unavailable in container.
-	if (container->no_new_privs) {
-		prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-	}
-	// Disallow raising ambient capabilities via the prctl(2) PR_CAP_AMBIENT_RAISE operation.
-	prctl(PR_SET_SECUREBITS, SECBIT_NO_CAP_AMBIENT_RAISE);
-	// We only need 0(stdin), 1(stdout), 2(stderr),
-	// So we close the other fds to avoid security issues.
 	for (int i = 3; i <= 10; i++) {
 		close(i);
 	}

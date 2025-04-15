@@ -6,8 +6,8 @@ bin_PROGRAMS = ruri
 
 # Source files
 ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
-                src/info.c src/rurienv.c src/seccomp.c \
-                src/signal.c src/umount.c src/unshare.c src/rootless.c \
+                src/info.c src/env.c src/seccomp.c \
+                src/signal.c src/umount.c src/unshare.c \
                 src/mount.c src/k2v.c src/elf-magic.c src/config.c \
                 src/cgroup.c src/passwd.c src/ps.c  src/ruri.c
 
