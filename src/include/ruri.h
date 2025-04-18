@@ -123,7 +123,7 @@ typedef int cap_value_t;
 #define RURI_MAX_SECCOMP_DENIED_SYSCALL (2048)
 // For configure.ac
 #ifdef HAVE_CONFIG_H
-#include "../../config.h"
+#include <config.h>
 #define RURI_VERSION VERSION
 #else
 #include "version.h"

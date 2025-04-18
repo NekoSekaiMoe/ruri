@@ -6450,15 +6450,18 @@ fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for commit id" >&5
 printf %s "checking for commit id... " >&6; }
 RURI_COMMIT_ID=`git rev-parse --short HEAD 2>/dev/null`
-if test "$RURI_COMMIT_ID" == "";then
+if test "$RURI_COMMIT_ID" = ""; then
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
 printf "%s\n" "no" >&6; }
-    RURI_COMMIT_ID="-DRURI_COMMIT_ID=\\\"null\\\""
+    RURI_COMMIT_ID="null"
 else
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $RURI_COMMIT_ID" >&5
 printf "%s\n" "$RURI_COMMIT_ID" >&6; }
-    RURI_COMMIT_ID="-DRURI_COMMIT_ID=\\\"$RURI_COMMIT_ID\\\""
 fi
+
+
+printf "%s\n" "#define RURI_COMMIT_ID \"$RURI_COMMIT_ID\"" >>confdefs.h
+
 
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes

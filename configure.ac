@@ -46,13 +46,14 @@ fi
 
 AC_MSG_CHECKING([for commit id])
 RURI_COMMIT_ID=`git rev-parse --short HEAD 2>/dev/null`
-if test "$RURI_COMMIT_ID" == "";then
+if test "$RURI_COMMIT_ID" = ""; then
     AC_MSG_RESULT([no])
-    RURI_COMMIT_ID="-DRURI_COMMIT_ID=\\\"null\\\""
+    RURI_COMMIT_ID="null"
 else
     AC_MSG_RESULT([$RURI_COMMIT_ID])
-    RURI_COMMIT_ID="-DRURI_COMMIT_ID=\\\"$RURI_COMMIT_ID\\\""
 fi
+
+AC_DEFINE_UNQUOTED([RURI_COMMIT_ID], ["$RURI_COMMIT_ID"], [The Git commit ID])
 
 gl_cv_func_printf_directive_n=yes
 gl_cv_func_printf_infinite_long_double=yes
