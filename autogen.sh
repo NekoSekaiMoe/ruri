@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PS4='+ [DEBUG] ${BASH_SOURCE}:${LINENO}: ' && export PS4
+PS4='[$(date)] [DEBUG] ${BASH_SOURCE}:${LINENO}: ' && export PS4
 
 set -eu
 
@@ -66,6 +66,13 @@ if [ $? -ne 0 ]; then
   MISSING="$MISSING tar"
 fi
 
+env perl -V > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+  PERL=perl
+else
+  MISSING="$MISSING perl"
+fi
+
 ## If dependencies are missing, warn the user and abort
 if [ "x$MISSING" != "x" ]; then
   echo "Aborting."
@@ -93,9 +100,13 @@ $AUTOCONF
 echo Running ${AUTOMAKE}...
 $AUTOMAKE --add-missing --force-missing --copy --foreign
 
-# Run autogen in the argp-standalone sub-directory
-#echo "Running autogen.sh in argp-standalone ..."
-#( cd contrib/argp-standalone;./autogen.sh )
+perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" configure
+perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" missing
+perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" config.sub
+perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" config.guess
+perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" ltmain.sh
+perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" depcomp
+perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" compile
 
 # Instruct user on next steps
 echo

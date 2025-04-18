@@ -51,7 +51,7 @@ IFS=" ""	$as_nl"
 
 PS1='$ '
 PS2='> '
-PS4='+ '
+PS4='[$(date "+%Y年 %m月 %d日 %A %H:%M:%S %Z")] [DEBUG] ${BASH_SOURCE}:${LINENO}: '
 
 # Ensure predictable behavior from utilities with locale-dependent output.
 LC_ALL=C
@@ -7308,7 +7308,7 @@ IFS=" ""	$as_nl"
 
 PS1='$ '
 PS2='> '
-PS4='+ '
+PS4='[$(date "+%Y年 %m月 %d日 %A %H:%M:%S %Z")] [DEBUG] ${BASH_SOURCE}:${LINENO}: '
 
 # Ensure predictable behavior from utilities with locale-dependent output.
 LC_ALL=C

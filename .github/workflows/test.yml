@@ -89,3 +89,26 @@ jobs:
         run: |
           make -C test -f Makefile.test debug-gdb
           #make -C test -f Makefile.test
+
+  lo:
+    name: Build with log
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: |
+          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
+
+      - name: Check latest version
+        uses: actions/checkout@v4
+
+      - name: Prepare
+        run: |
+          bash -x autogen.sh
+
+      - name: Configure
+        run: |
+          bash -x configure
+
+      - name: Build
+        run: |
+          make -j8 && sudo make install
