@@ -117,7 +117,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 	// Check if arguments are given.
 	if (argc <= 1) {
 		cfprintf(stderr, "{red}Error: too few arguments QwQ{clear}\n");
-		cfprintf(stderr, "{red}Use -h args to see more help usage.");
+		cfprintf(stderr, "{red}Use -h args to see more help usage.\n");
 		exit(1);
 	}
 	// Init configs.
