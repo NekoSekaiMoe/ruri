@@ -96,7 +96,7 @@ jobs:
     steps:
       - name: Test
         run: |
-          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
+          sudo apt update && sudo apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
 
       - name: Check latest version
         uses: actions/checkout@v4
