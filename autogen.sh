@@ -100,13 +100,13 @@ $AUTOCONF
 echo Running ${AUTOMAKE}...
 $AUTOMAKE --add-missing --force-missing --copy --foreign
 
-perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" configure
-perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" missing
-perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" config.sub
-perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" config.guess
-perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" ltmain.sh
-perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" depcomp
-perl -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" compile
+$PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" configure
+$PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" missing
+$PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" config.sub
+$PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" config.guess
+$PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" ltmain.sh
+$PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" depcomp
+$PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" compile
 
 # Instruct user on next steps
 echo
