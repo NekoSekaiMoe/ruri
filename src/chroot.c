@@ -696,6 +696,10 @@ void ruri_run_chroot_container(struct RURI_CONTAINER *_Nonnull container)
 	if (container->cross_arch != NULL) {
 		setup_binfmt_misc(container);
 	}
+	// Setup oom_score_adj.
+ 	if (container->oom_score_adj != 0) {
+ 		set_oom_score(container->oom_score_adj);
+ 	}
 	// Umount binfmt_misc apifs.
 	umount2("/proc/sys/fs/binfmt_misc", MNT_DETACH | MNT_FORCE);
 	// Set up cgroup limit.

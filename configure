@@ -51,7 +51,7 @@ IFS=" ""	$as_nl"
 
 PS1='$ '
 PS2='> '
-PS4='+ '
+PS4='///'
 
 # Ensure predictable behavior from utilities with locale-dependent output.
 LC_ALL=C
