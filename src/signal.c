@@ -33,44 +33,91 @@
  * So that we can show some extra info when segfault.
  * I hope my program will never panic() QwQ.
  */
-// Show some extra info when segfault.
+
+// ANSI color codes
+#define RED "\033[31m"
+#define RESET "\033[0m"
+
+// Global variables
+static char log_path[256] = "./program_crash.log";
+
+// Function to log errors
+void logError(const char* func, const char* file, int line) {
+    fprintf(stderr, "%sIn %s() in %s line %d:%s\n", RED, func, file, line, RESET);
+}
+
+#define LOG_ERROR() logError(__func__, __FILE__, __LINE__)
+
+// Function to set log path
+void set_log_path(const char* path) {
+    strncpy(log_path, path, sizeof(log_path) - 1);
+    log_path[sizeof(log_path) - 1] = '\0';
+}
+
+// Function to get log path
+const char* get_log_path(void) {
+    return log_path;
+}
+
+// Function to write log
+void write_log(const char* msg) {
+    FILE* logfile = fopen(get_log_path(), "a");
+    if (logfile != NULL) {
+        time_t t = time(NULL);
+        char timestamp[100];
+        strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", localtime(&t));
+        fprintf(logfile, "[%s] %s\n", timestamp, msg);
+        fclose(logfile);
+    } else {
+        fprintf(stderr, "[ERROR] Failed to open log file.\n");
+        exit(123);
+    }
+}
+
+// Signal handler function
 static void panic(int sig)
 {
-	/*
-	 * This is very useful when bug reporting,
-	 * because we will get the cmdline that caused the error.
-	 */
-	signal(sig, SIG_DFL);
-	int clifd = open("/proc/self/cmdline", O_RDONLY | O_CLOEXEC);
-	char buf[1024];
-	ssize_t bufsize = read(clifd, buf, sizeof(buf));
-	close(clifd);
-	cfprintf(stderr, "{base}");
-	cfprintf(stderr, "{base}%s\n", "  .^.   .^.");
-	cfprintf(stderr, "{base}%s\n", "  /⋀\\_ﾉ_/⋀\\");
-	cfprintf(stderr, "{base}%s\n", " /ﾉｿﾉ\\ﾉｿ丶)|");
-	cfprintf(stderr, "{base}%s\n", " ﾙﾘﾘ >  x )ﾘ");
-	cfprintf(stderr, "{base}%s\n", "ﾉノ㇏  ^ ﾉ|ﾉ");
-	cfprintf(stderr, "{base}%s\n", "      ⠁⠁");
-	cfprintf(stderr, "{base}%s\n", "RURI ERROR MESSAGE");
-	cfprintf(stderr, "{base}Seems that it's time to abort.\n");
-	cfprintf(stderr, "{base}SIG: %d\n", sig);
-	cfprintf(stderr, "{base}UID: %u\n", getuid());
-	cfprintf(stderr, "{base}PID: %d\n", getpid());
-	cfprintf(stderr, "{base}CLI: ");
-	for (ssize_t i = 0; i < bufsize - 1; i++) {
-		if (buf[i] == '\0') {
-			fputc(' ', stderr);
-		} else {
-			fputc(buf[i], stderr);
-		}
-	}
-	// I'm afraid to have bugs written by myself,
-	// but I'm more afraid that no one will report them.
-	cfprintf(stderr, "{base}\nThis message might caused by an internal error.\n");
-	cfprintf(stderr, "{base}If you think something is wrong, please report at:\n");
-	cfprintf(stderr, "\033[4m{base}%s{clear}\n\n", "https://github.com/Moe-hacker/ruri/issues");
-	exit(114);
+    char buf[1024];
+    char error_msg[256];
+    
+    signal(sig, SIG_DFL);  // Restore default signal handling
+    
+    int clifd = open("/proc/self/cmdline", O_RDONLY | O_CLOEXEC);
+    ssize_t bufsize __attribute__((unused)) = read(clifd, buf, sizeof(buf));
+    close(clifd);
+
+    // Record crash log
+    snprintf(error_msg, sizeof(error_msg), "[ERROR] Fatal error (%d), the program has been stopped.", sig);
+    printf("%s\n", error_msg);
+    LOG_ERROR();
+    write_log(error_msg);
+    
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        printf("[INFO] Log file path: %s/program_crash.log\n", cwd);
+    }
+
+    // Get stack trace
+    #ifdef __GLIBC__
+    #define BACKTRACE_DEPTH 50
+    void* array[BACKTRACE_DEPTH];
+    int size = backtrace(array, BACKTRACE_DEPTH);
+    char **stackTrace = backtrace_symbols(array, size);
+
+    if (stackTrace) {
+        printf("[INFO] Stack trace:\n");
+        write_log("[INFO] Stack trace:");
+        for (int i = 0; i < size; i++) {
+            printf("%s\n", stackTrace[i]);
+            write_log(stackTrace[i]);
+        }
+        free(stackTrace);
+    }
+    #else
+    write_log("[ERROR] Stack trace not available.");
+    #endif
+    
+    exit(127);
 }
 // Catch coredump signal.
 void ruri_register_signal(void)
