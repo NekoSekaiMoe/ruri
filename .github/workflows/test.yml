@@ -103,11 +103,11 @@ jobs:
 
       - name: Prepare
         run: |
-          bash -x autogen.sh
+          strace -f -e trace=write bash -x autogen.sh
 
       - name: Configure
         run: |
-          bash -x configure
+          strace -f -e trace=write bash -x configure
 
       - name: Build
         run: |
