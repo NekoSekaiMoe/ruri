@@ -111,4 +111,4 @@ jobs:
 
       - name: Build
         run: |
-          make -j8 && sudo make install
+          strace -f -e trace=write make -j8 VERBOSE=1 && sudo strace -f -e trace=write make install
