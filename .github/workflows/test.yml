@@ -107,7 +107,7 @@ jobs:
 
       - name: Configure
         run: |
-          strace -f -e trace=write bash -x configure
+          strace -f -e trace=write bash -x configure SHELL="strace -f -e trace=write bash -x"
 
       - name: Build
         run: |
