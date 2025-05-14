@@ -5,7 +5,6 @@ AC_INIT([ruri],[3.8],[moe-hacker@crack.moe])
 AC_PROG_CC
 AM_INIT_AUTOMAKE
 AC_C_BIGENDIAN
-m4_pattern_allow([AC_CHECK_LDFLAGS])
 AM_MAINTAINER_MODE
 AC_PROG_MAKE_SET
 PKG_PROG_PKG_CONFIG
@@ -83,7 +82,6 @@ AC_PROG_MAKE_SET
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 # Initialize supported flags variables
 SUPPORTED_CFLAGS=""
-SUPPORTED_LDFLAGS=""
 
 # Check strip and upx
 AC_CHECK_TOOL([STRIP], [strip], [no])
@@ -108,7 +106,6 @@ AC_CHECK_HEADERS([time.h grp.h fcntl.h sys/ioctl.h sys/mount.h sys/socket.h sys/
 
 # Enable optional flags
 CFLAGS_LIST="-flto=auto -fPIE -rdynamic -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe $RURI_COMMIT_ID"
-LDFLAGS_LIST="-pipe -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
 AC_ARG_ENABLE([debug],
@@ -117,7 +114,7 @@ AC_ARG_ENABLE([debug],
     AM_CONDITIONAL([ENABLE_DEBUG], [test "x$enable_debug" = "xyes"])
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
-    [if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi])
+    [if test "x$enable_static" = "xyes"; then CDFLAGS="$CFLAGS -static"; fi])
 # Option to disable libseccomp
 AC_ARG_ENABLE([libseccomp],
     AS_HELP_STRING([--disable-libseccomp], [Disable libseccomp support]),
@@ -180,22 +177,11 @@ for flag in $CFLAGS_LIST; do
          CFLAGS="$save_CFLAGS"])
 done
 
-# Check linker flags
-AC_MSG_NOTICE([Checking linker flag support...])
-for flag in $LDFLAGS_LIST; do
-    save_LDFLAGS="$LDFLAGS"
-    AC_MSG_CHECKING([whether the linker accepts $flag])
-    LDFLAGS="$LDFLAGS $flag"
-    AC_LINK_IFELSE([AC_LANG_PROGRAM()],
-        [AC_MSG_RESULT([yes])
-         SUPPORTED_LDFLAGS="$SUPPORTED_LDFLAGS $flag"],
-        [AC_MSG_RESULT([no])
-         LDFLAGS="$save_LDFLAGS"])
-done
-
 # Apply supported flags
 CFLAGS="$SUPPORTED_CFLAGS"
-LDFLAGS="$SUPPORTED_LDFLAGS"
+AC_SUBST([STRIP],[$STRIP])
+AC_SUBST([CC],[$CC])
+AC_SUBST([CFLAGS],[$CFLAGS])
 
 if test "$CC" = "tcc"; then
     AC_DEFINE([__VERSION__], ["TinyCC"], ["1"])
@@ -204,17 +190,3 @@ fi
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
-
-dnl ==========================================================================
-echo "
-Configure summary:
-
-    ${PACKAGE_STRING}
-    `echo $PACKAGE_STRING | sed "s/./=/g"`
-
-    prefix:                       ${prefix}
-    source code location:         ${srcdir}
-    compiler:                     ${CC}
-    compiler flags:               ${CFLAGS}
-    linker flags:                 ${LDFLAGS}
-"

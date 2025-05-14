@@ -5043,7 +5043,6 @@ printf "%s\n" "#define AC_APPLE_UNIVERSAL_BUILD 1" >>confdefs.h
  esac
 
 
-
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether to enable maintainer-specific portions of Makefiles" >&5
 printf %s "checking whether to enable maintainer-specific portions of Makefiles... " >&6; }
     # Check whether --enable-maintainer-mode was given.
@@ -6560,7 +6559,6 @@ AM_BACKSLASH='\'
 
 # Initialize supported flags variables
 SUPPORTED_CFLAGS=""
-SUPPORTED_LDFLAGS=""
 
 # Check strip and upx
 if test -n "$ac_tool_prefix"; then
@@ -6760,7 +6758,6 @@ done
 
 # Enable optional flags
 CFLAGS_LIST="-flto=auto -fPIE -rdynamic -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe $RURI_COMMIT_ID"
-LDFLAGS_LIST="-pipe -Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now"
 
 # Handle optional flags for debug and static builds
 # Check whether --enable-debug was given.
@@ -6781,7 +6778,7 @@ fi
 # Check whether --enable-static was given.
 if test ${enable_static+y}
 then :
-  enableval=$enable_static; if test "x$enable_static" = "xyes"; then LDFLAGS="$LDFLAGS -static"; fi
+  enableval=$enable_static; if test "x$enable_static" = "xyes"; then CDFLAGS="$CFLAGS -static"; fi
 fi
 
 # Option to disable libseccomp
@@ -7043,42 +7040,14 @@ fi
 rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
 done
 
-# Check linker flags
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: Checking linker flag support..." >&5
-printf "%s\n" "$as_me: Checking linker flag support..." >&6;}
-for flag in $LDFLAGS_LIST; do
-    save_LDFLAGS="$LDFLAGS"
-    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the linker accepts $flag" >&5
-printf %s "checking whether the linker accepts $flag... " >&6; }
-    LDFLAGS="$LDFLAGS $flag"
-    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main (void)
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_c_try_link "$LINENO"
-then :
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-printf "%s\n" "yes" >&6; }
-         SUPPORTED_LDFLAGS="$SUPPORTED_LDFLAGS $flag"
-else $as_nop
-  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
-printf "%s\n" "no" >&6; }
-         LDFLAGS="$save_LDFLAGS"
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.beam \
-    conftest$ac_exeext conftest.$ac_ext
-done
-
 # Apply supported flags
 CFLAGS="$SUPPORTED_CFLAGS"
-LDFLAGS="$SUPPORTED_LDFLAGS"
+STRIP=$STRIP
+
+CC=$CC
+
+CFLAGS=$CFLAGS
+
 
 if test "$CC" = "tcc"; then
 
@@ -8564,17 +8533,4 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
 printf "%s\n" "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
-
-echo "
-Configure summary:
-
-    ${PACKAGE_STRING}
-    `echo $PACKAGE_STRING | sed "s/./=/g"`
-
-    prefix:                       ${prefix}
-    source code location:         ${srcdir}
-    compiler:                     ${CC}
-    compiler flags:               ${CFLAGS}
-    linker flags:                 ${LDFLAGS}
-"
 
