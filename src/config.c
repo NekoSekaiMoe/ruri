@@ -355,7 +355,7 @@ void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_No
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
-	if (size >= 65536) {Add commentMore actions
+	if (size >= 65536) {
 		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
 	}
 	close(fd);
@@ -493,7 +493,7 @@ void ruri_correct_config(const char *_Nonnull path)
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
-	if (size >= 65536) {Add commentMore actions
+	if (size >= 65536) {
 		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
 	}
 	close(fd);
