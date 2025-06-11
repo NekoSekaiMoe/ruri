@@ -144,6 +144,9 @@ static char *get_username(uid_t uid)
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {Add commentMore actions
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	char *buf = malloc((size_t)size + 1);
 	read(fd, buf, (size_t)size);
 	buf[size] = '\0';
@@ -263,6 +266,9 @@ static void get_uid_map(char *_Nonnull user, struct RURI_ID_MAP *_Nonnull id_map
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {Add commentMore actions
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	char *buf = malloc((size_t)size + 1);
 	read(fd, buf, (size_t)size);
 	buf[size] = '\0';
@@ -272,7 +278,11 @@ static void get_uid_map(char *_Nonnull user, struct RURI_ID_MAP *_Nonnull id_map
 		return;
 	}
 	// Find username in /etc/subuid.
-	char *map = strstr(buf, user);
+	char *str_to_find = malloc(strlen(user) + 4);
+	strcpy(str_to_find, user);
+	strcat(str_to_find, ":");
+	char *map = strstr(buf, str_to_find);
+	free(str_to_find);
 	if (map == NULL) {
 		// If username is not in /etc/subuid.
 		id_map->uid_lower = 0;
@@ -359,11 +369,18 @@ static void get_gid_map(const char *_Nonnull user, struct RURI_ID_MAP *_Nonnull 
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {Add commentMore actions
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	char *buf = malloc((size_t)size + 1);
 	read(fd, buf, (size_t)size);
 	buf[size] = '\0';
 	close(fd);
-	char *map = strstr(buf, user);
+	char *str_to_find = malloc(strlen(user) + 4);
+	strcpy(str_to_find, user);
+	strcat(str_to_find, ":");
+	char *map = strstr(buf, str_to_find);
+	free(str_to_find);
 	if (map == NULL) {
 		id_map->gid_lower = 0;
 		id_map->gid_count = 0;
@@ -416,6 +433,9 @@ bool ruri_user_exist(const char *_Nonnull username)
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {Add commentMore actions
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	char *buf = malloc((size_t)size + 1);
 	read(fd, buf, (size_t)size);
 	buf[size] = '\0';
@@ -459,6 +479,9 @@ uid_t ruri_get_user_uid(const char *_Nonnull username)
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {Add commentMore actions
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	char *buf = malloc((size_t)size + 1);
 	read(fd, buf, (size_t)size);
 	buf[size] = '\0';
@@ -504,6 +527,9 @@ gid_t ruri_get_user_gid(const char *_Nonnull username)
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {Add commentMore actions
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	char *buf = malloc((size_t)size + 1);
 	read(fd, buf, (size_t)size);
 	buf[size] = '\0';
@@ -620,6 +646,9 @@ int ruri_get_groups(uid_t uid, gid_t groups[])
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {Add commentMore actions
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	char *buf = malloc((size_t)size + 1);
 	read(fd, buf, (size_t)size);
 	buf[size] = '\0';
