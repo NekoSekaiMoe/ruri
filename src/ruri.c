@@ -106,27 +106,6 @@ static void parse_cgroup_settings(const char *_Nonnull str, struct RURI_CONTAINE
 	}
 }
 
-static bool is_container_dir(char *dir)More actions
-{
-	/*
-	 * Check if the given directory is a container directory.
-	 * It will only check if the directory exists now.
-	 */
-	if (dir == NULL) {
-		return false;
-	}
-	struct stat st;
-	// Directory does not exist.
-	if (stat(dir, &st) != 0) {
-		return false;
-	}
-	// Not a directory.
-	if (!S_ISDIR(st.st_mode)) {
-		return false;
-	}
-	return true;
-}
-
 static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_Nonnull container)
 {
 	/*
