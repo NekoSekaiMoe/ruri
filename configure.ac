@@ -114,7 +114,7 @@ AC_ARG_ENABLE([debug],
     AM_CONDITIONAL([ENABLE_DEBUG], [test "x$enable_debug" = "xyes"])
 AC_ARG_ENABLE([static],
     AS_HELP_STRING([--enable-static], [Enable static linking]),
-    [if test "x$enable_static" = "xyes"; then CDFLAGS="$CFLAGS -static"; fi])
+    [if test "x$enable_static" = "xyes"; then CFLAGS="$CFLAGS -static"; fi])
 # Option to disable libseccomp
 AC_ARG_ENABLE([libseccomp],
     AS_HELP_STRING([--disable-libseccomp], [Disable libseccomp support]),
