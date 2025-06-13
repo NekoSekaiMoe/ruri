@@ -21,7 +21,7 @@ mkdir output output2 output3
 
 git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git --depth=1
 cd ruri
-./configure --enable-static
+./configure -C --enable-static
 make -j$(nproc)
 
 strip ruri
@@ -32,9 +32,11 @@ cp LICENSE ../output/LICENSE
 cp ruri ../output2/ruri
 cp LICENSE ../output2/LICENSE
 
+mv config.cache ..
 git clean -dxf
+mv ../config.cache .
 
-./configure --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
+./configure -C --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
 make
 strip ruri
 cp ruri ../output3/ruri
