@@ -78,7 +78,7 @@ jobs:
           export CC="ccache gcc"
           export CXX="ccache g++"
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -pipe" --extra-cflags="-O3 -pipe" --enable-strip
+          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -pipe -Wno-error" --extra-cflags="-O3 -pipe -Wno-error" --enable-strip
           ninja -C build
 
           sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
