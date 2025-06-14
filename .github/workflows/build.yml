@@ -78,7 +78,7 @@ jobs:
           export CC="ccache gcc"
           export CXX="ccache g++"
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -flto=auto -pipe" --extra-cflags="-O3 -flto=auto -pipe"
+          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -pipe" --extra-cflags="-O3 -pipe" --disable-debug-info --enable-strip
           ninja -C build
 
           sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
@@ -102,12 +102,15 @@ jobs:
           git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
           cd ruri
           apt build-dep . -y
-          ./configure --enable-static
-          make
+          ./configure -C --enable-static
+          make -j8
           strip ruri
+          mv config.cache ..
           tar -cf ../loong64.tar ./ruri ./LICENSE
-          ./configure --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
-          make
+          git clean -dxf
+          mv ../config.cache .
+          ./configure -C --disable-libcap --disable-libseccomp --disable-rurienv --enable-static
+          make -j8
           strip ruri
           tar -cf ../loong64-core.tar ./ruri ./LICENSE
           EOF'
