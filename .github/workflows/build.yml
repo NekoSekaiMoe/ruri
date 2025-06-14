@@ -68,7 +68,7 @@ jobs:
           cd build
           git clone --depth 1 https://github.com/moe-hacker/ruri.git
           cd ruri
-          ccache gcc -Wl,--gc-sections -static src/*.c src/easteregg/*.c -o ruri -lcap -lseccomp -lpthread -O3 -flto=auto -pipe
+          ccache gcc -Wl,--gc-sections -static src/*.c src/easteregg/*.c -o ruri -lcap -lseccomp -lpthread -O3 -pipe
 
       - name: Build loong64 qemu
         run: |
@@ -78,7 +78,7 @@ jobs:
           export CC="ccache gcc"
           export CXX="ccache g++"
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -pipe" --extra-cflags="-O3 -pipe" --disable-debug-info --enable-strip
+          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -pipe" --extra-cflags="-O3 -pipe" --enable-strip
           ninja -C build
 
           sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
