@@ -91,6 +91,9 @@ pid_t ruri_get_ns_pid(const char *_Nonnull container_dir)
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	close(fd);
 	// Read .rurienv file.
 	char *buf = k2v_open_file(file, (size_t)size);
@@ -292,6 +295,9 @@ struct RURI_CONTAINER *ruri_read_info(struct RURI_CONTAINER *_Nullable container
 	struct stat filestat;
 	fstat(fd, &filestat);
 	off_t size = filestat.st_size;
+	if (size >= 65536) {
+		ruri_error("{red}Config file is too large, it should be less than 65536 bytes.\n{clear}");
+	}
 	close(fd);
 	// Read .rurienv file.
 	char *buf = k2v_open_file(file, (size_t)size);
@@ -313,9 +319,6 @@ struct RURI_CONTAINER *ruri_read_info(struct RURI_CONTAINER *_Nullable container
 		} else {
 			container->ns_pid = RURI_INIT_VALUE;
 		}
-		close(fd);
-		free(buf);
-		return container;
 	}
 	// Check if ns_pid is a ruri process.
 	// If not, that means the container is not running.
@@ -387,11 +390,9 @@ struct RURI_CONTAINER *ruri_read_info(struct RURI_CONTAINER *_Nullable container
 	int seccomplen = k2v_get_key(char_array, "deny_syscall", buf, container->seccomp_denied_syscall, RURI_MAX_SECCOMP_DENIED_SYSCALL);
 	container->seccomp_denied_syscall[seccomplen] = NULL;
 	// Check if seccomp_denied_syscall changed.
-	if (memcmp(backup->seccomp_denied_syscall, container->seccomp_denied_syscall, sizeof(char *) * RURI_MAX_SECCOMP_DENIED_SYSCALL) != 0) {
-		if (!container->no_warnings) {
-			ruri_warning("{yellow}.rurienv detected, seccomp_denied_syscall changed{clear}\n");
-		}
-	}
+	//
+	// TODO
+	//
 	// Get ns_pid.
 	container->ns_pid = k2v_get_key(int, "ns_pid", buf);
 	ruri_log("{base}ns_pid: %d\n", container->ns_pid);
