@@ -427,10 +427,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 				}
 				for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
 					if (container->extra_mountpoint[i] == NULL) {
-						container->extra_mountpoint[i] = realpath(argv[index], NULL);
-						if (container->extra_mountpoint[i] == NULL) {
-							ruri_error("{red}mountpoint does not exist QwQ\n");
-						}
+						container->extra_mountpoint[i] = strdup(argv[index]);
 						index++;
 						container->extra_mountpoint[i + 1] = strdup(argv[index]);
 						if (strcmp(argv[index], "/") == 0) {
@@ -439,7 +436,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 							container->extra_mountpoint[i] = NULL;
 							container->extra_mountpoint[i + 1] = NULL;
 							if (container->rootfs_source == NULL) {
-								container->rootfs_source = realpath(argv[index - 1], NULL);
+								container->rootfs_source = strdup(argv[index - 1]);
 							} else {
 								ruri_error("{red}You can only mount one source to / QwQ\n");
 							}
@@ -462,10 +459,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 			if ((argv[index] != NULL) && (argv[index + 1] != NULL)) {
 				for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
 					if (container->extra_ro_mountpoint[i] == NULL) {
-						container->extra_ro_mountpoint[i] = realpath(argv[index], NULL);
-						if (container->extra_ro_mountpoint[i] == NULL) {
-							ruri_error("{red}mountpoint does not exist QwQ\n");
-						}
+						container->extra_ro_mountpoint[i] = strdup(argv[index]);
 						index++;
 						container->extra_ro_mountpoint[i + 1] = strdup(argv[index]);
 						container->extra_ro_mountpoint[i + 2] = NULL;
@@ -475,7 +469,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 							container->extra_ro_mountpoint[i] = NULL;
 							container->extra_ro_mountpoint[i + 1] = NULL;
 							if (container->rootfs_source == NULL) {
-								container->rootfs_source = realpath(argv[index - 1], NULL);
+								container->rootfs_source = strdup(argv[index - 1]);
 								container->ro_root = true;
 							} else {
 								ruri_error("{red}You can only mount one source to / QwQ\n");
@@ -837,10 +831,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 							}
 							for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
 								if (container->extra_mountpoint[i] == NULL) {
-									container->extra_mountpoint[i] = realpath(argv[index], NULL);
-									if (container->extra_mountpoint[i] == NULL) {
-										ruri_error("{red}mountpoint does not exist QwQ\n");
-									}
+									container->extra_mountpoint[i] = strdup(argv[index]);
 									index++;
 									container->extra_mountpoint[i + 1] = strdup(argv[index]);
 									if (strcmp(argv[index], "/") == 0) {
@@ -849,7 +840,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 										container->extra_mountpoint[i] = NULL;
 										container->extra_mountpoint[i + 1] = NULL;
 										if (container->rootfs_source == NULL) {
-											container->rootfs_source = realpath(argv[index - 1], NULL);
+											container->rootfs_source = strdup(argv[index - 1]);
 										} else {
 											ruri_error("{red}You can only mount one source to / QwQ\n");
 										}
@@ -875,10 +866,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 						if ((argv[index] != NULL) && (argv[index + 1] != NULL)) {
 							for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
 								if (container->extra_ro_mountpoint[i] == NULL) {
-									container->extra_ro_mountpoint[i] = realpath(argv[index], NULL);
-									if (container->extra_ro_mountpoint[i] == NULL) {
-										ruri_error("{red}mountpoint does not exist QwQ\n");
-									}
+									container->extra_ro_mountpoint[i] = strdup(argv[index]);
 									index++;
 									container->extra_ro_mountpoint[i + 1] = strdup(argv[index]);
 									container->extra_ro_mountpoint[i + 2] = NULL;
@@ -888,7 +876,7 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 										container->extra_ro_mountpoint[i] = NULL;
 										container->extra_ro_mountpoint[i + 1] = NULL;
 										if (container->rootfs_source == NULL) {
-											container->rootfs_source = realpath(argv[index - 1], NULL);
+											container->rootfs_source = strdup(argv[index - 1]);
 											container->ro_root = true;
 										} else {
 											ruri_error("{red}You can only mount one source to / QwQ\n");
