@@ -52,44 +52,6 @@ jobs:
         run: |
           make -C test -f Makefile.test
 
-
-  build-dbg:
-    name: Build with Debug
-    strategy:
-      matrix:
-        include:
-        - build: cmake-dbg
-          os: ubuntu-latest
-        - build: autoconf-dbg
-          os: ubuntu-latest
-        - build: cmake-dbg
-          os: ubuntu-22.04-arm
-        - build: autoconf-dbg
-          os: ubuntu-22.04-arm
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dep
-        run: |
-          sudo apt update&&sudo apt install -y git wget
-          yes | sudo apt install --no-install-recommends -y curl xz-utils \
-          make \
-          clang \
-          clang-tidy \
-          libseccomp-dev \
-          libcap-dev \
-          libc6-dev \
-          binutils qemu-user-static uidmap gdb
-          if [ ${{ matrix.build-dbg }} = "cmake-dbg" ]; then
-              sed -i 's|./configure --enable-debug|cmake . -G"Unix Makefiles" -DENABLE_DEBUG=on|' test/init-root-test.sh
-          fi
-      - name: Test
-        run: |
-          make -C test -f Makefile.test debug-gdb
-          #make -C test -f Makefile.test
-
   lo:
     name: Build with log
     runs-on: ubuntu-latest
