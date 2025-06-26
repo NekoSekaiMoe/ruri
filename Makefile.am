@@ -34,6 +34,7 @@ endif
 
 if !ENABLE_DEBUG
 install-data-hook: strip_target upx_target
+install: install-data-hook
 endif
 
 #Check VERBOSE vaule

@@ -737,7 +737,7 @@ installdirs:
 	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
+@ENABLE_DEBUG_TRUE@install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -908,6 +908,7 @@ uninstall-am: uninstall-binPROGRAMS
 @ENABLE_UPX_FALSE@	$(AM_V)echo "UPX not found, skipping compression."
 
 @ENABLE_DEBUG_FALSE@install-data-hook: strip_target upx_target
+@ENABLE_DEBUG_FALSE@install: install-data-hook
 
 # Custom commands
 .PHONY: ruritest check
