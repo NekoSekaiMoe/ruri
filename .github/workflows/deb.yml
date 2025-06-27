@@ -20,7 +20,7 @@ jobs:
           apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
           wget https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-amd64_linux.tar.xz -O upx.tar.xz
           tar -xvf upx.tar.xz
-          sudo mv upx /usr/local/bin/
+          mv upx /usr/local/bin/
           upx --version
 
       - name: Check latest version
@@ -60,7 +60,7 @@ jobs:
           apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
           wget https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-amd64_linux.tar.xz -O upx.tar.xz
           tar -xvf upx.tar.xz
-          sudo mv upx /usr/local/bin/
+          mv upx /usr/local/bin/
           upx --version
 
       - name: Check latest version
