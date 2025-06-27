@@ -121,7 +121,7 @@ jobs:
           export CC="ccache gcc"
           export CXX="ccache g++"
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -flto=auto -pipe" --extra-cflags="-O3 -flto=auto -pipe"
+          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -z now -fPIC -fPIE -pipe" --extra-cflags="-O3 -z now -fPIC -fPIE -pipe"
           ninja -C build
 
           sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
