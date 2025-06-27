@@ -20,7 +20,7 @@ jobs:
           apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
           wget https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-amd64_linux.tar.xz -O upx.tar.xz
           tar -xvf upx.tar.xz
-          mv upx-5.0.1-amd64_linux/upx /usr/local/bin/
+          mv -v upx-5.0.1-amd64_linux/upx /usr/local/bin/
           upx --version
 
       - name: Check latest version
@@ -30,6 +30,7 @@ jobs:
         run: |
           git config --global --add safe.directory /__w/ruri/ruri
           rm -rf -v build src/include/version.h
+          mv debian ..
           bash -x autogen.sh
           git config --global user.name "root"
           git config --global user.email "your_email@example.com"
@@ -39,6 +40,7 @@ jobs:
       - name: build amd64 deb
         run: |
           git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
+          mv ../debian .
           apt build-dep . -y
           dpkg-buildpackage -F -d
           mkdir -p build
@@ -70,6 +72,7 @@ jobs:
         run: |
           git config --global --add safe.directory /__w/ruri/ruri
           rm -rf -v build  src/include/version.h
+          mv debian ..
           bash -x autogen.sh
           git config --global user.name "root"
           git config --global user.email "your_email@example.com"
@@ -79,6 +82,7 @@ jobs:
       - name: build arm64 deb
         run: |
           git archive --prefix=ruri-3.8/ -o ../ruri_3.8.orig.tar.gz HEAD
+          mv ../debian .
           apt build-dep . -y
           dpkg-buildpackage -b -us -uc -d
           mkdir -p build
@@ -120,7 +124,7 @@ jobs:
           export CC="ccache gcc"
           export CXX="ccache g++"
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
-          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -z now -fPIC -fPIE -pipe" --extra-cflags="-O3 -z now -fPIC -fPIE -pipe"
+          ./configure --static --disable-system --target-list=loongarch64-linux-user --extra-cxxflags="-O3 -z now -fPIC -fPIE -pipe -Wno-error" --extra-cflags="-O3 -z now -fPIC -fPIE -pipe -Wno-error"
           ninja -C build
 
           sudo cp build/qemu-loongarch64 /usr/bin/qemu-loongarch64-static
