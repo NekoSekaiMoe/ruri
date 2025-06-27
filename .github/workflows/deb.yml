@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Test
         run: |
-          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
+          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf upx
 
       - name: Check latest version
         uses: actions/checkout@v4
@@ -53,7 +53,7 @@ jobs:
     steps:
       - name: Test
         run: |
-          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
+          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf upx
 
       - name: Check latest version
         uses: actions/checkout@v4
@@ -133,7 +133,7 @@ jobs:
           rm -f /etc/resolv.conf
           echo nameserver 1.1.1.1 > /etc/resolv.conf
           apt-get update
-          apt-get install -y wget make clang-tidy git libseccomp-dev libcap-dev libc-dev binutils tar dpkg-dev pkg-config debhelper dh-make
+          apt-get install -y wget make clang-tidy git libseccomp-dev libcap-dev libc-dev binutils tar dpkg-dev pkg-config debhelper dh-make upx
           git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
           cd ruri
           dpkg-buildpackage -b -us -uc -d
