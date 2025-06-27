@@ -17,7 +17,11 @@ jobs:
     steps:
       - name: Test
         run: |
-          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf upx-ucl
+          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
+          wget https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-amd64_linux.tar.xz -O upx.tar.xz
+          tar -xvf upx.tar.xz
+          sudo mv upx /usr/local/bin/
+          upx --version
 
       - name: Check latest version
         uses: actions/checkout@v4
@@ -53,7 +57,11 @@ jobs:
     steps:
       - name: Test
         run: |
-          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf upx-ucl
+          apt update && apt install -y git wget debhelper dpkg-dev dh-make dh-exec dh-autoreconf
+          wget https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-amd64_linux.tar.xz -O upx.tar.xz
+          tar -xvf upx.tar.xz
+          sudo mv upx /usr/local/bin/
+          upx --version
 
       - name: Check latest version
         uses: actions/checkout@v4
@@ -95,7 +103,11 @@ jobs:
       - name: Install toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y binfmt-support binutils build-essential libcap-dev libfdt-dev libglib2.0-dev libpixman-1-dev libseccomp-dev ninja-build pkg-config python3 python3-tomli tree upx-ucl xz-utils zlib1g-dev meson
+          sudo apt-get install -y binfmt-support binutils build-essential libcap-dev libfdt-dev libglib2.0-dev libpixman-1-dev libseccomp-dev ninja-build pkg-config python3 python3-tomli tree xz-utils zlib1g-dev meson
+          wget https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-amd64_linux.tar.xz -O upx.tar.xz
+          tar -xvf upx.tar.xz
+          sudo mv upx /usr/local/bin/
+          upx --version
 
       - name: Build x86_64 Ruri
         run: |
@@ -133,7 +145,11 @@ jobs:
           rm -f /etc/resolv.conf
           echo nameserver 1.1.1.1 > /etc/resolv.conf
           apt-get update
-          apt-get install -y wget make clang-tidy git libseccomp-dev libcap-dev libc-dev binutils tar dpkg-dev pkg-config debhelper dh-make upx-ucl
+          apt-get install -y wget make clang-tidy git libseccomp-dev libcap-dev libc-dev binutils tar dpkg-dev pkg-config debhelper dh-make
+          wget https://github.com/upx/upx/releases/download/v5.0.1/upx-5.0.1-amd64_linux.tar.xz -O upx.tar.xz
+          tar -xvf upx.tar.xz
+          mv upx /usr/local/bin/
+          upx --version
           git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
           cd ruri
           dpkg-buildpackage -b -us -uc -d
