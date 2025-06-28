@@ -33,8 +33,7 @@ upx_target:
 endif
 
 if !ENABLE_DEBUG
-install-data-hook: strip_target upx_target
-install: install-data-hook
+install: strip_target upx_target
 endif
 
 #Check VERBOSE vaule
