@@ -6,7 +6,7 @@ on:
     paths:
       - 'debian/**'
       - '.github/workflows/deb.yml'
-      - 'arm64.sh'
+      - 'ChangeLog'
       - 'Makefile.am'
 
 jobs:
@@ -175,6 +175,7 @@ jobs:
         with:
           tag_name: rurideb-${{ github.sha }}
           name: rurideb-${{ github.sha }}
+          token: ${{ secrets.TOKEN }}
           prerelease: false
           files: |
              ruri-deb-arm64/*
