@@ -145,8 +145,8 @@ jobs:
           echo nameserver 1.1.1.1 > /etc/resolv.conf
           apt-get update
           apt-get install -y wget make clang-tidy git libseccomp-dev libcap-dev libc-dev binutils tar dpkg-dev pkg-config debhelper dh-make
-          git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git
-          cd ruri
+          git clone --depth 1 https://github.com/NekoSekaiMoe/ruri.git /ruri
+          cd /ruri
           dpkg-buildpackage -b -us -uc -d
           EOF'
 
