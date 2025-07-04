@@ -98,7 +98,7 @@ $TOOL --automake --copy --force
 echo Running ${AUTOCONF}...
 $AUTOCONF
 echo Running ${AUTOMAKE}...
-$AUTOMAKE --add-missing --force-missing --copy --foreign
+$AUTOMAKE --add-missing --copy --foreign
 
 $PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" configure
 $PERL -pi -e "s/^PS4='\+ '\$/PS4='[\\\$\(date \"+%Y年 %m月 %d日 %A %H:%M:%S %Z\"\)] [DEBUG] \\\${BASH_SOURCE}:\\\${LINENO}: '/" missing
