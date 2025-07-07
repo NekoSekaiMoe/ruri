@@ -173,11 +173,6 @@ else()
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
 endif()
 
-# For static build
-if(ENABLE_STATIC)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-endif()
-
 # Add LDFLAGS
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LDFLAGS}")
 
@@ -196,22 +191,49 @@ add_definitions(-D_FILE_OFFSET_BITS=64)
 file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/easteregg/*.c)
 
 if (BUILD_LIB)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-    add_library(ruri SHARED ${SOURCES})
-    install (TARGETS ruri DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/usr/lib/)
+    if(ENABLE_STATIC)
+        # Build static library
+        set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+        add_library(ruri STATIC ${SOURCES})
+        set_target_properties(ruri PROPERTIES OUTPUT_NAME "ruri")
+        install(TARGETS ruri 
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+        message(STATUS "Building static library (libruri.a)")
+    else()
+        # Build shared library
+        set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+        add_library(ruri SHARED ${SOURCES})
+        set_target_properties(ruri PROPERTIES 
+            VERSION ${VERSION}
+            SOVERSION ${VERSION})
+        install(TARGETS ruri 
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+        message(STATUS "Building shared library (libruri.so)")
+    endif()
 else ()
-# add the executable
-    set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIE")
-    add_executable(ruri ${SOURCES})
-    add_custom_command(
-        TARGET ruri
-        POST_BUILD
-        COMMAND strip ruri
-        VERBATIM
-        )
-        install (TARGETS ruri DESTINATION /usr/bin/)
+    if(ENABLE_STATIC)
+        # Build static executable
+        set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+        add_executable(ruri ${SOURCES})
+        set_target_properties(ruri PROPERTIES LINK_FLAGS "-static")
+        message(STATUS "Building static executable")
+    else()
+        # Build dynamic executable
+        set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIE")
+        add_executable(ruri ${SOURCES})
+        message(STATUS "Building dynamic executable")
+    endif()
+     add_custom_command(
+         TARGET ruri
+         POST_BUILD
+         COMMAND strip ruri
+         VERBATIM
+    )
+    install(TARGETS ruri DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
 add_custom_target(
