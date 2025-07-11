@@ -312,6 +312,8 @@ static void set_envs(const struct RURI_CONTAINER *_Nonnull container)
 	setenv("TMPDIR", "/tmp", 1);
 	// Set $SHELL to sh.
 	setenv("SHELL", "sh", 1);
+	// Set $container to ruri.
+	setenv("container", "ruri", 1);
 	// Set other envs.
 	for (int i = 0; true; i += 2) {
 		if (container->env[i] == NULL || container->env[i + 1] == NULL) {
