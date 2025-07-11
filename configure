@@ -653,6 +653,8 @@ ac_unique_file="src/ruri.c"
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+ENABLE_ANALYZER_FALSE
+ENABLE_ANALYZER_TRUE
 ENABLE_DEBUG_FALSE
 ENABLE_DEBUG_TRUE
 ENABLE_UPX_FALSE
@@ -773,6 +775,7 @@ enable_largefile
 enable_debug
 enable_static
 enable_libseccomp
+enable_analyzer
 enable_libcap
 enable_rurienv
 '
@@ -1427,6 +1430,7 @@ Optional Features:
   --enable-debug          Enable debug build
   --enable-static         Enable static linking
   --disable-libseccomp    Disable libseccomp support
+  --enable-analyzer       Enable analyzng build
   --disable-libcap        Disable libcap support
   --disable-rurienv       Disable .rurienv support
 
@@ -6757,7 +6761,7 @@ fi
 done
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -rdynamic -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe -fanalyzer"
+CFLAGS_LIST="-flto=auto -fPIE -rdynamic -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe"
 
 # Handle optional flags for debug and static builds
 # Check whether --enable-debug was given.
@@ -6789,6 +6793,22 @@ then :
 else $as_nop
   enable_libseccomp=yes
 fi
+
+# Check whether --enable-analyzer was given.
+if test ${enable_analyzer+y}
+then :
+  enableval=$enable_analyzer; if test "x$enable_analyzer" = "xyes"; then CFLAGS="$CFLAGS  -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
+printf "%s\n" "$as_me: Warning: DEBUG mode is enabled." >&6;} && CFLAGS_LIST="$CFLAGS_LIST -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV"; else CFLAGS="$CFLAGS -O3 -g0 -DNDEBUG" && CFLAGS_LIST="$CFLAGS_LIST -fanalyzer"; fi
+fi
+
+     if test "x$enable_analyzer" = "xyes"; then
+  ENABLE_ANALYZER_TRUE=
+  ENABLE_ANALYZER_FALSE='#'
+else
+  ENABLE_ANALYZER_TRUE='#'
+  ENABLE_ANALYZER_FALSE=
+fi
+
 
 
 # Option to disable libcap
@@ -7212,6 +7232,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_DEBUG_TRUE}" && test -z "${ENABLE_DEBUG_FALSE}"; then
   as_fn_error $? "conditional \"ENABLE_DEBUG\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_ANALYZER_TRUE}" && test -z "${ENABLE_ANALYZER_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_ANALYZER\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

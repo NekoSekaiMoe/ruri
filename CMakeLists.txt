@@ -139,7 +139,8 @@ set(CFLAGS_LIST
 )
 
 foreach(flag IN LISTS CFLAGS_LIST)
-    try_compile(result ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/test/check_flag.c COMPILE_DEFINITIONS ${flag})
+    try_compile(result 
+${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/test/check_flag.c COMPILE_DEFINITIONS ${flag})
     if(result)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
         message(STATUS "Compiler supports flag: ${flag}")
@@ -151,14 +152,19 @@ endforeach()
 set(LDFLAGS "-Wl,-z,relro -Wl,-z,noexecstack -Wl,-z,now")
 
 option(ENABLE_DEBUG "Enable debug build" OFF)
-option(ENABLE_STATIC "Enable static linking" OFF)
+option(ENABLE_STATIC "Enable static linking build" OFF)
+option(ENABLE_ANALYZER "Enable analyzing build" OFF)
 option(BUILD_LIB "BUILD with lib" OFF)
-option(DISABLE_LIBCAP "Disable cap library linking" OFF)
-option(DISABLE_LIBSECCOMP "Disable seccomp library linking" OFF)
+option(DISABLE_LIBCAP "Disable cap library linking build" OFF)
+option(DISABLE_LIBSECCOMP "Disable seccomp library linking build" OFF)
 option(DISABLE_RURIENV "Disable env in ruri" OFF)
 
 if (DISABLE_RURIENV)
     add_definitions(-DDISABLE_RURIENV)
+endif()
+
+if (ENABle_ANALYZER)
+    add_compile_options(-fanalyzer)
 endif()
 
 # For ruri core build
