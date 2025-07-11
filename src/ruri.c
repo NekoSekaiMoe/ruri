@@ -1188,6 +1188,12 @@ int main(int argc, char **argv)
 	prctl(PR_SET_NAME, "ruri");
 	// Catch coredump signal.
 	ruri_register_signal();
+	// Clear environment variables.
+	extern char **environ;
+	if (environ != NULL && environ[0] != NULL) {
+		environ = NULL;
+		execve("/proc/self/exe", argv, NULL);
+	}
 // Warning for dev/debug build.
 #if defined(RURI_DEBUG) || defined(RURI_DEV)
 	ruri_warning("{red}Warning: this is a dev/debug build, do not use it in production{clear}\n");
