@@ -6797,8 +6797,8 @@ fi
 # Check whether --enable-analyzer was given.
 if test ${enable_analyzer+y}
 then :
-  enableval=$enable_analyzer; if test "x$enable_analyzer" = "xyes"; then CFLAGS="$CFLAGS  -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
-printf "%s\n" "$as_me: Warning: DEBUG mode is enabled." >&6;} && CFLAGS_LIST="$CFLAGS_LIST -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV"; else CFLAGS="$CFLAGS -O3 -g0 -DNDEBUG" && CFLAGS_LIST="$CFLAGS_LIST -fanalyzer"; fi
+  enableval=$enable_analyzer; if test "x$enable_analyzer" = "xyes"; then { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: Analyzer mode is enabled." >&5
+printf "%s\n" "$as_me: Warning: Analyzer mode is enabled." >&6;} && CFLAGS="$CFLAGS -fanalyzer" && CFLAGS_LIST="$CFLAGS_LIST -fanalyzer"; fi
 fi
 
      if test "x$enable_analyzer" = "xyes"; then

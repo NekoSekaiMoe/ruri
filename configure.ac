@@ -121,7 +121,7 @@ AC_ARG_ENABLE([libseccomp],
     [], [enable_libseccomp=yes])
 AC_ARG_ENABLE([analyzer],
     AS_HELP_STRING([--enable-analyzer], [Enable analyzng build]),
-    [if test "x$enable_analyzer" = "xyes"; then CFLAGS="$CFLAGS  -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && AC_MSG_NOTICE([Warning: DEBUG mode is enabled.]) && CFLAGS_LIST="$CFLAGS_LIST -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV"; else CFLAGS="$CFLAGS -O3 -g0 -DNDEBUG" && CFLAGS_LIST="$CFLAGS_LIST -fanalyzer"; fi])
+    [if test "x$enable_analyzer" = "xyes"; then AC_MSG_NOTICE([Warning: Analyzer mode is enabled.]) && CFLAGS="$CFLAGS -fanalyzer" && CFLAGS_LIST="$CFLAGS_LIST -fanalyzer"; fi])
     AM_CONDITIONAL([ENABLE_ANALYZER], [test "x$enable_analyzer" = "xyes"])
 
 
