@@ -17,8 +17,8 @@ jobs:
     name: checksuite
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-22.04-arm, ubuntu-22.04]
-        cc: [gcc, clang]
+        os: [ubuntu-latest, ubuntu-22.04-arm, ubuntu-24.04-arm, ubuntu-22.04]
+        cc: gcc
         args: ["--disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug", "--disable-libcap --disable-libseccomp --disable-rurienv --enable-static", "--disable-libcap --disable-libseccomp --disable-rurienv", "--disable-libcap --disable-libseccomp", "--enable-static", "--enable-debug", "--enable-static --enable-debug", "--enable-static --disable-rurienv", "--enable-static --enable-debug --disable-rurienv", "--disable-rurienv", "--enable-analyzer", "--enable-analyzer --disable-libcap --disable-libseccomp --disable-rurienv"]
 
     runs-on: ${{ matrix.os }}
@@ -34,7 +34,38 @@ jobs:
           libseccomp-dev \
           libcap-dev \
           libc6-dev \
-          binutils gcc clang
+          binutils gcc
+      - name: Configure
+        run: ./configure -C ${{ matrix.args }} CC=${{ matrix.cc }}
+      - name: Build
+        run: |
+          make -j8
+      - name: Show version
+        run: ./ruri -v
+
+
+  test-clang:
+    name: checksuite
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-22.04-arm, ubuntu-22.04, ubuntu-24.04-arm]
+        cc: clang
+        args: ["--disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug", "--disable-libcap --disable-libseccomp --disable-rurienv --enable-static", "--disable-libcap --disable-libseccomp --disable-rurienv", "--disable-libcap --disable-libseccomp", "--enable-static", "--enable-debug", "--enable-static --enable-debug", "--enable-static --disable-rurienv", "--enable-static --enable-debug --disable-rurienv", "--disable-rurienv"]
+
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dep
+        run: |
+          sudo apt update && sudo apt install -y git wget
+          sudo apt install --no-install-recommends -y \
+          make \
+          libseccomp-dev \
+          libcap-dev \
+          libc6-dev \
+          binutils clang
       - name: Configure
         run: ./configure -C ${{ matrix.args }} CC=${{ matrix.cc }}
       - name: Build
