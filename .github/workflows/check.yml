@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-22.04-arm, ubuntu-24.04-arm, ubuntu-22.04]
-        cc: gcc
+        cc: [gcc]
         args: ["--disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug", "--disable-libcap --disable-libseccomp --disable-rurienv --enable-static", "--disable-libcap --disable-libseccomp --disable-rurienv", "--disable-libcap --disable-libseccomp", "--enable-static", "--enable-debug", "--enable-static --enable-debug", "--enable-static --disable-rurienv", "--enable-static --enable-debug --disable-rurienv", "--disable-rurienv", "--enable-analyzer", "--enable-analyzer --disable-libcap --disable-libseccomp --disable-rurienv"]
 
     runs-on: ${{ matrix.os }}
@@ -49,7 +49,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-22.04-arm, ubuntu-22.04, ubuntu-24.04-arm]
-        cc: clang
+        cc: [clang]
         args: ["--disable-libcap --disable-libseccomp --disable-rurienv --enable-static --enable-debug", "--disable-libcap --disable-libseccomp --disable-rurienv --enable-static", "--disable-libcap --disable-libseccomp --disable-rurienv", "--disable-libcap --disable-libseccomp", "--enable-static", "--enable-debug", "--enable-static --enable-debug", "--enable-static --disable-rurienv", "--enable-static --enable-debug --disable-rurienv", "--disable-rurienv"]
 
     runs-on: ${{ matrix.os }}
