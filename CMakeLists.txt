@@ -264,7 +264,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
         add_definitions(-DDISABLE_LIBSECCOMP)
         target_link_libraries(ruri -lcap)
     else()
-        target_link_libraries(ruri -lcap -lsecconp)
+        target_link_libraries(ruri -lcap -lseccomp)
     endif()
 
     if (ENABLE_STATIC)
