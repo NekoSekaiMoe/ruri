@@ -135,6 +135,7 @@ set(CFLAGS_LIST
     "-Wconversion"
     "-pedantic"
     "-pipe"
+    "-fanalyzer"
 )
 
 foreach(flag IN LISTS CFLAGS_LIST)
