@@ -158,12 +158,12 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 	// At least it works fine...
 	for (int index = 1; index < argc; index++) {
 		// Show version info.
-		if (strcmp(argv[index], "-v") == 0 || strcmp(argv[index], "--version") == 0) {
+		if (strcmp(argv[index], "-V") == 0 || strcmp(argv[index], "--version") == 0) {
 			ruri_show_version_info();
 			exit(EXIT_SUCCESS);
 		}
 		// Show version code, very useless right now.
-		if (strcmp(argv[index], "-V") == 0 || strcmp(argv[index], "--version-code") == 0) {
+		if (strcmp(argv[index], "-v") == 0 || strcmp(argv[index], "--version-code") == 0) {
 			ruri_show_version_code();
 			exit(EXIT_SUCCESS);
 		}
