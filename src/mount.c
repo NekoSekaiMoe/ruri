@@ -146,7 +146,7 @@ static char *losetup(const char *_Nonnull img)
 		loopctlfd = open("/dev/block/loop-control", O_RDWR | O_CLOEXEC);
 		if (loopctlfd < 0) {
 			ruri_log("{red}Error: {base}Cannot open /dev/loop-control or /dev/block/loop-control.\n");
-			exit(1);
+			return "1145141919810";
 		}
 	}
 	// It takes the same effect as `losetup -f`.
@@ -219,13 +219,64 @@ static int touch_mountpoint_file(const char *_Nonnull target)
 	}
 	return 0;
 }
-
+static int mount_as_filesystem(const char *_Nonnull source, const char *_Nonnull target, const char *_Nonnull fstype, unsigned int mountflags)
+{
+	/*
+	 * Mounts a filesystem at target with the given source and fstype.
+	 * This function is used to mount filesystems like ext4, vfat, ntfs, etc.
+	 *
+	 * Parameters:
+	 *   - source:     The source string (e.g., "/dev/sda1").
+	 *   - target:     The target directory where the filesystem will be mounted.
+	 *   - fstype:     The type of filesystem (e.g., "ext4", "vfat", "ntfs").
+	 *   - mountflags: Mount flags to be used in the mount operation.
+	 *
+	 * Returns:
+	 *   - 0 on success.
+	 *   - -1 on failure.
+	 */
+	struct stat dev_stat;
+	// Check if source exists.
+	if (lstat(source, &dev_stat) != 0) {
+		ruri_warning("{red}Error: {base}Source {cyan}%s{base} does not exist.\n", source);
+		return -1;
+	}
+	ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with fstype {cyan}%s{base} and flags {cyan}%d{base}\n", source, target, fstype, mountflags);
+	// If source is not a block device, losetup it.
+	if (!S_ISBLK(dev_stat.st_mode)) {
+		char *loopfile = losetup(source);
+		if (loopfile == NULL) {
+			return -1;
+		}
+		source = loopfile;
+	}
+	return mount(source, target, fstype, mountflags, NULL);
+}
 static int mount_other_type(const char *_Nonnull source, const char *_Nonnull target, unsigned int mountflags)
 {
 	/*
+	 * Mounts various types of filesystems based on the prefix of the source string.
 	 *
-	 * This function is used to mount other type of mountpoints.
+	 * Supported source prefixes and their corresponding filesystems:
+	 *   - "OVERLAY:" : Mounts an OverlayFS at the target using the provided options.
+	 *   - "TMPFS:"   : Mounts a tmpfs at the target using the provided options.
+	 *   - "EXT4:"    : Mounts an ext4 filesystem at the target.
+	 *   - "FAT32:"   : Mounts a FAT32 (vfat) filesystem at the target.
+	 *   - "NTFS:"    : Mounts an NTFS filesystem at the target.
+	 *   - "XFS:"     : Mounts an XFS filesystem at the target.
+	 *   - "BTRFS:"   : Mounts a Btrfs filesystem at the target.
+	 *   - "EXFAT:"   : Mounts an exFAT filesystem at the target.
+	 *   - "F2FS:"    : Mounts an F2FS filesystem at the target.
+	 *   - "EROFS:"   : Mounts an EROFS filesystem at the target.
 	 *
+	 * Parameters:
+	 *   - source:     The source string with a filesystem type prefix (e.g., "EXT4:/dev/sda1").
+	 *   - target:     The target directory where the filesystem will be mounted.
+	 *   - mountflags: Mount flags to be used in the mount operation.
+	 *
+	 * Returns:
+	 *   - 0 on success.
+	 *   - -1 on failure or if the source type is unsupported.
 	 */
 	if (strncmp(source, "OVERLAY:", strlen("OVERLAY:")) == 0) {
 		// OverlayFS mount.
@@ -249,10 +300,180 @@ static int mount_other_type(const char *_Nonnull source, const char *_Nonnull ta
 		free(tmpfs_flag);
 		return ret;
 	}
+	if (strncmp(source, "EXT4:", strlen("EXT4:")) == 0) {
+		// Ext4 mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *ext4_source = strdup(source + strlen("EXT4:"));
+		int ret = mount_as_filesystem(ext4_source, target, "ext4", mountflags);
+		free(ext4_source);
+		return ret;
+	}
+	if (strncmp(source, "FAT32:", strlen("FAT32:")) == 0) {
+		// FAT32 mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *fat32_source = strdup(source + strlen("FAT32:"));
+		int ret = mount_as_filesystem(fat32_source, target, "vfat", mountflags);
+		free(fat32_source);
+		return ret;
+	}
+	if (strncmp(source, "NTFS:", strlen("NTFS:")) == 0) {
+		// NTFS mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *ntfs_source = strdup(source + strlen("NTFS:"));
+		int ret = mount_as_filesystem(ntfs_source, target, "ntfs", mountflags);
+		free(ntfs_source);
+		return ret;
+	}
+	if (strncmp(source, "XFS:", strlen("XFS:")) == 0) {
+		// XFS mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *xfs_source = strdup(source + strlen("XFS:"));
+		int ret = mount_as_filesystem(xfs_source, target, "xfs", mountflags);
+		free(xfs_source);
+		return ret;
+	}
+	if (strncmp(source, "BTRFS:", strlen("BTRFS:")) == 0) {
+		// BTRFS mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *btrfs_source = strdup(source + strlen("BTRFS:"));
+		int ret = mount_as_filesystem(btrfs_source, target, "btrfs", mountflags);
+		free(btrfs_source);
+		return ret;
+	}
+	if (strncmp(source, "EXFAT:", strlen("EXFAT:")) == 0) {
+		// ExFAT mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *exfat_source = strdup(source + strlen("EXFAT:"));
+		int ret = mount_as_filesystem(exfat_source, target, "exfat", mountflags);
+		free(exfat_source);
+		return ret;
+	}
+	if (strncmp(source, "F2FS:", strlen("F2FS:")) == 0) {
+		// F2FS mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *f2fs_source = strdup(source + strlen("F2FS:"));
+		int ret = mount_as_filesystem(f2fs_source, target, "f2fs", mountflags);
+		free(f2fs_source);
+		return ret;
+	}
+	if (strncmp(source, "EROFS:", strlen("EROFS:")) == 0) {
+		// EROFS mount.
+		ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+		if (mk_mountpoint_dir(target) != 0) {
+			return -1;
+		}
+		char *erofs_source = strdup(source + strlen("EROFS:"));
+		int ret = mount_as_filesystem(erofs_source, target, "erofs", mountflags);
+		free(erofs_source);
+		return ret;
+	}
 	// For source that cannot be mounted.
 	return -1;
 }
-
+static const char *parse_mount_flags(const char *source, unsigned int *mountflag)
+{
+	/*
+	 * Parse mount flags from source.
+	 * Save the mount flags to mountflag.
+	 * Return the start of source without mount flags.
+	 *
+	 * Recognized prefixes and their corresponding flags:
+	 *   "RDONLY:"      -> MS_RDONLY
+	 *   "NOSUID:"      -> MS_NOSUID
+	 *   "NOEXEC:"      -> MS_NOEXEC
+	 *   "NODIRATIME:"  -> MS_NODIRATIME
+	 *   "NOATIME:"     -> MS_NOATIME
+	 *   "SYNCHRONOUS:" -> MS_SYNCHRONOUS
+	 *   "DIRSYNC:"     -> MS_DIRSYNC
+	 *   "MANDLOCK:"    -> MS_MANDLOCK
+	 *   "RELATIME:"    -> MS_RELATIME
+	 *   "SLAVE:"       -> MS_SLAVE
+	 *   "SHARED:"      -> MS_SHARED
+	 *   "PRIVATE:"     -> MS_PRIVATE
+	 *   "UNBINDABLE:"  -> MS_UNBINDABLE
+	 *   "SILENT:"      -> MS_SILENT
+	 *   "POSIXACL:"    -> MS_POSIXACL
+	 *   "LAZYTIME:"    -> MS_LAZYTIME
+	 *
+	 * The function stops processing when no recognized prefix is found at the start of 'source'.
+	 *
+	 */
+	while (true) {
+		if (strncmp(source, "RDONLY:", strlen("RDONLY:")) == 0) {
+			*mountflag |= MS_RDONLY;
+			source += strlen("RDONLY:");
+		} else if (strncmp(source, "NOSUID:", strlen("NOSUID:")) == 0) {
+			*mountflag |= MS_NOSUID;
+			source += strlen("NOSUID:");
+		} else if (strncmp(source, "NOEXEC:", strlen("NOEXEC:")) == 0) {
+			*mountflag |= MS_NOEXEC;
+			source += strlen("NOEXEC:");
+		} else if (strncmp(source, "NODIRATIME:", strlen("NODIRATIME:")) == 0) {
+			*mountflag |= MS_NODIRATIME;
+			source += strlen("NODIRATIME:");
+		} else if (strncmp(source, "NOATIME:", strlen("NOATIME:")) == 0) {
+			*mountflag |= MS_NOATIME;
+			source += strlen("NOATIME:");
+		} else if (strncmp(source, "SYNCHRONOUS:", strlen("SYNCHRONOUS:")) == 0) {
+			*mountflag |= MS_SYNCHRONOUS;
+			source += strlen("SYNCHRONOUS:");
+		} else if (strncmp(source, "DIRSYNC:", strlen("DIRSYNC:")) == 0) {
+			*mountflag |= MS_DIRSYNC;
+			source += strlen("DIRSYNC:");
+		} else if (strncmp(source, "MANDLOCK:", strlen("MANDLOCK:")) == 0) {
+			*mountflag |= MS_MANDLOCK;
+			source += strlen("MANDLOCK:");
+		} else if (strncmp(source, "RELATIME:", strlen("RELATIME:")) == 0) {
+			*mountflag |= MS_RELATIME;
+			source += strlen("RELATIME:");
+		} else if (strncmp(source, "SLAVE:", strlen("SLAVE:")) == 0) {
+			*mountflag |= MS_SLAVE;
+			source += strlen("SLAVE:");
+		} else if (strncmp(source, "SHARED:", strlen("SHARED:")) == 0) {
+			*mountflag |= MS_SHARED;
+			source += strlen("SHARED:");
+		} else if (strncmp(source, "PRIVATE:", strlen("PRIVATE:")) == 0) {
+			*mountflag |= MS_PRIVATE;
+			source += strlen("PRIVATE:");
+		} else if (strncmp(source, "UNBINDABLE:", strlen("UNBINDABLE:")) == 0) {
+			*mountflag |= MS_UNBINDABLE;
+			source += strlen("UNBINDABLE:");
+		} else if (strncmp(source, "SILENT:", strlen("SILENT:")) == 0) {
+			*mountflag |= MS_SILENT;
+			source += strlen("SILENT:");
+		} else if (strncmp(source, "POSIXACL:", strlen("POSIXACL:")) == 0) {
+			*mountflag |= MS_POSIXACL;
+			source += strlen("POSIXACL:");
+		} else if (strncmp(source, "LAZYTIME:", strlen("LAZYTIME:")) == 0) {
+			*mountflag |= MS_LAZYTIME;
+			source += strlen("LAZYTIME:");
+		} else {
+			break;
+		}
+	}
+	return source;
+}
 // Mount dev/dir/img to target.
 int ruri_trymount(const char *_Nonnull source, const char *_Nonnull target, unsigned int mountflags)
 {
@@ -271,12 +492,13 @@ int ruri_trymount(const char *_Nonnull source, const char *_Nonnull target, unsi
 	// umount target before mount(2), to avoid `device or resource busy`.
 	umount2(target, MNT_DETACH | MNT_FORCE);
 	int ret = 0;
-	ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags);
+	unsigned int mountflags_new = mountflags;
+	source = parse_mount_flags(source, &mountflags_new);
+	ruri_log("{base}Mounting {cyan}%s{base} to {cyan}%s{base} with flags {cyan}%d{base}\n", source, target, mountflags_new);
 	struct stat dev_stat;
-	// If source does not exist, just return -1 as error.
+	// If source does not exist, try to parse as other type of source.
 	if (lstat(source, &dev_stat) != 0) {
-		return mount_other_type(source, target, mountflags);ruri_log("{red}Error: {base}Source {cyan}%s{base} does not exist.\n", source);
-		return mount_other_type(source, target, mountflags);
+		return mount_other_type(source, target, mountflags_new);
 	}
 	// Bind-mount dir.
 	if (S_ISDIR(dev_stat.st_mode)) {
@@ -284,9 +506,9 @@ int ruri_trymount(const char *_Nonnull source, const char *_Nonnull target, unsi
 		if (mk_mountpoint_dir(target) != 0) {
 			return -1;
 		}
-		mount(source, target, NULL, mountflags | MS_BIND, NULL);
+		mount(source, target, NULL, mountflags_new | MS_BIND, NULL);
 		// For ro mount, we need a remount.
-		ret = mount(source, target, NULL, mountflags | MS_BIND | MS_REMOUNT, NULL);
+		ret = mount(source, target, NULL, mountflags_new | MS_BIND | MS_REMOUNT, NULL);
 	}
 	// Block device.
 	else if (S_ISBLK(dev_stat.st_mode)) {
@@ -294,7 +516,7 @@ int ruri_trymount(const char *_Nonnull source, const char *_Nonnull target, unsi
 		if (mk_mountpoint_dir(target) != 0) {
 			return -1;
 		}
-		ret = mount_device(source, target, mountflags);
+		ret = mount_device(source, target, mountflags_new);
 	}
 	// Image and common file.
 	// We cannot distinguish image file and common file by stat(2),
@@ -306,15 +528,15 @@ int ruri_trymount(const char *_Nonnull source, const char *_Nonnull target, unsi
 			return -1;
 		}
 		ruri_log("{base}Mounting as image file {cyan}%s{base} to {cyan}%s{base}\n", source, target);
-		ret = mount_device(losetup(source), target, mountflags);
+		ret = mount_device(losetup(source), target, mountflags_new);
 		// Common file.
 		if (ret != 0) {
 			if (touch_mountpoint_file(target) != 0) {
 				return -1;
 			}
 			ruri_log("{base}Bind-mounting as common file {cyan}%s{base} to {cyan}%s{base}\n", source, target);
-			mount(source, target, NULL, mountflags | MS_BIND, NULL);
-			ret = mount(source, target, NULL, mountflags | MS_BIND | MS_REMOUNT, NULL);
+			mount(source, target, NULL, mountflags_new | MS_BIND, NULL);
+			ret = mount(source, target, NULL, mountflags_new | MS_BIND | MS_REMOUNT, NULL);
 		}
 	}
 	// For char-device/FIFO/socket, we just bind-mount it.
@@ -323,8 +545,8 @@ int ruri_trymount(const char *_Nonnull source, const char *_Nonnull target, unsi
 			return -1;
 		}
 		ruri_log("{base}Bind-mounting {cyan}%s{base} to {cyan}%s{base}\n", source, target);
-		mount(source, target, NULL, mountflags | MS_BIND, NULL);
-		ret = mount(source, target, NULL, mountflags | MS_BIND | MS_REMOUNT, NULL);
+		mount(source, target, NULL, mountflags_new | MS_BIND, NULL);
+		ret = mount(source, target, NULL, mountflags_new | MS_BIND | MS_REMOUNT, NULL);
 	}
 	// We do not support to mount other type of files.
 	else {
