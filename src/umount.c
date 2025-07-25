@@ -204,6 +204,7 @@ void ruri_umount_container(const char *_Nonnull container_dir)
 					usleep(20000);
 				}
 				// Remove the empty file we created for mounting files into container.
+				// Not rmdir(), so directory wipl not be removed 
 				remove(to_umountpoint);
 				// Make ASAN happy.
 				free(container->extra_mountpoint[i]);
