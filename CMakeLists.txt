@@ -125,7 +125,6 @@ set(CFLAGS_LIST
     "-rdynamic"
     "-ffunction-sections"
     "-Wl,--gc-sections"
-    "-Wl,--strip-all"
     "-Wl,--disable-new-dtags"
     "-Wl,--build-id=sha1"
     "-Wl,-z,norelro"
@@ -138,10 +137,10 @@ set(CFLAGS_LIST
 )
 
 foreach(flag IN LISTS CFLAGS_LIST)
-    try_compile(result 
+    try_compile(result
 ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/test/check_flag.c COMPILE_DEFINITIONS ${flag})
     if(result)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
+        set(CMAKE_C_FLAGS "${flag} ${CMAKE_C_FLAGS}")
         message(STATUS "Compiler supports flag: ${flag}")
     else()
         message(WARNING "Compiler does not support flag: ${flag}")
@@ -157,6 +156,7 @@ option(BUILD_LIB "BUILD with lib" OFF)
 option(DISABLE_LIBCAP "Disable cap library linking build" OFF)
 option(DISABLE_LIBSECCOMP "Disable seccomp library linking build" OFF)
 option(DISABLE_RURIENV "Disable env in ruri" OFF)
+option(STRIP_DEBUGINFO "Strip debuginfo from ruri binary" ON)
 
 if (DISABLE_RURIENV)
     add_definitions(-DDISABLE_RURIENV)
@@ -174,9 +174,9 @@ endif()
 # For Debug build
 if(ENABLE_DEBUG)
     message(WARNING "Warning: DEBUG mode is enabled")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV")
+    set(CMAKE_C_FLAGS "-g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV ${CMAKE_C_FLAGS}")
 else()
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -DNDEBUG")
+    set(CMAKE_C_FLAGS "-O2 -DNDEBUG ${CMAKE_C_FLAGS}")
 endif()
 
 # Add LDFLAGS
@@ -195,6 +195,17 @@ add_definitions(-DRURI_COMMIT_ID="${GIT_COMMIT_ID}")
 add_definitions(-D_FILE_OFFSET_BITS=64)
 
 file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.c ${CMAKE_SOURCE_DIR}/src/easteregg/*.c)
+
+# Check strip-all
+if(STRIP_DEBUGINFO)
+    try_compile(result ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/test/check_flag.c COMPILE_DEFINITIONS -Wl,--strip-all)
+    if(result)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wl,--strip-all")
+        message(STATUS "Compiler supports flag: -Wl,--strip-all")
+    else()
+        message(WARNING "Compiler does not support flag: -Wl,--strip-all")
+    endif()
+endif()
 
 if (BUILD_LIB)
     if(ENABLE_STATIC)
@@ -233,12 +244,14 @@ else ()
         add_executable(ruri ${SOURCES})
         message(STATUS "Building dynamic executable")
     endif()
-     add_custom_command(
-         TARGET ruri
-         POST_BUILD
-         COMMAND strip ruri
-         VERBATIM
-    )
+    if(STRIP_DEBUGINFO)
+        add_custom_command(
+            TARGET ruri
+            POST_BUILD
+            COMMAND strip ruri
+            VERBATIM
+        )
+    endif()
     install(TARGETS ruri DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
