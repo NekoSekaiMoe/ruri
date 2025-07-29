@@ -133,7 +133,7 @@ void ruri_build_caplist(cap_value_t caplist[], bool privileged, cap_value_t drop
 #ifndef DISABLE_LIBCAP
 	// Based on docker's default capability set.
 	// And I removed some unneeded capabilities.
-	cap_value_t keep_caplist_common[] = { CAP_CHOWN, CAP_DAC_OVERRIDE, CAP_FSETID, CAP_FOWNER, CAP_SETGID, CAP_SETUID, CAP_SETFCAP, CAP_SETPCAP, CAP_NET_BIND_SERVICE, CAP_SYS_CHROOT, CAP_KILL, CAP_AUDIT_WRITE, RURI_INIT_VALUE };
+	cap_value_t keep_caplist_common[] = { CAP_CHOWN, CAP_DAC_OVERRIDE, CAP_FSETID, CAP_FOWNER, CAP_SETGID, CAP_SETUID, CAP_SETFCAP, CAP_SETPCAP, CAP_NET_BIND_SERVICE, CAP_KILL, CAP_AUDIT_WRITE, RURI_INIT_VALUE };
 	// Set default caplist to drop.
 	caplist[0] = RURI_INIT_VALUE;
 	if (!privileged) {
