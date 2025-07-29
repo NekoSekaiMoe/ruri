@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: MIT
 # Process this file with autoconf to produce a configure script.
 AC_PREREQ([2.69])
-AC_INIT([ruri],[3.9-rc1],[moe-hacker@crack.moe])
+AC_INIT([ruri],[3.9],[moe-hacker@crack.moe])
 AC_PROG_CC
 AM_INIT_AUTOMAKE
 AC_C_BIGENDIAN
