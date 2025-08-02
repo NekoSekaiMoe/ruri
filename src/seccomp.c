@@ -32,6 +32,29 @@
  * This file provides the built-in seccomp filter rules for ruri.
  * Thanks docker for denied syscall list.
  */
+// Reslove prefix for errno.
+static int ruri_resolve_seccomp_errno(const char *_Nonnull syscall, scmp_filter_ctx *_Nonnull ctx)
+{
+	const char *syscall_name = syscall;
+	uint32_t action = SCMP_ACT_KILL;
+	// Support errno prefixes like EACCES:chroot, EPERM:unshare, etc.
+	struct {
+		const char *name;
+		int value;
+	} errno_map[] = { { "ERRNO:", 0 }, { "E2BIG:", E2BIG }, { "EACCES:", EACCES }, { "EADDRINUSE:", EADDRINUSE }, { "EADDRNOTAVAIL:", EADDRNOTAVAIL }, { "EAFNOSUPPORT:", EAFNOSUPPORT }, { "EAGAIN:", EAGAIN }, { "EALREADY:", EALREADY }, { "EBADE:", EBADE }, { "EBADF:", EBADF }, { "EBADFD:", EBADFD }, { "EBADMSG:", EBADMSG }, { "EBADR:", EBADR }, { "EBADRQC:", EBADRQC }, { "EBADSLT:", EBADSLT }, { "EBUSY:", EBUSY }, { "ECANCELED:", ECANCELED }, { "ECHILD:", ECHILD }, { "ECHRNG:", ECHRNG }, { "ECOMM:", ECOMM }, { "ECONNABORTED:", ECONNABORTED }, { "ECONNREFUSED:", ECONNREFUSED }, { "ECONNRESET:", ECONNRESET }, { "EDEADLK:", EDEADLK }, { "EDEADLOCK:", EDEADLOCK }, { "EDESTADDRREQ:", EDESTADDRREQ }, { "EDOM:", EDOM }, { "EDQUOT:", EDQUOT }, { "EEXIST:", EEXIST }, { "EFAULT:", EFAULT }, { "EFBIG:", EFBIG }, { "EHOSTDOWN:", EHOSTDOWN }, { "EHOSTUNREACH:", EHOSTUNREACH }, { "EHWPOISON:", EHWPOISON }, { "EIDRM:", EIDRM }, { "EILSEQ:", EILSEQ }, { "EINPROGRESS:", EINPROGRESS }, { "EINTR:", EINTR }, { "EINVAL:", EINVAL }, { "EIO:", EIO }, { "EISCONN:", EISCONN }, { "EISDIR:", EISDIR }, { "EISNAM:", EISNAM }, { "EKEYEXPIRED:", EKEYEXPIRED }, { "EKEYREJECTED:", EKEYREJECTED }, { "EKEYREVOKED:", EKEYREVOKED }, { "EL2HLT:", EL2HLT }, { "EL2NSYNC:", EL2NSYNC }, { "EL3HLT:", EL3HLT }, { "EL3RST:", EL3RST }, { "ELIBACC:", ELIBACC }, { "ELIBBAD:", ELIBBAD }, { "ELIBMAX:", ELIBMAX }, { "ELIBSCN:", ELIBSCN }, { "ELIBEXEC:", ELIBEXEC }, { "ELNRNG:", ELNRNG }, { "ELOOP:", ELOOP }, { "EMEDIUMTYPE:", EMEDIUMTYPE }, { "EMFILE:", EMFILE }, { "EMLINK:", EMLINK }, { "EMSGSIZE:", EMSGSIZE }, { "EMULTIHOP:", EMULTIHOP }, { "ENAMETOOLONG:", ENAMETOOLONG }, { "ENETDOWN:", ENETDOWN }, { "ENETRESET:", ENETRESET }, { "ENETUNREACH:", ENETUNREACH }, { "ENFILE:", ENFILE }, { "ENOANO:", ENOANO }, { "ENOBUFS:", ENOBUFS }, { "ENODATA:", ENODATA }, { "ENODEV:", ENODEV }, { "ENOENT:", ENOENT }, { "ENOEXEC:", ENOEXEC }, { "ENOKEY:", ENOKEY }, { "ENOLCK:", ENOLCK }, { "ENOLINK:", ENOLINK }, { "ENOMEDIUM:", ENOMEDIUM }, { "ENOMEM:", ENOMEM }, { "ENOMSG:", ENOMSG }, { "ENONET:", ENONET }, { "ENOPKG:", ENOPKG }, { "ENOPROTOOPT:", ENOPROTOOPT }, { "ENOSPC:", ENOSPC }, { "ENOSR:", ENOSR }, { "ENOSTR:", ENOSTR }, { "ENOSYS:", ENOSYS }, { "ENOTBLK:", ENOTBLK }, { "ENOTCONN:", ENOTCONN }, { "ENOTDIR:", ENOTDIR }, { "ENOTEMPTY:", ENOTEMPTY }, { "ENOTRECOVERABLE:", ENOTRECOVERABLE }, { "ENOTSOCK:", ENOTSOCK }, { "ENOTSUP:", ENOTSUP }, { "ENOTTY:", ENOTTY }, { "ENOTUNIQ:", ENOTUNIQ }, { "ENXIO:", ENXIO }, { "EOPNOTSUPP:", EOPNOTSUPP }, { "EOVERFLOW:", EOVERFLOW }, { "EOWNERDEAD:", EOWNERDEAD }, { "EPERM:", EPERM }, { "EPFNOSUPPORT:", EPFNOSUPPORT }, { "EPIPE:", EPIPE }, { "EPROTO:", EPROTO }, { "EPROTONOSUPPORT:", EPROTONOSUPPORT }, { "EPROTOTYPE:", EPROTOTYPE }, { "ERANGE:", ERANGE }, { "EREMCHG:", EREMCHG }, { "EREMOTE:", EREMOTE }, { "EREMOTEIO:", EREMOTEIO }, { "ERESTART:", ERESTART }, { "ERFKILL:", ERFKILL }, { "EROFS:", EROFS }, { "ESHUTDOWN:", ESHUTDOWN }, { "ESPIPE:", ESPIPE }, { "ESOCKTNOSUPPORT:", ESOCKTNOSUPPORT }, { "ESRCH:", ESRCH }, { "ESTALE:", ESTALE }, { "ESTRPIPE:", ESTRPIPE }, { "ETIME:", ETIME }, { "ETIMEDOUT:", ETIMEDOUT }, { "ETOOMANYREFS:", ETOOMANYREFS }, { "ETXTBSY:", ETXTBSY }, { "EUCLEAN:", EUCLEAN }, { "EUNATCH:", EUNATCH }, { "EUSERS:", EUSERS }, { "EWOULDBLOCK:", EWOULDBLOCK }, { "EXDEV:", EXDEV }, { "EXFULL:", EXFULL } };
+	for (size_t i = 0; i < sizeof(errno_map) / sizeof(errno_map[0]); i++) {
+		if (strncmp(syscall_name, errno_map[i].name, strlen(errno_map[i].name)) == 0) {
+			action = SCMP_ACT_ERRNO(errno_map[i].value);
+			syscall_name += strlen(errno_map[i].name);
+			int syscall_nr = seccomp_syscall_resolve_name(syscall_name);
+			if (syscall_nr == __NR_SCMP_ERROR) {
+				ruri_error("Failed to resolve syscall: %s\n", syscall_name);
+			}
+			return seccomp_rule_add(*ctx, action, syscall_nr, 0);
+		}
+	}
+	return -1;
+}
 // Setup seccomp filter rule, with libseccomp.
 void ruri_setup_seccomp(const struct RURI_CONTAINER *_Nonnull container)
 {
@@ -46,7 +69,9 @@ void ruri_setup_seccomp(const struct RURI_CONTAINER *_Nonnull container)
 	for (int i = 0; container->seccomp_denied_syscall[i] != NULL; i++) {
 		int syscall_nr = seccomp_syscall_resolve_name(container->seccomp_denied_syscall[i]);
 		if (syscall_nr == __NR_SCMP_ERROR) {
-			ruri_error("Invalid syscall name: %s\n", container->seccomp_denied_syscall[i]);
+			if (ruri_resolve_seccomp_errno(container->seccomp_denied_syscall[i], &ctx) != 0) {
+				ruri_error("Failed to resolve syscall: %s\n", container->seccomp_denied_syscall[i]);
+			}
 		}
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, syscall_nr, 0);
 	}

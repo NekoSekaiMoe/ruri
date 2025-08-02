@@ -519,9 +519,6 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 #ifndef DISABLE_LIBSECCOMP
 			index++;
 			if (argv[index] != NULL) {
-				if (seccomp_syscall_resolve_name(argv[index]) == __NR_SCMP_ERROR) {
-					ruri_error("{red}Error: unknown syscall `%s`\nQwQ{clear}\n", argv[index]);
-				}
 				for (int i = 0; i < RURI_MAX_SECCOMP_DENIED_SYSCALL; i++) {
 					if (container->seccomp_denied_syscall[i] == NULL) {
 						container->seccomp_denied_syscall[i] = strdup(argv[index]);
@@ -1033,9 +1030,6 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 							ruri_error("{red}Please specify the syscall\n{clear}");
 						}
 						index++;
-						if (seccomp_syscall_resolve_name(argv[index]) == __NR_SCMP_ERROR) {
-							ruri_error("{red}Error: unknown syscall `%s`\nQwQ{clear}\n", argv[index]);
-						}
 						for (int i = 0; i < RURI_MAX_SECCOMP_DENIED_SYSCALL; i++) {
 							if (container->seccomp_denied_syscall[i] == NULL) {
 								container->seccomp_denied_syscall[i] = strdup(argv[index]);
