@@ -128,6 +128,9 @@ void ruri_setup_seccomp(const struct RURI_CONTAINER *_Nonnull container)
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(uselib), 0);
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(userfaultfd), 0);
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(ustat), 0);
+		if (ruri_is_in_caplist(container->drop_caplist, CAP_SYS_CHROOT)) {
+			seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(chroot), 0);
+		}
 	}
 #else
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(acct), 0);
@@ -187,6 +190,7 @@ void ruri_setup_seccomp(const struct RURI_CONTAINER *_Nonnull container)
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(uselib), 0);
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(userfaultfd), 0);
 		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(ustat), 0);
+		seccomp_rule_add(ctx, SCMP_ACT_KILL, SCMP_SYS(chroot), 0);
 	}
 #endif
 	// Disable no_new_privs bit by default.
