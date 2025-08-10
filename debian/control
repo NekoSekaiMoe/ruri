@@ -1,7 +1,7 @@
 Source: ruri
 Section: admin
 Priority: optional
-Maintainer: Moe-hacker <admin@crack.moe>
+Maintainer: dabao1955 <dabao1955@163.com>
 Build-Depends: debhelper-compat (= 13), libcap-dev, libseccomp-dev, clang-tidy, pkg-config
 Standards-Version: 4.6.0
 Homepage: https://github.com/Moe-hacker/ruri
