@@ -1155,6 +1155,11 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 		}
 	}
 	if (background) {
+		// One more fork().
+		pid_t f1 = fork();
+		if (f1 > 0) {
+			exit(EXIT_SUCCESS);
+		}
 		ruri_clear_env(argv);
 		// Fork to background if -b is set.
 		pid_t fpid = fork();
