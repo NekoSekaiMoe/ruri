@@ -397,6 +397,25 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 				ruri_error("{red}Unknown work directory\n");
 			}
 		}
+		// Masked path.
+		else if (strcmp(argv[index], "-Q") == 0 || strcmp(argv[index], "--mask-path") == 0) {
+			index++;
+			if (index < argc) {
+				for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
+					if (container->masked_path[i] == NULL) {
+						container->masked_path[i] = strdup(argv[index]);
+						container->masked_path[i + 1] = NULL;
+						break;
+					}
+					// Max 512 mountpoints.
+					if (i == (RURI_MAX_MOUNTPOINTS - 1)) {
+						ruri_error("{red}Too many masked paths QwQ\n");
+					}
+				}
+			} else {
+				ruri_error("{red}Unknown masked path QwQ\n");
+			}
+		}
 		// Set extra env.
 		else if (strcmp(argv[index], "-e") == 0 || strcmp(argv[index], "--env") == 0) {
 			index++;
@@ -708,6 +727,28 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 							ruri_error("{red}Please specify the output file\n{clear}");
 						}
 						output_path = argv[index];
+					} else {
+						ruri_error("Invalid argument %s\n", argv[index]);
+					}
+					break;
+				case 'Q':
+					if (i == (strlen(argv[index]) - 1)) {
+						index++;
+						if (index < argc) {
+							for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
+								if (container->masked_path[i] == NULL) {
+									container->masked_path[i] = strdup(argv[index]);
+									container->masked_path[i + 1] = NULL;
+									break;
+								}
+								// Max 512 mountpoints.
+								if (i == (RURI_MAX_MOUNTPOINTS - 1)) {
+									ruri_error("{red}Too many masked paths QwQ\n");
+								}
+							}
+						} else {
+							ruri_error("{red}Unknown masked path QwQ\n");
+						}
 					} else {
 						ruri_error("Invalid argument %s\n", argv[index]);
 					}

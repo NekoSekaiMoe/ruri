@@ -117,6 +117,7 @@ void ruri_show_helps(void)
 	cprintf("{base}  -X, --deny-syscall [syscall] ................: Deny syscall, use seccomp\n");
 	cprintf("{base}  -J, --join-ns [NS_PID] ......................: Join namespace using ns_pid (*13)\n");
 	cprintf("{base}  -O, --oom-score-adj [score] .................: Set oom_score_adj for container (*14)\n");
+	cprintf("{base}  -Q, --mask-path [path] ......................: Mask a path in the container\n");
 	cprintf("\n");
 	cprintf("{base}Note:\n");
 	cprintf("{base}(*1)  : Will not work for unshare containers without PID ns support\n");

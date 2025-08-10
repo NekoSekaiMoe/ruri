@@ -189,6 +189,17 @@ static void init_container(struct RURI_CONTAINER *_Nonnull container)
 			mount("/proc/sys", "/proc/sys", NULL, MS_BIND | MS_RDONLY | MS_REMOUNT, NULL);
 			mount("/proc/sys-trigger", "/proc/sys-trigger", NULL, MS_BIND | MS_REC, NULL);
 			mount("/proc/sys-trigger", "/proc/sys-trigger", NULL, MS_BIND | MS_RDONLY | MS_REMOUNT, NULL);
+			// Mask other user-specified path.
+			for (int i = 0; i < RURI_MAX_MOUNTPOINTS; i++) {
+				if (container->masked_path[i] == NULL) {
+					break;
+				}
+				// try to mask with ro tmpfs.
+				mount("tmpfs", container->masked_path[i], "tmpfs", MS_NOSUID | MS_NOEXEC | MS_NODEV | MS_RDONLY, NULL);
+				// Try to mask with /dev/null.
+				mount("/dev/null", container->masked_path[i], NULL, MS_BIND, NULL);
+				mount("/dev/null", container->masked_path[i], NULL, MS_BIND | MS_REMOUNT | MS_RDONLY, NULL);
+			}
 		}
 	} else {
 		free(test);

@@ -201,6 +201,8 @@ struct RURI_CONTAINER {
 	char *_Nonnull seccomp_denied_syscall[RURI_MAX_SECCOMP_DENIED_SYSCALL];
 	// OOM score.
 	int oom_score_adj;
+	// Masked path.
+	char *_Nonnull masked_path[RURI_MAX_MOUNTPOINTS + 2];
 };
 // For ruri_get_magic().
 #define ruri_magicof(x) (x##_magic)

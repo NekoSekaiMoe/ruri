@@ -84,6 +84,7 @@ void ruri_init_config(struct RURI_CONTAINER *_Nonnull container)
 	// We need a int value for container_id, so use long%86400.
 	// (86400 is the seconds of a day).
 	container->container_id = (int)(tm % 86400);
+	container->masked_path[0] = NULL;
 }
 char *ruri_container_info_to_k2v(const struct RURI_CONTAINER *_Nonnull container)
 {
@@ -340,6 +341,19 @@ char *ruri_container_info_to_k2v(const struct RURI_CONTAINER *_Nonnull container
 	ret = k2v_add_comment(ret, "Set it to empty to disable.");
 	ret = k2v_add_config(char_array, ret, "deny_syscall", container->seccomp_denied_syscall, len);
 	ret = k2v_add_newline(ret);
+	// masked_path.
+	for (int i = 0; true; i++) {
+		if (container->masked_path[i] == NULL) {
+			len = i;
+			break;
+		}
+	}
+	ret = k2v_add_comment(ret, "Masked path, will be masked with ro tmpfs or /dev/null.");
+	ret = k2v_add_comment(ret, "Format: \"path\".");
+	ret = k2v_add_comment(ret, "For example, [\"/sys/class\",\"/etc/ssl\"] is valid.");
+	ret = k2v_add_comment(ret, "Set it to empty to disable.");
+	ret = k2v_add_config(char_array, ret, "masked_path", container->masked_path, len);
+	ret = k2v_add_newline(ret);
 	return ret;
 }
 void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_Nonnull path)
@@ -469,6 +483,9 @@ void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_No
 	// Get time offset.
 	container->timens_realtime_offset = k2v_get_key(long, "timens_realtime_offset", buf);
 	container->timens_monotonic_offset = k2v_get_key(long, "timens_monotonic_offset", buf);
+	// Get masked_path.
+	int maskedlen = k2v_get_key(char_array, "masked_path", buf, container->masked_path, RURI_MAX_MOUNTPOINTS);
+	container->masked_path[maskedlen] = NULL;
 	// Get command.
 	int comlen = k2v_get_key(char_array, "command", buf, container->command, RURI_MAX_COMMANDS);
 	container->command[comlen] = NULL;
