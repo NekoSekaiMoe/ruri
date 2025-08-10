@@ -219,6 +219,8 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 		}
 		// Umount a container.
 		if (strcmp(argv[index], "-U") == 0 || strcmp(argv[index], "--umount") == 0) {
+			// Clear envs.
+			ruri_clear_env(argv);
 			index += 1;
 			struct stat st;
 			if (stat(argv[index], &st) != 0) {
@@ -240,6 +242,8 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 		}
 		// Show process status of a container.
 		if (strcmp(argv[index], "-P") == 0 || strcmp(argv[index], "--ps") == 0) {
+			// Clear envs.
+			ruri_clear_env(argv);
 			index += 1;
 			struct stat st;
 			if (stat(argv[index], &st) != 0) {
@@ -1150,9 +1154,9 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 			ruri_error("{red}Error: unknown option `%s`\nNote that only existing directory can be detected as CONTAINER_DIR\n", argv[index]);
 		}
 	}
-	ruri_clear_env(argv);
-	// Fork to background if -b is set.
 	if (background) {
+		ruri_clear_env(argv);
+		// Fork to background if -b is set.
 		pid_t fpid = fork();
 		if (fpid > 0) {
 			printf("PID: %d\n", fpid);
@@ -1213,6 +1217,8 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 		free(config);
 		close(fd);
 		exit(EXIT_SUCCESS);
+		ruri_clear_env(argv);
+		// Fork to background if -b is set.
 	}
 	// Enable unshare automatically if we got a ns_pid.
 	pid_t ns_pid = ruri_get_ns_pid(container->container_dir);
