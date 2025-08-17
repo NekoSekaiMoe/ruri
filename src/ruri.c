@@ -644,6 +644,8 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 			} else {
 				ruri_error("{red}Error: --umount should only be used without other arguments QwQ\n");
 			}
+		} else if (strcmp(argv[index], "-z") == 0 || strcmp(argv[index], "--enable-tty-signals") == 0) {
+			container->enable_tty_signals = true;
 		}
 		// Extra capabilities to drop.
 		else if (strcmp(argv[index], "-d") == 0 || strcmp(argv[index], "--drop") == 0) {
@@ -774,6 +776,9 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 					} else {
 						ruri_error("Invalid argument %s\n", argv[index]);
 					}
+					break;
+				case 'z':
+					container->enable_tty_signals = true;
 					break;
 				case 'Q':
 					if (i == (strlen(argv[index]) - 1)) {

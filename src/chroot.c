@@ -626,11 +626,19 @@ void ruri_run_chroot_container(struct RURI_CONTAINER *_Nonnull container)
 	// Ignore SIGTTIN, if we are running in the background, SIGTTIN may kill this process.
 	// This code is wrote when ruri had a daemon process,
 	// now even the daemon mode is removed, I still keep this code here.
+	// TODO: Add a way to disable this behavior.
 	sigset_t sigs;
 	sigemptyset(&sigs);
 	sigaddset(&sigs, SIGTTIN);
 	sigaddset(&sigs, SIGTTOU);
 	sigprocmask(SIG_BLOCK, &sigs, 0);
+	if (!container->enable_tty_signals) {
+		sigset_t sigs;
+		sigemptyset(&sigs);
+		sigaddset(&sigs, SIGTTIN);
+		sigaddset(&sigs, SIGTTOU);
+		sigprocmask(SIG_BLOCK, &sigs, 0);
+	}
 	// Check if system runtime files are already created.
 	// container_dir should bind-mount before chroot(2),
 	// mount_host_runtime() and ruri_store_info() will be called here.
