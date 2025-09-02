@@ -1281,6 +1281,8 @@ int main(int argc, char **argv)
 	// Set no dumpable.
 	#ifndef RURI_DEBUG
 	prctl(PR_SET_DUMPABLE, 0);
+	// This need YAMA.
+	prctl(PR_SET_PTRACER, 0);
 	#endif
 	// Catch coredump signal.
 	ruri_register_signal();
