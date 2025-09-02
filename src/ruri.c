@@ -1278,6 +1278,10 @@ int main(int argc, char **argv)
 	k2v_stop_at_warning = true;
 	// Set process name.
 	prctl(PR_SET_NAME, "ruri");
+	// Set no dumpable.
+	#ifndef RURI_DEBUG
+	prctl(PR_SET_DUMPABLE, 0);
+	#endif
 	// Catch coredump signal.
 	ruri_register_signal();
 	// Warning for dev/debug build.
