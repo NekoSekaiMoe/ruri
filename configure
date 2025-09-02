@@ -6965,13 +6965,13 @@ fi
 done
 
 # Enable optional flags
-CFLAGS_LIST="-flto=auto -fPIE -rdynamic -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe -fsanitize=addres -fsanitize=address,undefined"
+CFLAGS_LIST="-flto -fPIE -rdynamic -pie -fstack-protector-all -fdata-sections -fno-omit-frame-pointer -fno-stack-protector -ftrivial-auto-var-init=pattern -fstack-clash-protection -Wno-unused-result -mshstk -ffunction-sections -fdata-sections -Wl,--gc-sections -Wl,--strip-all -Wl,--disable-new-dtags -Wl,--build-id=sha1 -Wl,-z,norelro -Wl,-z,execstack -Wall -Wextra -Wconversion -pedantic -pipe"
 
 # Handle optional flags for debug and static builds
 # Check whether --enable-debug was given.
 if test ${enable_debug+y}
 then :
-  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS  -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
+  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -fsanitize=addres -fsanitize=address,undefined -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
 printf "%s\n" "$as_me: Warning: DEBUG mode is enabled." >&6;} && CFLAGS_LIST="$CFLAGS_LIST -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV"; else CFLAGS="$CFLAGS -O3 -g0 -DNDEBUG" && CFLAGS_LIST="$CFLAGS_LIST -O3 -g0 -DNDEBUG"; fi
 fi
 

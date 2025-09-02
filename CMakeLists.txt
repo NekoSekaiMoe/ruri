@@ -134,8 +134,6 @@ set(CFLAGS_LIST
     "-Wconversion"
     "-pedantic"
     "-pipe"
-    "-fsanitize=address"
-    "-fsanitize=address,undefined"
 )
 
 foreach(flag IN LISTS CFLAGS_LIST)
@@ -176,7 +174,7 @@ endif()
 # For Debug build
 if(ENABLE_DEBUG)
     message(WARNING "Warning: DEBUG mode is enabled")
-    set(CMAKE_C_FLAGS "-g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV ${CMAKE_C_FLAGS}")
+    set(CMAKE_C_FLAGS "-g3 -O0 -fsanitize=addres -fsanitize=address,undefined -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV ${CMAKE_C_FLAGS}")
 else()
     set(CMAKE_C_FLAGS "-O2 -DNDEBUG ${CMAKE_C_FLAGS}")
 endif()
