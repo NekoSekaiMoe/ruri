@@ -6971,7 +6971,7 @@ CFLAGS_LIST="-flto -fPIE -rdynamic -pie -fstack-protector-all -fdata-sections -f
 # Check whether --enable-debug was given.
 if test ${enable_debug+y}
 then :
-  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -fsanitize=addres -fsanitize=address,undefined -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
+  enableval=$enable_debug; if test "x$enable_debug" = "xyes"; then CFLAGS="$CFLAGS -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV" && { printf "%s\n" "$as_me:${as_lineno-$LINENO}: Warning: DEBUG mode is enabled." >&5
 printf "%s\n" "$as_me: Warning: DEBUG mode is enabled." >&6;} && CFLAGS_LIST="$CFLAGS_LIST -g3 -O0 -DDEBUG_BUILD -DRURI_DEBUG -DRURI_DEV"; else CFLAGS="$CFLAGS -O3 -g0 -DNDEBUG" && CFLAGS_LIST="$CFLAGS_LIST -O3 -g0 -DNDEBUG"; fi
 fi
 
