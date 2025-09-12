@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 # Set the project name
 project(ruri LANGUAGES C)
-set(VERSION 3.10)
+set(VERSION 3.12)
 set(RURI_VERSION ${VERSION})
 
 configure_file(

@@ -1,3 +1,11 @@
+ruri (3.12-1) unstable; urgency=medium
+
+  [ dabao1955 ]
+  * Add `-z` option: `--enable-tty-signals`.
+  * Fix devpts mount.
+
+ -- dabao1955 <dabao1955@163.com>  Mon, 12 Sep 2025 20:09:39 +0800
+
 ruri (3.10-1) unstable; urgency=medium
 
   [ dabao1955 ]
@@ -5,7 +13,7 @@ ruri (3.10-1) unstable; urgency=medium
   * Add `-Q` option: `--mask-path`.
   * Load ruri from memfd to avoid leak of ruri binary.
 
- -- dabao1955 <dabao1955@163.com>  Mon, 11 Aug 2025 00:18:11 +0800
+ -- dabao1955 <dabao1955@163.com>  Mon, 10 Aug 2025 00:18:11 +0800
 
 ruri (3.9-1) unstable; urgency=medium
 

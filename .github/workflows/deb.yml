@@ -39,7 +39,7 @@ jobs:
 
       - name: build amd64 deb
         run: |
-          git archive --prefix=ruri-3.10/ -o ../ruri_3.10.orig.tar.gz HEAD
+          git archive --prefix=ruri-3.12/ -o ../ruri_3.12.orig.tar.gz HEAD
           mv ../debian .
           apt build-dep . -y
           dpkg-buildpackage -F -d
@@ -81,7 +81,7 @@ jobs:
 
       - name: build arm64 deb
         run: |
-          git archive --prefix=ruri-3.10/ -o ../ruri_3.10.orig.tar.gz HEAD
+          git archive --prefix=ruri-3.12/ -o ../ruri_3.12.orig.tar.gz HEAD
           mv ../debian .
           apt build-dep . -y
           dpkg-buildpackage -b -us -uc -d
