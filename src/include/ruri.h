@@ -207,6 +207,8 @@ struct RURI_CONTAINER {
 	// Masked path.
 	char *_Nonnull masked_path[RURI_MAX_MOUNTPOINTS + 2];
 	bool enable_tty_signals;
+	// Skip setting groups for user
+	bool skip_setgroups;
 };
 // For ruri_get_magic().
 #define ruri_magicof(x) (x##_magic)

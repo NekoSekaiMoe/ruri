@@ -23,10 +23,6 @@ Max memory: 860 KB
 ## Core version:
 Without libcap and libseccomp, the core version, just as better-chroot implementation, can be even more lightweight.            
 It's useless, but it's cool.      
-## ~~Alphabet coverage~~
-|Alphabet|ruri used|%|
-|---|---|---|
-|52|44|85%|
 # Highlights:
 - Powerful Features
   - Basic container features are all supported, chroot, unshare with pivot_root, capability control, basic cgroup support, no_new_privs, auto set environment variables and change user/workdir, built-in seccomp profile, and more...      

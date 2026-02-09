@@ -358,6 +358,10 @@ char *ruri_container_info_to_k2v(const struct RURI_CONTAINER *_Nonnull container
 	// enable_tty_signals.
 	ret = k2v_add_comment(ret, "Enable TTY signals in the container.");
 	ret = k2v_add_config(bool, ret, "enable_tty_signals", container->enable_tty_signals);
+	ret = k2v_add_newline(ret);
+	// skip_setgroups.
+	ret = k2v_add_comment(ret, "Skip setgroups() call.");
+	ret = k2v_add_config(bool, ret, "skip_setgroups", container->skip_setgroups);
 	return ret;
 }
 void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_Nonnull path)
@@ -450,6 +454,8 @@ void ruri_read_config(struct RURI_CONTAINER *_Nonnull container, const char *_No
 	container->hidepid = k2v_get_key(int, "hidepid", buf);
 	// Get oom_score_adj.
 	container->oom_score_adj = k2v_get_key(int, "oom_score_adj", buf);
+	// Get skip_setgroups.
+	container->skip_setgroups = k2v_get_key(bool, "skip_setgroups", buf);
 	// Get user.
 	if (container->user == NULL) {
 		container->user = k2v_get_key(char, "user", buf);

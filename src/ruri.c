@@ -374,6 +374,10 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 		else if (strcmp(argv[index], "-p") == 0 || strcmp(argv[index], "--privileged") == 0) {
 			privileged = true;
 		}
+		// Skip setting groups.
+		else if (strcmp(argv[index], "-g") == 0 || strcmp(argv[index], "--skip-setgroups") == 0) {
+			container->skip_setgroups = true;
+		}
 		// Do not show warnings.
 		else if (strcmp(argv[index], "-w") == 0 || strcmp(argv[index], "--no-warnings") == 0) {
 			container->no_warnings = true;
@@ -723,6 +727,9 @@ static void parse_args(int argc, char **_Nonnull argv, struct RURI_CONTAINER *_N
 				switch (argv[index][i]) {
 				case 'D':
 					dump_config = true;
+					break;
+				case 'g':
+					container->skip_setgroups = true;
 					break;
 				case 'u':
 					container->enable_unshare = true;
