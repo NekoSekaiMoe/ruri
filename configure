@@ -6986,7 +6986,7 @@ fi
 # Check whether --enable-static was given.
 if test ${enable_static+y}
 then :
-  enableval=$enable_static; if test "x$enable_static" = "xyes"; then CFLAGS="$CFLAGS -static"; fi
+  enableval=$enable_static; if test "x$enable_static" = "xyes"; then CFLAGS="$CFLAGS -static -static-pie"; fi
 fi
 
 # Option to disable libseccomp
