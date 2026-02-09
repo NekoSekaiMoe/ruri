@@ -165,24 +165,36 @@ char *k2v_open_file(const char *_Nonnull path, size_t bufsize)
 	 * If config file does not exist, return NULL.
 	 */
 	// NULL check.
-	if (path == NULL) {
-		return NULL;
-	}
-	// bufsize+2 might avoid overflow(I hope).
-	char *ret = (char *)malloc(bufsize + 2);
-	int fd = open(path, O_RDONLY | O_CLOEXEC);
-	if (fd < 0) {
-		free(ret);
-		return NULL;
-	}
-	ssize_t len = read(fd, ret, bufsize);
-	ret[len] = '\0';
-	if ((size_t)len != strlen(ret)) {
-		warning("\033[31m \\0 is not the end of file\n");
-	}
-	__k2v_lint(ret);
-	close(fd);
-	return ret;
+        if (path == NULL) {
+                return NULL;
+        }
+
+        char *ret = malloc(bufsize + 1);  // +1 is enough for trailing '\0'
+        if (ret == NULL) {
+                return NULL;
+        }
+
+        int fd = open(path, O_RDONLY | O_CLOEXEC);
+        if (fd < 0) {
+                free(ret);
+                return NULL;
+        }
+
+        ssize_t len = read(fd, ret, bufsize);
+        close(fd);
+
+        if (len < 0) {
+                free(ret);
+                return NULL;
+        }
+
+        // Ensure null-termination
+        ret[len] = '\0';
+
+        // Optional: lint the content (e.g., check for embedded nulls if needed)
+        __k2v_lint(ret);
+
+        return ret;
 }
 char *char_to_k2v(const char *_Nonnull key, const char *_Nonnull val)
 {
