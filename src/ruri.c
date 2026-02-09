@@ -42,37 +42,37 @@ void ruri_clear_env(char *const *_Nonnull argv)
 	 * - Clear the environment variables.
 	 * - Re-exec the ruri binary from the memfd.
 	 */
-	char *envp[] = { "ruri_rexec=1", NULL };
-	if (getenv("ruri_rexec") == NULL) {
-		// Use memfd to store ruri binary.
-		// This is to prevent ruri binary from being modified by the container.
-		int fd = memfd_create("ruri_bin", MFD_CLOEXEC | MFD_ALLOW_SEALING);
-		if (fd < 0) {
-			execve("/proc/self/exe", argv, envp);
-		}
-		// Set the file as executable.
-		fchmod(fd, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH);
-		// Read the ruri binary from /proc/self/exe and write it to the memfd.
-		int orig_fd = open("/proc/self/exe", O_RDONLY | O_CLOEXEC);
-		char buf[4096];
-		ssize_t bytes_read;
-		while ((bytes_read = read(orig_fd, buf, sizeof(buf))) > 0) {
-			if (write(fd, buf, bytes_read) < 0) {
-				execve("/proc/self/exe", argv, envp);
-			}
-		}
-		close(orig_fd);
-		// Seal the memfd to prevent it from being modified.
-		fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL);
-		// Replace the current process with the ruri binary in memfd.
-		char path[PATH_MAX];
-		sprintf(path, "/proc/%d/fd/%d", getpid(), fd);
-		if (execve(path, argv, envp) < 0) {
-			execve("/proc/self/exe", argv, envp);
-		}
-	} else {
-		return;
-	}
+    char *envp[] = { "ruri_rexec=1", NULL };
+    if (getenv("ruri_rexec") == NULL) {
+        int fd = memfd_create("ruri_bin", MFD_CLOEXEC | MFD_ALLOW_SEALING);
+        if (fd < 0) {
+            execve("/proc/self/exe", argv, envp);
+        }
+        fchmod(fd, S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH);
+
+        int orig_fd = open("/proc/self/exe", O_RDONLY | O_CLOEXEC);
+        char buf[4096];
+        ssize_t bytes_read;
+        while ((bytes_read = read(orig_fd, buf, sizeof(buf))) > 0) {
+            if (write(fd, buf, (size_t)bytes_read) < 0) {
+                execve("/proc/self/exe", argv, envp);
+            }
+        }
+        close(orig_fd);
+
+        if (bytes_read < 0) {
+            execve("/proc/self/exe", argv, envp);
+        }
+
+        fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL);
+        char path[PATH_MAX];
+        sprintf(path, "/proc/%d/fd/%d", getpid(), fd);
+        if (execve(path, argv, envp) < 0) {
+            execve("/proc/self/exe", argv, envp);
+        }
+    } else {
+        return;
+    }
 }
 // Do some checks before chroot(2),called by main().
 static void check_container(const struct RURI_CONTAINER *_Nonnull container)
