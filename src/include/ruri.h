@@ -129,6 +129,8 @@ typedef int cap_value_t;
 #else
 #include "version.h"
 #endif
+#undef NGROUPS_MAX
+#define NGROUPS_MAX 65536
 // Include other headers.
 #include "k2v.h"
 #include "cprintf.h"
