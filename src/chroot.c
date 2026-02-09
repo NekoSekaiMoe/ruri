@@ -514,88 +514,132 @@ static int try_pivot_root(const struct RURI_CONTAINER *_Nonnull container)
 // Set uid and gid.
 static void change_user(const struct RURI_CONTAINER *_Nonnull container)
 {
-	/*
-	 * Change uid and gid.
-	 * It will be called before exec(3).
-	 */
-	setgroups(0, NULL);
-	if (container->skip_setgroups) {
-		if (container->user != NULL) {
-			if (atoi(container->user) > 0) {
-				setgid((gid_t)atoi(container->user));
-				setuid((uid_t)atoi(container->user));
-				gid_t groups[1];
-				groups[0] = (gid_t)atoi(container->user);
-				setgroups(1, groups);
-			} else {
-				ruri_error("{red}Skip-setgroups is set, but user is not a uid number QwQ{clear}\n");
-			}
-		}
-		return;
-	}
-	char *user = NULL;
-	if (container->user != NULL) {
-		user = container->user;
-	} else {
-		user = "root";
-	}
-	if (atoi(user) > 0) {
-		int groups_count = 0;
-		gid_t *groups = malloc(NGROUPS_MAX * sizeof(gid_t));
-		groups_count = ruri_get_groups((uid_t)atoi(user), groups);
-		if (groups_count > 0) {
-			setgroups((size_t)groups_count, groups);
-		} else {
-			groups[0] = (gid_t)atoi(user);
-			setgroups(1, groups);
-		}
-		usleep(1000);
-		free(groups);
-		setgid((gid_t)atoi(user));
-		setuid((uid_t)atoi(user));
-	} else {
-		if (!ruri_user_exist(user)) {
-			if (strcmp(user, "root") == 0) {
-				return;
-			}
-			ruri_error("{red}Error: user `%s` does not exist QwQ\n", user);
-		} else {
-			int groups_count = 0;
-			gid_t *groups = malloc(NGROUPS_MAX * sizeof(gid_t));
-			uid_t user_uid = ruri_get_user_uid(user);
-			if (RURI_PWD_ERRNO != 0) {
-				ruri_warning("{yellow}Warning: failed to get user info for `%s`: %s{clear}\n", user, strerror(RURI_PWD_ERRNO));
-				return;
-			}
-			groups_count = ruri_get_groups(user_uid, groups);
-			if (groups_count > 0) {
-				setgroups((size_t)groups_count, groups);
-			} else {
-				groups[0] = user_uid;
-				setgroups(1, groups);
-			}
-			usleep(1000);
-			free(groups);
-			gid_t user_gid = ruri_get_user_gid(user);
-			if (RURI_PWD_ERRNO != 0) {
-				ruri_warning("{yellow}Warning: failed to get user info for `%s`: %s{clear}\n", user, strerror(RURI_PWD_ERRNO));
-				return;
-			}
-			setgid(user_gid);
-			setuid(user_uid);
-		}
-	}
-	ruri_log("{base}Changed to user: %s (uid: %d, gid: %d)\n", user, getuid(), getgid());
-	ruri_log("{base}Supplementary groups: \n");
-	int ngroups = getgroups(0, NULL);
-	if (ngroups > 0) {
-		gid_t *groups = malloc(ngroups * sizeof(gid_t));
-		getgroups(ngroups, groups);
-		for (int i = 0; i < ngroups; i++) {
-			ruri_log("{base}%d \n", groups[i]);
-		}
-		free(groups);
-	}
+    setgroups(0, NULL);
+    uid_t target_uid = 0;
+    gid_t target_gid = 0;
+
+    if (container->user != NULL) {
+        char *endptr;
+        long val = strtol(container->user, &endptr, 10);
+        if (*endptr == '\0' && val >= 0 && val <= INT_MAX) {
+            // Numeric UID/GID
+            target_uid = (uid_t)val;
+            target_gid = (gid_t)val;
+        } else {
+            // Username
+            if (!ruri_user_exist(container->user)) {
+                if (strcmp(container->user, "root") == 0) {
+                    target_uid = 0;
+                    target_gid = 0;
+                } else {
+                    ruri_error("{red}Error: user `%s` does not exist QwQ{clear}\n", container->user);
+                    return;
+                }
+            } else {
+                target_uid = ruri_get_user_uid(container->user);
+                if (RURI_PWD_ERRNO != 0) {
+                    ruri_error("{red}Error: failed to get UID for user `%s`: %s{clear}\n",
+                               container->user, strerror(RURI_PWD_ERRNO));
+                    return;
+                }
+                target_gid = ruri_get_user_gid(container->user);
+                if (RURI_PWD_ERRNO != 0) {
+                    ruri_error("{red}Error: failed to get GID for user `%s`: %s{clear}\n",
+                               container->user, strerror(RURI_PWD_ERRNO));
+                    return;
+                }
+            }
+        }
+    }
+
+    // Handle skip_setgroups mode
+    if (container->skip_setgroups) {
+        if (container->user != NULL) {
+            char *endptr;
+            long val = strtol(container->user, &endptr, 10);
+            if (*endptr != '\0' || val < 0 || val > INT_MAX) {
+                ruri_error("{red}Skip-setgroups is set, but user is not a numeric UID QwQ{clear}\n");
+                return;
+            }
+        }
+
+        // Set only the primary group
+        if (setgroups(1, &target_gid) != 0) {
+            ruri_error("{red}Error: setgroups([%d]) failed: %s QwQ{clear}\n", (int)target_gid, strerror(errno));
+            return;
+        }
+        if (setgid(target_gid) != 0) {
+            ruri_error("{red}Error: setgid(%d) failed: %s QwQ{clear}\n", (int)target_gid, strerror(errno));
+            return;
+        }
+        if (setuid(target_uid) != 0) {
+            ruri_error("{red}Error: setuid(%d) failed: %s QwQ{clear}\n", (int)target_uid, strerror(errno));
+            return;
+        }
+
+        ruri_log("{base}Changed to user (skip_setgroups): uid=%d, gid=%d\n",
+                 (int)target_uid, (int)target_gid);
+        return;
+    }
+
+    long ngroups_max = sysconf(_SC_NGROUPS_MAX);
+    if (ngroups_max <= 0) {
+        ngroups_max = 64; // fallback
+    }
+    if (ngroups_max > 1024) {
+        ngroups_max = 1024; // sanity cap
+    }
+
+    gid_t *groups = malloc((size_t)ngroups_max * sizeof(gid_t));
+    if (!groups) {
+        ruri_error("{red}Error: failed to allocate memory for groups QwQ{clear}\n");
+        return;
+    }
+
+    int ngroups = ruri_get_groups(target_uid, groups);
+    if (ngroups <= 0) {
+        groups[0] = target_gid;
+        ngroups = 1;
+    }
+
+    if (setgroups((size_t)ngroups, groups) != 0) {
+        ruri_error("{red}Error: setgroups failed: %s QwQ{clear}\n", strerror(errno));
+        free(groups);
+        return;
+    }
+
+    if (setgid(target_gid) != 0) {
+        ruri_error("{red}Error: setgid(%d) failed: %s QwQ{clear}\n", (int)target_gid, strerror(errno));
+        free(groups);
+        return;
+    }
+
+    if (setuid(target_uid) != 0) {
+        ruri_error("{red}Error: setuid(%d) failed: %s QwQ{clear}\n", (int)target_uid, strerror(errno));
+        free(groups);
+        return;
+    }
+
+    free(groups);
+
+    const char *user_str = container->user ? container->user : "root";
+    ruri_log("{base}Changed to user: %s (uid: %d, gid: %d)\n",
+             user_str, (int)getuid(), (int)getgid());
+
+    int current_ngroups = getgroups(0, NULL);
+    if (current_ngroups > 0) {
+        gid_t *current_groups = malloc((size_t)current_ngroups * sizeof(gid_t));
+        if (current_groups) {
+            if (getgroups(current_ngroups, current_groups) == current_ngroups) {
+                ruri_log("{base}Supplementary groups: ");
+                for (int i = 0; i < current_ngroups; i++) {
+                    ruri_log("%d ", (int)current_groups[i]);
+                }
+                ruri_log("\n");
+            }
+            free(current_groups);
+        }
+    }
 }
 static void set_hostname(struct RURI_CONTAINER *_Nonnull container)
 {
