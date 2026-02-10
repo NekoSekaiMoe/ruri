@@ -12,7 +12,7 @@ ruri_SOURCES = src/caplist.c src/chroot.c src/cprintf.c \
                 src/cgroup.c src/passwd.c src/ps.c  src/ruri.c
 
 # Compiler and linker flags
-AM_CFLAGS = $(CFLAGS) -I.
+AM_CFLAGS = $(CFLAGS) -I. -I..
 
 TIDY_FLAGS = --checks=*,-clang-analyzer-security.insecureAPI.strcpy,-altera-unroll-loops,-cert-err33-c,-concurrency-mt-unsafe,-clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,-readability-function-cognitive-complexity,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers,-bugprone-easily-swappable-parameters,-cert-err34-c,-misc-include-cleaner,-readability-identifier-length,-bugprone-signal-handler,-cert-msc54-cpp,-cert-sig30-c,-altera-id-dependent-backward-branch,-bugprone-suspicious-realloc-usage,-hicpp-signed-bitwise,-clang-analyzer-security.insecureAPI.UncheckedReturn --list-checks ${SOURCES} -- -lpthread -lseccomp -lcap -Wall -Wextra
 
@@ -35,11 +35,6 @@ endif
 if !ENABLE_DEBUG
 install: strip_target upx_target
 endif
-
-#Check VERBOSE vaule
-AM_V = $(if $(VERBOSE),, @)
-
-AM_V_CC = $(AM_V)echo "  CC       " $@;
 
 # Custom commands
 .PHONY: ruritest check

@@ -149,6 +149,7 @@ jobs:
 
       - name: build source code
         run: |
+          mkdir -p build
           cd build
           git clone --depth 1 https://github.com/moe-hacker/ruri.git
           cd ruri
@@ -173,8 +174,9 @@ jobs:
       - name: Build for ${{ matrix.arch }}
         shell: bash
         run: |
+          mkdir -p build
           cd build
-          cp build.sh "$ARCHITECTURE/build.sh"
+          cp ../build.sh "$ARCHITECTURE/build.sh"
           sudo chmod +x ../ruri
           sudo chmod +x "$ARCHITECTURE/build.sh"
 
