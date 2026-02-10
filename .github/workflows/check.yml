@@ -34,7 +34,7 @@ jobs:
           libseccomp-dev \
           libcap-dev \
           libc6-dev \
-          binutils gcc
+          binutils gcc libseccomp2
       - name: Configure
         run: ./configure -C ${{ matrix.args }} CC=${{ matrix.cc }}
       - name: Build
