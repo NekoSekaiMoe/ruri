@@ -27,7 +27,7 @@
  *
  *
  */
-#include "include/ruri.h"
+#include "ruri.h"
 /*
  * This file provides the mount functions for ruri.
  * It's used to mount disk devices, loop devices, and dir/files.

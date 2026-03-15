@@ -27,7 +27,7 @@
  *
  *
  */
-#include "include/ruri.h"
+#include "ruri.h"
 /*
  * Since we cannot statically link getpwuid() in glibc,
  * we need to implement it.

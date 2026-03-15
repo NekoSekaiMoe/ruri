@@ -27,7 +27,7 @@
  *
  *
  */
-#include "include/ruri.h"
+#include "ruri.h"
 /*
  * This file provides functions to manage capability list.
  * But drop_caps() is in chroot.c, not here.

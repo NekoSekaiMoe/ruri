@@ -27,7 +27,7 @@
  *
  *
  */
-#include "include/ruri.h"
+#include "ruri.h"
 /*
  * This file provides function to umount the container.
  * All pids detected in the container will be killed at the same time.

@@ -27,7 +27,7 @@
  *
  *
  */
-#include "include/ruri.h"
+#include "ruri.h"
 
 /*
  * This file provides some functions to show help/version info.

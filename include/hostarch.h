@@ -52,19 +52,19 @@
 #if defined(__mipsn32el__)
 #define RURI_HOST_ARCH "mipsn32el"
 #endif
-#if defined(__ppc__)
+#if defined(__ppc__) || defined(__powerpc__)
 #define RURI_HOST_ARCH "ppc"
 #endif
-#if defined(__ppc64__)
+#if defined(__ppc64__) || (defined(__powerpc64__) && !defined(__LITTLE_ENDIAN__))
 #define RURI_HOST_ARCH "ppc64"
 #endif
-#if defined(__ppc64le__)
+#if defined(__ppc64le__) || (defined(__powerpc64__) && defined(__LITTLE_ENDIAN__))
 #define RURI_HOST_ARCH "ppc64le"
 #endif
-#if defined(__riscv32__)
+#if defined(__riscv32__) || (defined(__riscv) && __riscv_xlen == 32)
 #define RURI_HOST_ARCH "riscv32"
 #endif
-#if defined(__riscv64__)
+#if defined(__riscv64__) || (defined(__riscv) && __riscv_xlen == 64)
 #define RURI_HOST_ARCH "riscv64"
 #endif
 #if defined(__s390x__)

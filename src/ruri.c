@@ -27,7 +27,7 @@
  *
  *
  */
-#include "include/ruri.h"
+#include "ruri.h"
 /*
  * This file was the main.c of ruri.
  * It will parse the arguments, and do the action.
