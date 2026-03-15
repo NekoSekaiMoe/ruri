@@ -83,7 +83,7 @@ static inline char* k2v_add_config_impl(char* k2v_buf, char* k2v_tmp) {
         k2v_size += strlen(k2v_buf);
     }
     k2v_size += strlen(k2v_tmp) + 4;
-    
+
     k2v_ret = malloc(k2v_size);
     if (k2v_ret == NULL) {
         free(k2v_buf);
@@ -103,8 +103,7 @@ static inline char* k2v_add_config_impl(char* k2v_buf, char* k2v_tmp) {
 }
 
 /* Macro that calls the helper function */
-#define k2v_add_config(type, k2v_buf, ...) \
-    k2v_add_config_impl(k2v_buf, type##_to_k2v(__VA_ARGS__))
+#define k2v_add_config(type, k2v_buf, ...) k2v_add_config_impl(k2v_buf, type##_to_k2v(__VA_ARGS__))
 char *k2v_add_comment(char *_Nullable buf, char *_Nonnull comment);
 char *k2v_add_newline(char *_Nullable buf);
 long long key_get_long(const char *_Nonnull key, const char *_Nonnull buf);
