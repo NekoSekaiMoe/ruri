@@ -27,7 +27,7 @@
  *
  *
  */
-#include "ruri.h"
+#include "include/ruri.h"
 /*
  * This file provides the built-in seccomp filter rules for ruri.
  * Thanks docker for denied syscall list.

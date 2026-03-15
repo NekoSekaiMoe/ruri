@@ -27,7 +27,7 @@
  *
  *
  */
-#include "cprintf.h"
+#include "include/cprintf.h"
 char *cprintf_base_color = "254;228;208";
 bool cprintf_print_color_if_not_fifo = true;
 #define fprintf_if_not_fifo(stream, ...)                                                              \

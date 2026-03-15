@@ -27,7 +27,7 @@
  *
  *
  */
-#include "ruri.h"
+#include "include/ruri.h"
 /*
  * This file provides config file support for ruri.
  * ruri_init_config() is also here.

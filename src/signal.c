@@ -27,7 +27,7 @@
  *
  *
  */
-#include "ruri.h"
+#include "include/ruri.h"
 /*
  * This file is used to catch segfault,
  * So that we can show some extra info when segfault.

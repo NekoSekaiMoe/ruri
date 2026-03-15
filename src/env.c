@@ -27,7 +27,7 @@
  *
  *
  */
-#include "ruri.h"
+#include "include/ruri.h"
 /*
  * This file provides functions to read and store .rurienv file.
  * ${container_dir}/.rurienv file is a file that stores the runtime info of the container.
