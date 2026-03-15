@@ -1,0 +1,187 @@
+.TH RURI 1 "December 2024" "Version 3.0" "System Administration"
+
+.SH NAME
+ruri \- Lightweight, User-friendly Linux-container Implementation
+
+.SH SYNOPSIS
+.B ruri
+[OPTIONS]... [ARGS]... [CONTAINER_DIRECTORY]... [COMMAND [ARGS]...]
+
+.SH DESCRIPTION
+.B ruri
+is a powerful container implementation designed for Linux devices with minimal kernel configurations or storage. It provides comprehensive container features and supports a wide range of architectures. 
+
+.SH OPTIONS
+.TP
+.BR -v ", " --version
+Show version info.
+.TP
+.BR -h ", " --help
+Show help message.
+.TP
+.BR -P ", " --ps [container_dir/config]
+Show process status of the container.
+.TP
+.BR -U ", " --umount [container_dir/config]
+Umount a container. This must be run with root privileges before removing a container.
+
+.TP
+.BR -C ", " --correct-config
+Correct an incomplete config file.
+.TP
+.BR -D ", " --dump-config
+Dump the container's current config. Example:
+.IP
+.B ruri -D -k cap_sys_admin -d cap_sys_chroot ./t
+.TP
+.BR -o ", " --output [config file]
+Specify the output file for the dumped config.
+
+.TP
+.BR -c ", " --config [config] [args] [COMMAND [ARGS]]
+Run a container using a config file. Example:
+.IP
+.B ruri -c config_file
+
+.TP
+.BR -a ", " --arch [arch]
+Simulate a different architecture using binfmt_misc/QEMU. Must be used with
+.BR -q .
+.TP
+.BR -q ", " --qemu-path [path]
+Specify the path to the QEMU binary.
+
+.TP
+.BR -u ", " --unshare
+Enable the unshare feature for containers. Note: This requires kernel namespace support.
+
+.TP
+.BR -p ", " --privileged
+Run a privileged container with all capabilities. Combine with
+.BR -d 
+to filter specific capabilities.
+
+.TP
+.BR -r ", " --rootless
+Run a rootless container. Requires the
+.B uidmap
+package and user namespace support.
+
+.TP
+.BR -k ", " --keep [cap]
+Keep the specified capability in the container.
+
+.TP
+.BR -d ", " --drop [cap]
+Drop the specified capability in the container.
+
+.TP
+.BR -m ", " --mount [src] [target]
+Mount directories, block devices, or images to the container.
+
+.TP
+.BR -S ", " --host-runtime
+Bind-mount
+.B /dev/,
+.B /sys/,
+and
+.B /proc
+from the host system.
+
+.TP
+.BR -R ", " --read-only
+Mount the container's root filesystem as read-only.
+
+.TP
+.BR -n ", " --no-new-privs
+Set the NO_NEW_PRIVS flag to restrict privilege escalation.
+
+.TP
+.BR -s ", " --enable-seccomp
+Enable the built-in Seccomp profile for additional security.
+
+.TP
+.BR -b ", " --background
+Run the container in the background.
+
+.TP
+.BR -L ", " --logfile [file]
+Specify the log file when running in the background.
+
+.SH EXAMPLES
+.TP
+Run a simple chroot container:
+.IP
+.B sudo ruri /tmp/alpine
+.TP
+Run a privileged container:
+.IP
+.B sudo ruri -p /tmp/alpine
+.TP
+Run a container with specific capabilities:
+.IP
+.B sudo ruri -k cap_sys_admin /tmp/alpine
+
+.SH CONTAINER SECURITY
+To enhance container security, ruri implements the following features:
+.TP
+1. Masking sensitive directories in
+.B /proc
+and
+.B /sys
+by default.
+.TP
+2. Dropping unnecessary capabilities. Use
+.B -k
+and
+.B -d
+options to customize capability settings.
+.TP
+3. Enforcing
+.B NO_NEW_PRIVS
+by default, unless explicitly disabled.
+.TP
+4. Providing a built-in seccomp profile. To enable, use the
+.B -s
+option. Custom seccomp rules can be implemented by modifying the source code.
+
+For advanced security configurations, review and customize the built-in options.
+
+.SH .rurienv BEHAVIOR
+The `.rurienv` file is an immutable configuration file automatically created in the container’s root directory. It stores the following settings:
+.TP
+- Capabilities to drop.
+.TP
+- `NO_NEW_PRIVS` flag.
+.TP
+- Enabled seccomp profile.
+.TP
+- User and working directory settings.
+.TP
+- Namespace-related configurations for unshared containers.
+.TP
+- Extra mount points and environment variables.
+
+.B Usage Notes:
+.TP
+1. The `.rurienv` file overrides some command-line arguments. To disable `.rurienv`, use the
+.B --no-rurienv
+option.
+.TP
+2. To modify `.rurienv`, unmount the container with
+.B -U
+and reinitialize it with updated arguments or configurations.
+.TP
+3. The `.rurienv` file is immutable by default. To edit it manually, remove the immutable flag with
+.B chattr -i .
+.TP
+4. The `.rurienv` file is automatically removed when the container is unmounted.
+
+.SH BUG REPORTING
+Report issues at
+.I https://github.com/Moe-hacker/ruri/issues
+
+.SH AUTHOR
+Moe-haeker(Origin Author)
+
+dabao1955(packager)
